@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Career from '../components/Career.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Base>
+  <main>
+    <Hero />
+    <About />
+    <Career />
+    <Contact />
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <p>© {new Date().getFullYear()} Ed Stapleton</p>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  .footer {
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--colour-rule);
+    font-size: var(--fs-xs);
+    color: var(--colour-ink-soft);
+  }
+</style>

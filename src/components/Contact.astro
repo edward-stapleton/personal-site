@@ -1,0 +1,71 @@
+---
+const items = [
+  {
+    label: 'Email',
+    value: 'edwardstapleton@me.com',
+    href: 'mailto:edwardstapleton@me.com',
+  },
+  {
+    label: 'Phone',
+    value: '+44 7761 752310',
+    href: 'tel:+447761752310',
+  },
+  {
+    label: 'LinkedIn',
+    value: 'linkedin.com/in/edwardstapleton',
+    href: 'https://linkedin.com/in/edwardstapleton',
+  },
+];
+---
+
+<section class="contact section" id="contact">
+  <div class="container">
+    <p class="section__eyebrow">Contact</p>
+    <h2 class="section__title">Want to work together, or just say hello?</h2>
+    <ul class="contact__list">
+      {
+        items.map((item) => (
+          <li class="contact__item">
+            <span class="contact__label">{item.label}</span>
+            <a class="contact__value" href={item.href}>{item.value}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .section__title {
+    max-width: 22ch;
+  }
+
+  .contact__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .contact__item {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: baseline;
+    gap: var(--space-4);
+    font-size: var(--fs-md);
+  }
+
+  .contact__label {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--colour-ink-soft);
+  }
+
+  .contact__value {
+    color: var(--colour-ink);
+  }
+</style>
