@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&family=Instrument+Serif:ital@1&display=swap"
+    />
+    <style>
+      :root {
+        --paper: #fafaf7;
+        --ink: #0a0a0b;
+        --ink-2: #2a2a2c;
+        --ink-3: #5a5a5e;
+        --line: #e0ded7;
+        --accent: #2547f5;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        width: 1200px;
+        height: 630px;
+        font-family: 'Geist', sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        padding: 72px 80px;
+        position: relative;
+        overflow: hidden;
+      }
+      .wordmark {
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        display: inline-flex;
+        align-items: baseline;
+      }
+      .dot {
+        display: inline-block;
+        width: 0.42em;
+        height: 0.42em;
+        margin-left: 0.18em;
+        vertical-align: 0.12em;
+        border-radius: 9999px;
+        background: var(--accent);
+      }
+      .meta {
+        margin-top: 16px;
+        font-family: 'Geist Mono', monospace;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+      }
+      .headline {
+        font-size: 92px;
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+        font-weight: 600;
+        margin-top: auto;
+        margin-bottom: 28px;
+        max-width: 16ch;
+      }
+      .headline em {
+        font-family: 'Instrument Serif', serif;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        font-size: 1.04em;
+      }
+      .sub {
+        font-size: 22px;
+        line-height: 1.45;
+        color: var(--ink-2);
+        max-width: 56ch;
+      }
+      .corner {
+        position: absolute;
+        top: 72px;
+        right: 80px;
+        font-family: 'Geist Mono', monospace;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p class="wordmark">Ed Stapleton<span class="dot"></span></p>
+      <p class="meta">London · Venture builder &amp; product operator</p>
+    </div>
+    <p class="corner">edwardstapleton.co.uk</p>
+    <h1 class="headline">
+      Venture builder. Product operator. <em>Founder.</em>
+    </h1>
+    <p class="sub">
+      10 years building and scaling products, brands and businesses — from
+      zero to acquisition and beyond.
+    </p>
+  </body>
+</html>

@@ -12,6 +12,9 @@
     "smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
+    "@fontsource/geist": "^5.2.9",
+    "@fontsource/geist-mono": "^5.2.8",
+    "@fontsource/instrument-serif": "^5.2.8",
     "astro": "^5.0.0"
   },
   "devDependencies": {

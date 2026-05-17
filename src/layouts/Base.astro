@@ -1,4 +1,15 @@
 ---
+// Self-hosted fonts (latin subsets auto-selected by browser via unicode-range)
+import '@fontsource/geist/300.css';
+import '@fontsource/geist/400.css';
+import '@fontsource/geist/500.css';
+import '@fontsource/geist/600.css';
+import '@fontsource/geist/700.css';
+import '@fontsource/geist-mono/400.css';
+import '@fontsource/geist-mono/500.css';
+import '@fontsource/geist-mono/600.css';
+import '@fontsource/instrument-serif/400-italic.css';
+
 import '../styles/global.css';
 
 interface Props {
@@ -42,13 +53,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://edwardstapl
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(ogImage, Astro.site ?? 'https://edwardstapleton.co.uk').toString()} />
 
-    <!-- Fonts: Geist (UI), Geist Mono (labels/metadata), Instrument Serif Italic (signature flourish) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@1&display=swap"
-    />
   </head>
   <body>
     <slot />

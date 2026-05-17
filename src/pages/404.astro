@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import TopNav from '../components/TopNav.astro';
+---
+
+<Base title="Page not found — Ed Stapleton" description="That page doesn't exist.">
+  <TopNav />
+  <main class="notfound">
+    <div class="container">
+      <p class="mono-label notfound__code">
+        <span>404</span>
+        <span class="notfound__sep" aria-hidden="true">——</span>
+        <span>Not found</span>
+      </p>
+
+      <h1 class="notfound__title">
+        Nothing here, <em class="serif-italic">but plenty over there.</em>
+      </h1>
+
+      <p class="notfound__body">
+        The page you were looking for doesn't exist — or never did.
+      </p>
+
+      <div class="notfound__actions">
+        <a class="btn btn--primary" href="/">
+          Back home
+          <svg class="btn__arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .notfound {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding-block: var(--s-9);
+  }
+
+  .notfound__sep {
+    color: var(--ink-4);
+  }
+
+  .notfound__code {
+    margin-bottom: var(--s-5);
+  }
+
+  .notfound__title {
+    font-size: clamp(2.25rem, 5.5vw, var(--fs-3xl));
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+    margin-bottom: var(--s-5);
+    max-width: 16ch;
+  }
+
+  .notfound__title em.serif-italic {
+    font-size: 1.04em;
+    color: var(--ink);
+  }
+
+  .notfound__body {
+    font-size: var(--fs-lg);
+    color: var(--ink-2);
+    max-width: 48ch;
+    margin-bottom: var(--s-7);
+  }
+
+  .notfound__actions {
+    display: flex;
+    gap: var(--s-3);
+  }
+</style>
