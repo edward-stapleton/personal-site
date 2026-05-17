@@ -20,14 +20,25 @@ const items = [
 
 <section class="contact section" id="contact">
   <div class="container">
-    <p class="section__eyebrow">Contact</p>
-    <h2 class="section__title">Want to work together, or just say hello?</h2>
+    <p class="mono-label section__eyebrow">
+      <span>03</span>
+      <span class="contact__sep" aria-hidden="true">——</span>
+      <span>Contact</span>
+    </p>
+
+    <h2 class="section__title">
+      Want to work together, or
+      <em class="serif-italic">just say hello?</em>
+    </h2>
+
     <ul class="contact__list">
       {
         items.map((item) => (
           <li class="contact__item">
-            <span class="contact__label">{item.label}</span>
-            <a class="contact__value" href={item.href}>{item.value}</a>
+            <span class="mono-label contact__label">{item.label}</span>
+            <a class="contact__value" href={item.href}>
+              {item.value}
+            </a>
           </li>
         ))
       }
@@ -36,8 +47,12 @@ const items = [
 </section>
 
 <style>
-  .section__title {
-    max-width: 22ch;
+  .contact__sep {
+    color: var(--ink-4);
+  }
+
+  .section__title em.serif-italic {
+    color: var(--ink);
   }
 
   .contact__list {
@@ -46,26 +61,28 @@ const items = [
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
   }
 
   .contact__item {
     display: grid;
     grid-template-columns: 110px 1fr;
     align-items: baseline;
-    gap: var(--space-4);
-    font-size: var(--fs-md);
+    gap: var(--s-4);
+    padding-block: var(--s-4);
+    border-top: 1px solid var(--line);
   }
 
-  .contact__label {
-    font-size: var(--fs-xs);
-    font-weight: var(--fw-medium);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--colour-ink-soft);
+  .contact__item:first-child {
+    border-top: 0;
   }
 
   .contact__value {
-    color: var(--colour-ink);
+    font-size: var(--fs-md);
+    color: var(--ink);
+    border-bottom-color: var(--line);
+  }
+
+  .contact__value:hover {
+    border-bottom-color: var(--accent);
   }
 </style>

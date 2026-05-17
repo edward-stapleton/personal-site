@@ -1,18 +1,32 @@
 ---
 ---
 
-<section class="hero section" id="top">
+<section class="hero section section--flush" id="top">
   <div class="container">
-    <p class="hero__name">Ed Stapleton</p>
+    <p class="mono-label hero__meta">
+      <span>Est. 2014</span>
+      <span class="hero__meta-sep" aria-hidden="true">·</span>
+      <span>London</span>
+      <span class="hero__meta-sep" aria-hidden="true">·</span>
+      <span>Building Place<span class="dot" aria-hidden="true"></span></span>
+    </p>
+
     <h1 class="hero__headline">
-      Venture builder. Product operator. Founder.
+      Venture builder. Product operator. <em class="serif-italic">Founder.</em>
     </h1>
+
     <p class="hero__sub">
       10 years building and scaling products, brands and businesses —
       from zero to acquisition and beyond.
     </p>
+
     <div class="hero__actions">
-      <a class="btn btn--primary" href="#contact">Get in touch</a>
+      <a class="btn btn--primary" href="#contact">
+        Get in touch
+        <svg class="btn__arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
       <a class="btn btn--ghost" href="#career">See my work</a>
     </div>
   </div>
@@ -20,37 +34,44 @@
 
 <style>
   .hero {
-    padding-block: var(--space-10) var(--space-9);
+    padding-block: var(--s-10) var(--s-9);
   }
 
-  .hero__name {
-    font-size: var(--fs-sm);
-    font-weight: var(--fw-medium);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--colour-ink-soft);
-    margin-bottom: var(--space-5);
+  .hero__meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    margin-bottom: var(--s-7);
+  }
+
+  .hero__meta-sep {
+    color: var(--ink-4);
   }
 
   .hero__headline {
-    margin-bottom: var(--space-5);
-    max-width: 18ch;
+    font-size: clamp(2.5rem, 7vw, var(--fs-4xl));
+    line-height: var(--lh-tight);
+    letter-spacing: var(--tracking-display);
+    margin-bottom: var(--s-5);
+    max-width: 14ch;
+  }
+
+  .hero__headline em.serif-italic {
+    font-size: 1.05em;
+    color: var(--ink);
   }
 
   .hero__sub {
-    font-size: var(--fs-md);
-    color: var(--colour-ink-muted);
+    font-size: var(--fs-lg);
+    color: var(--ink-2);
     max-width: 48ch;
-    margin-bottom: var(--space-7);
+    margin-bottom: var(--s-7);
   }
 
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
-  }
-
-  .hero__actions .btn {
-    border-bottom-width: 1px;
+    gap: var(--s-3);
   }
 </style>

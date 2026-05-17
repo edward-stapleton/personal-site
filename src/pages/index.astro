@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import TopNav from '../components/TopNav.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
 import Career from '../components/Career.astro';
@@ -7,6 +8,7 @@ import Contact from '../components/Contact.astro';
 ---
 
 <Base>
+  <TopNav />
   <main>
     <Hero />
     <About />
@@ -14,17 +16,47 @@ import Contact from '../components/Contact.astro';
     <Contact />
   </main>
   <footer class="footer">
-    <div class="container">
-      <p>© {new Date().getFullYear()} Ed Stapleton</p>
+    <div class="container container--wide footer__inner">
+      <p class="mono-label">
+        <span>©</span>
+        <span>{new Date().getFullYear()}</span>
+        <span class="footer__sep" aria-hidden="true">·</span>
+        <span>Ed Stapleton</span>
+      </p>
+      <p class="mono-label footer__status">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Currently building Place</span>
+      </p>
     </div>
   </footer>
 </Base>
 
 <style>
   .footer {
-    padding-block: var(--space-6);
-    border-top: 1px solid var(--colour-rule);
-    font-size: var(--fs-xs);
-    color: var(--colour-ink-soft);
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--line);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer__sep {
+    color: var(--ink-4);
+  }
+
+  .footer__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    color: var(--ink-2);
+  }
+
+  .footer__status .dot {
+    margin-left: 0;
   }
 </style>

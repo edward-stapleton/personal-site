@@ -3,14 +3,16 @@ const roles = [
   {
     company: 'Place',
     role: 'Founder',
-    period: '2025 — present',
+    period: '2025 — Now',
+    status: 'Current',
     description:
       'An AI-powered travel and discovery companion that delivers GPS-triggered audio stories as you move through the world. Currently raising pre-seed funding.',
   },
   {
     company: 'Zeti',
     role: 'Director of Product & Operations',
-    period: '2018 — present',
+    period: '2018 — Now',
+    status: 'Current',
     description:
       'London fintech building usage-based financing infrastructure for transport and energy assets. Led the product from no-code MVP through to a proprietary Azure platform. Now leading ZetiOS toward Series B.',
   },
@@ -40,14 +42,28 @@ const roles = [
 
 <section class="career section" id="career">
   <div class="container">
-    <p class="section__eyebrow">Career</p>
-    <h2 class="section__title">Selected work</h2>
+    <p class="mono-label section__eyebrow">
+      <span>02</span>
+      <span class="career__sep" aria-hidden="true">——</span>
+      <span>Selected work</span>
+    </p>
+
+    <h2 class="section__title">
+      A career across <em class="serif-italic">every stage.</em>
+    </h2>
+
     <ol class="career__list">
       {
         roles.map((role) => (
           <li class="role">
             <div class="role__meta">
-              <p class="role__period">{role.period}</p>
+              <p class="mono role__period">{role.period}</p>
+              {role.status && (
+                <p class="role__status">
+                  <span class="dot" aria-hidden="true" />
+                  <span>{role.status}</span>
+                </p>
+              )}
             </div>
             <div class="role__body">
               <h3 class="role__company">{role.company}</h3>
@@ -62,51 +78,88 @@ const roles = [
 </section>
 
 <style>
+  .career__sep {
+    color: var(--ink-4);
+  }
+
+  .section__title em.serif-italic {
+    color: var(--ink);
+  }
+
   .career__list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-7);
   }
 
   .role {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-2);
+    gap: var(--s-3);
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--line);
+  }
+
+  .role:first-child {
+    border-top: 0;
+    padding-top: 0;
   }
 
   @media (min-width: 640px) {
     .role {
-      grid-template-columns: 140px 1fr;
-      gap: var(--space-5);
+      grid-template-columns: 160px 1fr;
+      gap: var(--s-6);
     }
+  }
+
+  .role__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding-top: 0.45rem;
   }
 
   .role__period {
     font-size: var(--fs-xs);
     font-weight: var(--fw-medium);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+
+  .role__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--tracking-mono-caps);
     text-transform: uppercase;
-    color: var(--colour-ink-soft);
-    padding-top: 0.35rem;
+    color: var(--ink-2);
+  }
+
+  .role__status .dot {
+    margin-left: 0;
   }
 
   .role__company {
     font-size: var(--fs-lg);
-    margin-bottom: var(--space-1);
+    margin-bottom: var(--s-1);
   }
 
   .role__title {
-    font-size: var(--fs-sm);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
     font-weight: var(--fw-medium);
-    color: var(--colour-ink);
-    margin-bottom: var(--space-3);
+    letter-spacing: var(--tracking-mono-caps);
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: var(--s-4);
   }
 
   .role__description {
-    color: var(--colour-ink-muted);
+    color: var(--ink-2);
     max-width: 60ch;
   }
 </style>

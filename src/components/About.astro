@@ -3,21 +3,29 @@
 
 <section class="about section" id="about">
   <div class="container">
-    <p class="section__eyebrow">About</p>
+    <p class="mono-label section__eyebrow">
+      <span>01</span>
+      <span class="about__sep" aria-hidden="true">——</span>
+      <span>About</span>
+    </p>
+
+    <h2 class="section__title">
+      A venture builder and product operator,
+      <em class="serif-italic">based in London.</em>
+    </h2>
+
     <div class="about__body">
       <p>
-        I'm a venture builder and product operator based in London, with
-        10 years of experience bringing new products and businesses to
-        life.
+        I have 10 years of experience bringing new products and
+        businesses to life — in every shape and size.
       </p>
       <p>
-        I've done this in every shape and size — from co-founding
-        <strong>Shandy Shack</strong>, an award-winning craft drinks
-        brand I grew from a festival pop-up to a seven-figure
-        acquisition, to leading product and operations at
+        I co-founded <strong>Shandy Shack</strong>, an award-winning
+        British craft drinks brand I grew from a festival pop-up to a
+        seven-figure acquisition. I lead product and operations at
         <strong>Zeti</strong>, a London fintech building the
-        infrastructure for the next generation of asset finance. Before
-        that, I spent three years at <strong>Accenture Song</strong>
+        infrastructure for the next generation of asset finance. And
+        before that, I spent three years at <strong>Accenture Song</strong>
         advising international businesses on digital strategy and
         innovation.
       </p>
@@ -31,21 +39,66 @@
         friends, and watch a lot of Spanish cinema.
       </p>
     </div>
+
+    <dl class="about__meta">
+      <div>
+        <dt class="mono-label">Based</dt>
+        <dd>Herne Hill, London</dd>
+      </div>
+      <div>
+        <dt class="mono-label">Languages</dt>
+        <dd>English, French, Spanish, Catalan</dd>
+      </div>
+      <div>
+        <dt class="mono-label">Education</dt>
+        <dd>BA Modern Languages, Durham</dd>
+      </div>
+    </dl>
   </div>
 </section>
 
 <style>
+  .about__sep {
+    color: var(--ink-4);
+  }
+
+  .section__title em.serif-italic {
+    color: var(--ink);
+  }
+
   .about__body {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--s-5);
     font-size: var(--fs-md);
-    color: var(--colour-ink-muted);
+    color: var(--ink-2);
     max-width: 60ch;
+    margin-bottom: var(--s-8);
   }
 
-  .about__body strong {
-    color: var(--colour-ink);
-    font-weight: var(--fw-semibold);
+  .about__meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+    margin: 0;
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 640px) {
+    .about__meta {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-6);
+    }
+  }
+
+  .about__meta dt {
+    margin-bottom: var(--s-2);
+  }
+
+  .about__meta dd {
+    margin: 0;
+    font-size: var(--fs-base);
+    color: var(--ink);
   }
 </style>
