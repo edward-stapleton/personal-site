@@ -105,6 +105,43 @@ import { chapters } from '../../data/chapters';
     display: none;
   }
 
+  /* A gentle nudge towards the past until the visitor first moves. */
+  :global(.js:not(.tl--travelled)) .rail__list {
+    animation: rail-nudge 1.6s var(--ease-out-expressive) 1.5s 3;
+  }
+
+  :global(.js:not(.tl--travelled)) li:has(> .rail__item[aria-current='step']) + li .rail__item {
+    animation: rail-hint 1.6s ease-in-out 1.5s 3;
+  }
+
+  @keyframes rail-nudge {
+    0%,
+    60%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-10px);
+    }
+  }
+
+  @keyframes rail-hint {
+    0%,
+    100% {
+      color: var(--ink-4);
+    }
+    25% {
+      color: var(--accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .rail__list,
+    :global(.js) .rail__item {
+      animation: none !important;
+    }
+  }
+
   .rail__item {
     display: flex;
     flex-direction: column;

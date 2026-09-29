@@ -201,6 +201,8 @@ export function initTimeline() {
     }
     if (railFill) railFill.style.transform = `scaleX(${f / Math.max(1, stops.length - 1)})`;
     root!.classList.toggle('tl--moved', f > 0.05);
+    // Once the visitor has moved, the rail's "go this way" nudge stops for good.
+    if (f > 0.05) document.documentElement.classList.add('tl--travelled');
     document.documentElement.classList.toggle('tl--moved', f > 0.05);
   }
 
@@ -315,6 +317,40 @@ export function initTimeline() {
       goToStop(Math.round(progress()) + (e.key === 'ArrowRight' ? 1 : -1));
     }
   });
+
+  // Touch: swipe left to go back in time (the next world along), right to come
+  // forward. The viewport ignores native panning (touch-action: none), so a
+  // swipe steps exactly one page; vertical swipes do the same, except on the
+  // caption sheet, which scrolls its own text.
+  let touch: { x: number; y: number; inCaption: boolean } | null = null;
+  viewport.addEventListener(
+    'touchstart',
+    (e) => {
+      const t = e.touches[0];
+      touch =
+        e.touches.length === 1
+          ? { x: t.clientX, y: t.clientY, inCaption: !!(e.target as HTMLElement).closest('.caption') }
+          : null;
+    },
+    { passive: true },
+  );
+  viewport.addEventListener(
+    'touchend',
+    (e) => {
+      const start = touch;
+      touch = null;
+      if (!start) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - start.x;
+      const dy = t.clientY - start.y;
+      const across = Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2;
+      const down = !start.inCaption && Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.2;
+      if (!across && !down) return;
+      const dir = (across ? dx : dy) < 0 ? 1 : -1;
+      goToStop(Math.round(progress()) + dir);
+    },
+    { passive: true },
+  );
 
   let resizeTimer = 0;
   addEventListener('resize', () => {

@@ -335,18 +335,18 @@ const headingId = `${chapter.id}-title`;
     box-shadow: 0 10px 30px -18px rgba(40, 30, 20, 0.35);
   }
 
-  /* Portrait: caption becomes a bottom sheet under the scene. */
+  /* Portrait: caption becomes an edge-to-edge bottom sheet under the scene. */
   @media (max-aspect-ratio: 4/3) {
     :global(.js) .chapter__caption {
       bottom: var(--rail-h);
-      padding: 0 var(--s-3);
+      padding: 0;
     }
 
     :global(.js) .caption {
       max-width: none;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      padding: var(--s-4) var(--s-4) var(--s-3);
+      border-width: 1px 0 0;
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+      padding: var(--s-4) var(--s-5) var(--s-3);
       max-height: calc(var(--vh) - var(--scene-top) - var(--scene-h) - var(--rail-h) + var(--s-5));
       overflow: auto;
     }

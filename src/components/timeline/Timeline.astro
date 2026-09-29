@@ -80,6 +80,18 @@ import Walker from './Walker.astro';
     background: var(--scene-bg, #efe7da);
   }
 
+  /* Touch screens navigate by swipe (see timeline.ts), not by scrolling the
+     page; only the caption sheet keeps its own vertical scroll. */
+  @media (pointer: coarse) {
+    :global(.js) .tl__viewport {
+      touch-action: none;
+    }
+
+    :global(.js) .tl__viewport :global(.caption) {
+      touch-action: pan-y;
+    }
+  }
+
   :global(.js) .tl__track {
     position: relative;
     display: flex;
