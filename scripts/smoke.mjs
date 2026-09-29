@@ -2,6 +2,7 @@ import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { expectedHeadings, expectedAnchors, checkTimeline } from './timeline-checks.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -16,15 +17,6 @@ const viewports = [
   { name: 'desktop', width: 1280, height: 900 },
   { name: 'wide', width: 1680, height: 1000 },
 ];
-
-const expectedHeadings = [
-  /Venture builder\. Product operator\. Founder\./i,
-  /based in London/i,
-  /every stage/i,
-  /just say hello/i,
-];
-
-const expectedAnchors = ['#about', '#career', '#contact'];
 
 function log(msg, tone = 'info') {
   const tag = { info: '·', ok: '✓', warn: '!', err: '✗' }[tone] ?? '·';
@@ -65,19 +57,23 @@ async function run() {
     log(`${r}`, hit ? 'ok' : 'err');
   }
 
-  console.log('\nAnchor scroll checks');
+  console.log('\nWorld anchors');
   for (const a of expectedAnchors) {
     const target = a.slice(1);
     const exists = (await page.locator(`#${target}`).count()) > 0;
-    log(`section ${a}`, exists ? 'ok' : 'err');
+    log(`world ${a}`, exists ? 'ok' : 'err');
   }
 
-  console.log('\nScreenshots');
+  console.log('\nPaging + screenshots');
   for (const vp of viewports) {
+    console.log(`\n  ${vp.name} ${vp.width}×${vp.height}`);
     await page.setViewportSize({ width: vp.width, height: vp.height });
     await page.waitForTimeout(300);
+    await checkTimeline(page, log);
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await page.waitForTimeout(1600);
     const path = resolve(outDir, `${vp.name}-${vp.width}x${vp.height}.png`);
-    await page.screenshot({ path, fullPage: true });
+    await page.screenshot({ path });
     log(`${vp.name.padEnd(7)} ${vp.width}×${vp.height}  →  ${path.replace(root + '/', '')}`, 'ok');
   }
 

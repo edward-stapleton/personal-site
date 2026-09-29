@@ -2,6 +2,7 @@ import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { expectedHeadings, expectedAnchors, checkTimeline } from './timeline-checks.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
@@ -21,13 +22,6 @@ function log(m, t = 'info') {
   console.log(`  ${{ info: '·', ok: '✓', err: '✗', warn: '!' }[t] ?? '·'} ${m}`);
 }
 
-const expectedHeadings = [
-  /Venture builder\. Product operator\. Founder\./i,
-  /based in London/i,
-  /every stage/i,
-  /just say hello/i,
-];
-const expectedAnchors = ['#about', '#career', '#contact'];
 const viewports = [
   { name: 'mobile', width: 375, height: 812 },
   { name: 'desktop', width: 1280, height: 900 },
@@ -58,7 +52,7 @@ async function probeHome() {
   console.log('\n  Anchors');
   for (const a of expectedAnchors) {
     const exists = (await page.locator(a).count()) > 0;
-    log(`section ${a}`, exists ? 'ok' : 'err');
+    log(`world ${a}`, exists ? 'ok' : 'err');
   }
 
   console.log('\n  Fonts (should be self-hosted; nothing from Google Fonts)');
@@ -78,8 +72,11 @@ async function probeHome() {
   for (const vp of viewports) {
     await page.setViewportSize({ width: vp.width, height: vp.height });
     await page.waitForTimeout(200);
+    await checkTimeline(page, log);
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await page.waitForTimeout(1600);
     const p = resolve(outDir, `home-${vp.name}.png`);
-    await page.screenshot({ path: p, fullPage: true });
+    await page.screenshot({ path: p });
     log(`${vp.name.padEnd(7)} ${vp.width}×${vp.height}  →  ${p.replace(root + '/', '')}`, 'ok');
   }
 

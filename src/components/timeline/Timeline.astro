@@ -1,0 +1,122 @@
+---
+import { chapters } from '../../data/chapters';
+import Chapter from './Chapter.astro';
+import Walker from './Walker.astro';
+---
+
+<div class="tl" id="timeline">
+  <div class="tl__stops" aria-hidden="true"></div>
+  <div class="tl__viewport">
+    <div class="tl__track">
+      <svg class="tl__trails" aria-hidden="true"></svg>
+      {chapters.map((chapter, index) => <Chapter chapter={chapter} index={index} />)}
+      <Walker />
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initTimeline } from '../../scripts/timeline';
+  initTimeline();
+</script>
+
+<style>
+  /* Layout tokens for the paged, horizontal mode. Landscape: each page is one
+     viewport and the 16:9 scene is contained within it. Portrait: the scene
+     is at least half the height (and never narrower than the viewport), the
+     page widens so the camera pans across it in 2–3 steps, and the scene is
+     centred between the header and the caption sheet. */
+  :global(.js) {
+    --vw: 100vw;
+    --vh: 100svh;
+    --rail-h: 56px;
+    --avail-h: calc(var(--vh) - var(--rail-h) - 56px);
+    --scene-w: min(var(--vw), calc(var(--avail-h) * 16 / 9));
+    --scene-h: calc(var(--scene-w) * 9 / 16);
+    --scene-top: calc(56px + (var(--avail-h) - var(--scene-h)) / 2);
+    --page-w: var(--vw);
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+  }
+
+  :global(.js::-webkit-scrollbar) {
+    display: none;
+  }
+
+  @media (max-aspect-ratio: 4/3) {
+    :global(.js) {
+      --sheet-h: clamp(180px, 24svh, 240px);
+      --scene-w: max(var(--vw), calc(var(--vh) * 0.5 * 16 / 9));
+      --scene-h: calc(var(--scene-w) * 9 / 16);
+      --scene-top: calc(
+        56px + max(8px, (var(--vh) - 56px - var(--rail-h) - var(--sheet-h) - var(--scene-h)) / 2)
+      );
+      --page-w: var(--scene-w);
+    }
+  }
+
+  .tl__stops {
+    display: none;
+  }
+
+  :global(.js) .tl {
+    position: relative;
+  }
+
+  :global(.js) .tl__stops {
+    display: block;
+  }
+
+  :global(.js) .tl__stops :global(.tl__stop) {
+    height: var(--vh);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  :global(.js) .tl__viewport {
+    position: fixed;
+    inset: 0;
+    height: var(--vh);
+    overflow: clip;
+    background: var(--scene-bg, #efe7da);
+  }
+
+  :global(.js) .tl__track {
+    position: relative;
+    display: flex;
+    height: 100%;
+    will-change: transform;
+    transition: opacity 180ms ease-out;
+  }
+
+  /* Rail jumps of more than one world cut through a quick fade. */
+  :global(.js) .tl--jumping .tl__track {
+    opacity: 0;
+  }
+
+  .tl__trails {
+    display: none;
+  }
+
+  /* Dotted trail between worlds: drawn behind the artwork, so the dots fade
+     into each image's feathered edge where the painted road takes over. */
+  :global(.js) .tl__trails {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  :global(.js) .tl__trails :global(path) {
+    fill: none;
+    stroke: rgba(120, 96, 64, 0.5);
+    stroke-width: var(--dot, 5px);
+    stroke-linecap: round;
+    stroke-dasharray: 0 calc(var(--dot, 5px) * 2.6);
+  }
+
+  /* The scene background is part of the artwork, so it stays light in dark
+     mode; only the chrome (captions, rail) follows the theme. */
+</style>

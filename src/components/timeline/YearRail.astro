@@ -1,0 +1,151 @@
+---
+import { chapters } from '../../data/chapters';
+---
+
+<header class="tl-header">
+  <a href="#today" class="tl-header__mark" data-go="today">
+    Ed Stapleton<span class="dot" aria-hidden="true"></span>
+  </a>
+  <a href="#where-next" class="btn btn--primary tl-header__cta" data-go="where-next">Get in touch</a>
+</header>
+
+<nav class="rail" aria-label="Timeline">
+  <div class="rail__progress" aria-hidden="true"><span class="rail__fill"></span></div>
+  <ol class="rail__list">
+    {
+      chapters.map((c) => (
+        <li>
+          <a class="rail__item" href={`#${c.id}`} data-go={c.id}>
+            <span class="rail__year mono">{c.kind === 'end' ? 'Next' : c.kind === 'intro' ? 'Now' : c.year}</span>
+            <span class="rail__name">{c.short}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .tl-header,
+  .rail {
+    display: none;
+  }
+
+  :global(.js) .tl-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--s-3) var(--s-5);
+    pointer-events: none;
+  }
+
+  .tl-header > * {
+    pointer-events: auto;
+  }
+
+  .tl-header__mark {
+    border: 0;
+    font-weight: var(--fw-semibold);
+    letter-spacing: -0.02em;
+    color: #0a0a0b;
+  }
+
+  .tl-header__cta {
+    padding: 10px 16px;
+  }
+
+  :global(.js) .rail {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    display: block;
+    height: var(--rail-h);
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+  }
+
+  .rail__progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 2px;
+  }
+
+  .rail__fill {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  .rail__list {
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0 var(--s-3);
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    justify-content: safe center;
+  }
+
+  .rail__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rail__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 0 var(--s-3);
+    border: 0;
+    white-space: nowrap;
+    color: var(--ink-4);
+    transition: color var(--dur-std) var(--ease-out-expressive);
+  }
+
+  .rail__item:hover,
+  .rail__item[aria-current='step'] {
+    color: var(--ink);
+  }
+
+  .rail__year {
+    font-size: var(--fs-xs);
+    line-height: 1.2;
+  }
+
+  .rail__name {
+    font-size: var(--fs-xs);
+    line-height: 1.3;
+  }
+
+  .rail__item[aria-current='step'] .rail__year {
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .rail__name {
+      display: none;
+    }
+    .rail__item {
+      padding: 0 var(--s-2);
+    }
+    .tl-header__cta {
+      padding: 8px 12px;
+      font-size: var(--fs-xs);
+    }
+  }
+</style>

@@ -27,3 +27,6 @@ pnpm-debug.log*
 
 # Smoke-test output
 screenshots/
+
+# Art working files: reference photos, prompts and client notes (kept local)
+docs/

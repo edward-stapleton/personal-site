@@ -1,0 +1,514 @@
+---
+import type { Chapter } from '../../data/chapters';
+import { contact } from '../../data/chapters';
+import { art } from '../../data/art';
+import { blockBoxPct, officeRoute, SCENE_H, SCENE_W } from '../../lib/iso';
+import { Picture } from 'astro:assets';
+import IsoScene from './IsoScene.astro';
+
+interface Props {
+  chapter: Chapter;
+  index: number;
+}
+
+const { chapter, index } = Astro.props;
+// A world with finished artwork uses its traced route and hotspots; the rest
+// fall back to the grey-box diorama.
+const world = art[chapter.id];
+const route = world?.route ?? officeRoute(chapter.office);
+const hotspots = (
+  world
+    ? world.hotspots.map((h) => ({ label: h.label, body: h.body, role: h.role, links: h.links, box: h, dot: h.dot }))
+    : chapter.blocks
+        .filter((b) => b.body)
+        .map((b) => {
+          const box = blockBoxPct(...b.at);
+          return { label: b.label, body: b.body!, links: b.links, box, dot: { x: box.x + box.w / 2, y: box.y } };
+        })
+).map((h) => ({
+  ...h,
+  // Dot position relative to the clickable box.
+  dotLeft: ((h.dot.x - h.box.x) / h.box.w) * 100,
+  dotTop: ((h.dot.y - h.box.y) / h.box.h) * 100,
+}));
+
+// Signs are laid flat onto parallelogram panels: map a 100-wide box, as tall
+// as the panel's proportions, onto its top-left, top-right and bottom-left
+// corners so lettering keeps its shape and follows the panel's slant.
+const px = (p: { x: number; y: number }) => ({ x: (p.x / 100) * SCENE_W, y: (p.y / 100) * SCENE_H });
+const len = (a: { x: number; y: number }, b: { x: number; y: number }) => Math.hypot(b.x - a.x, b.y - a.y);
+// Rough advance widths in em, enough to keep a wordmark inside its panel.
+const textWidth = (text: string, serif: boolean) =>
+  [...text].reduce((w, c) => w + (c === ' ' ? 0.28 : c === c.toUpperCase() ? (serif ? 0.72 : 0.66) : 0.52), 0);
+const signs = (world?.signs ?? []).map((sign) => {
+  const [tl, tr, bl] = [px(sign.tl), px(sign.tr), px(sign.bl)];
+  const h = (100 * len(tl, bl)) / len(tl, tr);
+  const m = [(tr.x - tl.x) / 100, (tr.y - tl.y) / 100, (bl.x - tl.x) / h, (bl.y - tl.y) / h, tl.x, tl.y];
+  const size = Math.min(h * 0.32, 72 / textWidth(sign.text, sign.font === 'serif')) * (sign.size ?? 1);
+  // Each logo fills the panel's margins on its own; several take turns in the
+  // same spot (see initSignCycles). `scale` nudges optical size.
+  const placed = (sign.logos ?? []).map((l) => {
+    const bh = Math.min(h * (sign.fit ?? 0.56), 80 / l.ratio);
+    const k = Math.min(l.scale ?? 1, 90 / (l.ratio * bh)) * (sign.size ?? 1);
+    const [w, hh] = [l.ratio * bh * k, bh * k];
+    return { href: l.src, x: 50 - w / 2, y: (h - hh) / 2, width: w, height: hh };
+  });
+  return { ...sign, h, size, placed, transform: `matrix(${m.map((n) => n.toFixed(4)).join(' ')})` };
+});
+const inkFilter = `${chapter.id}-logo-ink`;
+const whiteFilter = `${chapter.id}-logo-white`;
+const headingId = `${chapter.id}-title`;
+---
+
+<section
+  class="chapter"
+  id={chapter.id}
+  aria-labelledby={headingId}
+  data-chapter={chapter.id}
+  data-year={chapter.year}
+  data-bg={chapter.eraBg}
+  data-route={JSON.stringify(route)}
+>
+  {!world && <div class="chapter__trail" aria-hidden="true" />}
+
+  <div class="chapter__scene">
+    {
+      world ? (
+        <>
+          <Picture
+            class="chapter__art"
+            src={world.src}
+            alt={world.alt}
+            formats={['avif', 'webp']}
+            fallbackFormat="webp"
+            widths={[800, 1200, world.src.width]}
+            sizes="(max-aspect-ratio: 4/3) 180svh, 100vw"
+            loading={index === 0 ? 'eager' : 'lazy'}
+          />
+          {signs.length > 0 && (
+            <svg class="chapter__signs" viewBox={`0 0 ${SCENE_W} ${SCENE_H}`} aria-hidden="true">
+              <defs>
+                {/* Flatten each logo to one colour, keeping its shape (alpha). */}
+                <filter id={whiteFilter} color-interpolation-filters="sRGB">
+                  <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.94 0" />
+                </filter>
+                <filter id={inkFilter} color-interpolation-filters="sRGB">
+                  <feColorMatrix values="0 0 0 0 0.11  0 0 0 0 0.11  0 0 0 0 0.13  0 0 0 0.92 0" />
+                </filter>
+              </defs>
+              {signs.map((sign) => (
+                <g transform={sign.transform}>
+                  {sign.placed.length > 0 ? (
+                    <g class="sign__logos">
+                      {sign.placed.map((l, i) => (
+                        <g class:list={['sign__logo', { 'is-on': i === 0 }]}>
+                          <image
+                            href={l.href}
+                            x={l.x.toFixed(2)}
+                            y={l.y.toFixed(2)}
+                            width={l.width.toFixed(2)}
+                            height={l.height.toFixed(2)}
+                            preserveAspectRatio="xMidYMid meet"
+                            filter={
+                              sign.tone === 'color'
+                                ? undefined
+                                : `url(#${sign.tone === 'ink' ? inkFilter : whiteFilter})`
+                            }
+                          />
+                        </g>
+                      ))}
+                    </g>
+                  ) : (
+                    <text
+                      x="50"
+                      y={sign.h / 2}
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      font-family={sign.font === 'serif' ? 'Georgia, Times New Roman, serif' : 'Geist, sans-serif'}
+                      font-weight={sign.font === 'serif' ? '700' : '600'}
+                      font-size={sign.size.toFixed(1)}
+                      fill={sign.color ?? '#fff'}
+                    >
+                      {sign.text}
+                    </text>
+                  )}
+                </g>
+              ))}
+            </svg>
+          )}
+        </>
+      ) : (
+        <IsoScene chapter={chapter} />
+      )
+    }
+    {
+      hotspots.map((h, i) => (
+        <button
+          type="button"
+          class="hotspot"
+          style={`left:${h.box.x}%;top:${h.box.y}%;width:${h.box.w}%;height:${h.box.h}%;--dot-x:${h.dotLeft.toFixed(1)}%;--dot-y:${h.dotTop.toFixed(1)}%`}
+          data-label={h.label}
+          data-body={h.body}
+          data-role={'role' in h ? h.role : undefined}
+          data-links={h.links ? JSON.stringify(h.links) : undefined}
+          data-chapter={chapter.company}
+          data-index={i + 1}
+          data-total={hotspots.length}
+        >
+          <span class="hotspot__dot" aria-hidden="true">{i + 1}</span>
+          <span class="hotspot__label">{h.label}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="chapter__caption">
+    <div class="caption">
+      {
+        chapter.kind !== 'intro' && (
+          <p class="caption__meta mono-label">
+            <span class="caption__year">{chapter.period}</span>
+            <span aria-hidden="true">·</span>
+            <span>{chapter.location}</span>
+          </p>
+        )
+      }
+      {
+        index === 0 ? (
+          <h1 class="caption__title" id={headingId}>
+            {chapter.company}
+            <span class="dot" aria-hidden="true" />
+          </h1>
+        ) : (
+          <h2 class="caption__title" id={headingId}>
+            {chapter.company}
+          </h2>
+        )
+      }
+      <p class="caption__role mono">{chapter.role}</p>
+      <p class="caption__summary">{chapter.summary}</p>
+      {
+        chapter.skills && (
+          <ul class="caption__skills" aria-label="Skills">
+            {chapter.skills.map((skill) => (
+              <li class="mono-label">{skill}</li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        chapter.quote && (
+          <blockquote class="caption__quote">
+            <p class="serif-italic">“{chapter.quote.text}”</p>
+            <cite class="mono-label">{chapter.quote.cite}</cite>
+          </blockquote>
+        )
+      }
+      {
+        chapter.kind === 'end' && (
+          <ul class="caption__contact">
+            {contact.map((c) => (
+              <li>
+                <span class="mono-label">{c.label}</span>
+                <a href={c.href}>{c.value}</a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .chapter {
+    position: relative;
+  }
+
+  /* ---- Stacked (no-JS) layout ------------------------------------------- */
+  .chapter__scene {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+
+  .chapter__trail {
+    display: none;
+  }
+
+  .chapter__caption {
+    padding: var(--s-5) var(--gutter) var(--s-8);
+  }
+
+  .caption {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  /* ---- Horizontal (JS) layout ------------------------------------------- */
+  :global(.js) .chapter {
+    flex: none;
+    width: var(--page-w);
+    height: var(--vh);
+  }
+
+  :global(.js) .chapter__scene {
+    position: absolute;
+    left: calc((var(--page-w) - var(--scene-w)) / 2);
+    top: var(--scene-top);
+    width: var(--scene-w);
+    height: var(--scene-h);
+    max-width: none;
+    aspect-ratio: auto;
+  }
+
+  .chapter__scene :global(.chapter__art) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Feather the edges so the artwork's own background melts into the page. */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent),
+      linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent),
+      linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    mask-composite: intersect;
+  }
+
+  .chapter__signs {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* Panels with several logos show one at a time, cross-fading. */
+  .chapter__signs :global(.sign__logo) {
+    opacity: 0;
+    transition: opacity 600ms ease-in-out;
+  }
+
+  .chapter__signs :global(.sign__logo.is-on) {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chapter__signs :global(.sign__logo) {
+      transition: none;
+    }
+  }
+
+  :global(.js) .chapter__trail {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--scene-top) + var(--scene-h) * 0.58 - var(--scene-h) * 0.012);
+    height: calc(var(--scene-h) * 0.024);
+    background: rgba(120, 100, 70, 0.14);
+    border-radius: var(--r-full);
+  }
+
+  :global(.js) .chapter__caption {
+    position: absolute;
+    left: 0;
+    bottom: calc(var(--rail-h) + var(--s-5));
+    width: var(--vw);
+    padding: 0 var(--s-6);
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  :global(.js) .caption {
+    margin: 0;
+    pointer-events: auto;
+    padding: var(--s-5);
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: 0 10px 30px -18px rgba(40, 30, 20, 0.35);
+  }
+
+  /* Portrait: caption becomes a bottom sheet under the scene. */
+  @media (max-aspect-ratio: 4/3) {
+    :global(.js) .chapter__caption {
+      bottom: var(--rail-h);
+      padding: 0 var(--s-3);
+    }
+
+    :global(.js) .caption {
+      max-width: none;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      padding: var(--s-4) var(--s-4) var(--s-3);
+      max-height: calc(var(--vh) - var(--scene-top) - var(--scene-h) - var(--rail-h) + var(--s-5));
+      overflow: auto;
+    }
+  }
+
+  /* ---- Caption type ----------------------------------------------------- */
+  .caption__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-bottom: var(--s-2);
+  }
+
+  .caption__title {
+    font-size: clamp(1.5rem, 3vw, var(--fs-2xl));
+    margin-bottom: var(--s-2);
+  }
+
+  .caption__role {
+    font-size: var(--fs-xs);
+    color: var(--ink-2);
+    margin-bottom: var(--s-3);
+    line-height: 1.5;
+  }
+
+  .caption__summary {
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  .caption__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+    margin: var(--s-3) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .caption__skills li {
+    padding: 2px var(--s-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 10px;
+  }
+
+  .caption__quote {
+    margin: var(--s-3) 0 0;
+    padding-left: var(--s-3);
+    border-left: 2px solid var(--line);
+  }
+
+  .caption__quote p {
+    font-size: var(--fs-md);
+    line-height: 1.3;
+    margin-bottom: var(--s-1);
+  }
+
+  .caption__contact {
+    list-style: none;
+    padding: 0;
+    margin: var(--s-4) 0 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .caption__contact li {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--s-3);
+  }
+
+  .caption__contact a {
+    font-size: var(--fs-sm);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-aspect-ratio: 4/3) {
+    .caption__summary {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .caption__quote,
+    .caption__skills {
+      display: none;
+    }
+  }
+
+  /* ---- Hotspots --------------------------------------------------------- */
+  .hotspot {
+    position: absolute;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    border-radius: var(--r-md);
+    transition: transform var(--dur-std) var(--ease-out-expressive);
+  }
+
+  .hotspot:hover,
+  .hotspot:focus-visible {
+    transform: translateY(-6px);
+  }
+
+  .hotspot:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .hotspot__dot {
+    position: absolute;
+    left: var(--dot-x, 50%);
+    top: var(--dot-y, 0%);
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    border-radius: var(--r-full);
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 0 rgba(37, 71, 245, 0.45);
+    animation: pulse 2.4s ease-out infinite;
+  }
+
+  .hotspot__label {
+    position: absolute;
+    left: var(--dot-x, 50%);
+    bottom: calc(100% - var(--dot-y, 0%) + 16px);
+    transform: translate(-50%, 4px);
+    white-space: nowrap;
+    padding: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: #fafaf7;
+    background: #0a0a0b;
+    border-radius: var(--r-full);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-micro), transform var(--dur-std) var(--ease-out-expressive);
+  }
+
+  .hotspot:hover .hotspot__label,
+  .hotspot:focus-visible .hotspot__label {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 71, 245, 0.45); }
+    70% { box-shadow: 0 0 0 12px rgba(37, 71, 245, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 71, 245, 0); }
+  }
+</style>

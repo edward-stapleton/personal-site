@@ -1,47 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
-import TopNav from '../components/TopNav.astro';
-import Hero from '../components/Hero.astro';
-import About from '../components/About.astro';
-import Career from '../components/Career.astro';
-import Contact from '../components/Contact.astro';
+import Timeline from '../components/timeline/Timeline.astro';
+import YearRail from '../components/timeline/YearRail.astro';
+import HotspotPanel from '../components/timeline/HotspotPanel.astro';
 ---
 
 <Base>
-  <TopNav />
+  <YearRail />
   <main>
-    <Hero />
-    <About />
-    <Career />
-    <Contact />
+    <Timeline />
   </main>
-  <footer class="footer">
-    <div class="container container--wide footer__inner">
-      <p class="mono-label">
-        <span>©</span>
-        <span>{new Date().getFullYear()}</span>
-        <span class="footer__sep" aria-hidden="true">·</span>
-        <span>Ed Stapleton</span>
-      </p>
-    </div>
-  </footer>
+  <HotspotPanel />
 </Base>
-
-<style>
-  .footer {
-    padding-block: var(--s-6);
-    border-top: 1px solid var(--line);
-  }
-
-  .footer__inner {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-4);
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .footer__sep {
-    color: var(--ink-4);
-  }
-</style>

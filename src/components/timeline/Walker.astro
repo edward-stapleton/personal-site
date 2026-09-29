@@ -1,0 +1,59 @@
+---
+// Mini-Ed: a five-frame sprite strip (public/mini-ed.png, cut from the pose
+// sheet by scripts/slice-mini-ed.mjs): two walking-down frames, two
+// walking-up frames and a seated pose. src/scripts/timeline.ts sets
+// data-state / data-dir / data-frame / data-facing; walking left is the
+// right-facing frames mirrored.
+---
+
+<div class="walker" data-state="sit" data-dir="down" data-frame="0" data-facing="right" aria-hidden="true">
+  <div class="walker__sprite"></div>
+</div>
+
+<style>
+  .walker {
+    display: none;
+  }
+
+  :global(.js) .walker {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    /* Cell is 111×256; feet sit on the bottom edge, centred. */
+    --h: calc(var(--scene-h) * 0.05);
+    width: calc(var(--h) * 0.4336);
+    height: var(--h);
+    margin: calc(var(--h) * -1) 0 0 calc(var(--h) * -0.2168);
+    z-index: 3;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .walker__sprite {
+    width: 100%;
+    height: 100%;
+    background: url('/mini-ed.png') no-repeat 0 0 / 500% 100%;
+    filter: drop-shadow(0 calc(var(--h) * 0.02) calc(var(--h) * 0.03) rgba(40, 30, 20, 0.25));
+  }
+
+  [data-facing='left'] .walker__sprite {
+    transform: scaleX(-1);
+  }
+
+  [data-state='walk'][data-dir='down'][data-frame='1'] .walker__sprite {
+    background-position-x: 25%;
+  }
+
+  [data-state='walk'][data-dir='up'][data-frame='0'] .walker__sprite {
+    background-position-x: 50%;
+  }
+
+  [data-state='walk'][data-dir='up'][data-frame='1'] .walker__sprite {
+    background-position-x: 75%;
+  }
+
+  [data-state='sit'] .walker__sprite {
+    background-position-x: 100%;
+  }
+</style>
