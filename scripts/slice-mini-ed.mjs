@@ -1,11 +1,12 @@
 // Slices the Mini-Ed pose sheet (transparent background, five figures in a
 // row) into a sprite strip of equal cells, feet on the bottom edge, centred.
 // Order: walk-down A, walk-down B, walk-up A, walk-up B, sit.
+// The site serves a WebP copy: node scripts/to-webp.mjs 2000 0.92 public/mini-ed.png
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const src = process.argv[2] ?? 'src/assets/mini-ed/poses.webp';
-const out = process.argv[3] ?? 'public/mini-ed.png';
+const out = process.argv[3] ?? 'public/mini-ed.webp';
 const CELL_H = 256;
 
 const b64 = readFileSync(src).toString('base64');

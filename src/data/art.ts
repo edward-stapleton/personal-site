@@ -69,7 +69,7 @@ export type Logo = { src: string; ratio: number; scale?: number };
 const logo = {
   accenture: { src: '/logos/accenture.svg', ratio: 3.79 },
   bulb: { src: '/logos/bulb.svg', ratio: 2.46, scale: 1.25 },
-  eveningStandard: { src: '/logos/evening-standard.png', ratio: 7.69 },
+  eveningStandard: { src: '/logos/evening-standard.webp', ratio: 7.69 },
   hycap: { src: '/logos/hycap.svg', ratio: 3.57 },
   monzo: { src: '/logos/monzo.svg', ratio: 5.33 },
   octopus: { src: '/logos/octopus-group.svg', ratio: 4.12 },
@@ -78,17 +78,17 @@ const logo = {
   times: { src: '/logos/the-times.svg', ratio: 8.42 },
   toyotaVentures: { src: '/logos/toyota-ventures.svg', ratio: 9.09 },
   vitl: { src: '/logos/vitl.svg', ratio: 2.35, scale: 1.15 },
-  aldi: { src: '/logos/aldi.png', ratio: 2.5 },
+  aldi: { src: '/logos/aldi.webp', ratio: 2.5 },
   emaar: { src: '/logos/emaar.svg', ratio: 5.03 },
   greatTaste: { src: '/logos/great-taste.svg', ratio: 1 },
-  herneHill: { src: '/logos/herne-hill-velodrome.png', ratio: 4.2 },
-  qatar: { src: '/logos/qatar.png', ratio: 1.01 },
+  herneHill: { src: '/logos/herne-hill-velodrome.webp', ratio: 4.2 },
+  qatar: { src: '/logos/qatar.webp', ratio: 1.01 },
   sainsburys: { src: '/logos/sainsburys.svg', ratio: 5.26 },
   shs: { src: '/logos/shs-group.svg', ratio: 1 },
   sse: { src: '/logos/sse.svg', ratio: 2.06 },
-  thisMorning: { src: '/logos/this-morning.png', ratio: 2.81 },
-  uberBoat: { src: '/logos/uber-boat.png', ratio: 2.81 },
-  wychwood: { src: '/logos/wychwood.png', ratio: 10.53 },
+  thisMorning: { src: '/logos/this-morning.webp', ratio: 2.81 },
+  uberBoat: { src: '/logos/uber-boat.webp', ratio: 2.81 },
+  wychwood: { src: '/logos/wychwood.webp', ratio: 10.53 },
 } satisfies Record<string, Logo>;
 
 export type WorldArt = {
