@@ -331,6 +331,7 @@ export function initTimeline() {
   addEventListener('scroll', queue, { passive: true });
 
   initHotspots();
+  preloadWorlds();
   initSignCycles(() => worlds[activeWorld]?.el);
 
   // The URL hash decides where we start, not the browser's remembered scroll.
@@ -347,6 +348,26 @@ export function initTimeline() {
     shown = progress();
     render(shown);
   });
+}
+
+// World artwork is lazy-loaded so the first page is quick. Once that page
+// has finished loading, fetch the rest in the background, one at a time in
+// timeline order, so moving between worlds never waits on an image.
+function preloadWorlds() {
+  const start = () => {
+    const pending = [...document.querySelectorAll<HTMLImageElement>('.chapter__art[loading="lazy"]')];
+    const next = () => {
+      const img = pending.shift();
+      if (!img) return;
+      img.loading = 'eager';
+      if (img.complete) return next();
+      img.addEventListener('load', next, { once: true });
+      img.addEventListener('error', next, { once: true });
+    };
+    next();
+  };
+  if (document.readyState === 'complete') setTimeout(start, 300);
+  else addEventListener('load', () => setTimeout(start, 300), { once: true });
 }
 
 // Sign panels with several logos take turns showing each one. Only the world
