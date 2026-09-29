@@ -43,11 +43,9 @@ export async function checkTimeline(page, log) {
   const walker = await page.$eval('.walker', (el) => el.dataset.state);
   log(`walker is seated at rest (${walker})`, walker === 'sit' ? 'ok' : 'err');
 
-  // Landscape: one stop per world, so a single step lands on the next world.
-  const landscape = await page.evaluate(() => innerWidth / innerHeight > 4 / 3);
+  // One stop per world at every size, so a single step lands on the next world.
   const hash = await page.evaluate(() => location.hash);
-  if (landscape) log(`one step lands on the next world (${hash})`, hash === '#zeti' ? 'ok' : 'err');
-  else log(`portrait: first step pans within the world (${hash})`, hash === '#today' ? 'ok' : 'err');
+  log(`one step lands on the next world (${hash})`, hash === '#zeti' ? 'ok' : 'err');
 
   await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(3000);

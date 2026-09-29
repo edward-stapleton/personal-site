@@ -79,6 +79,7 @@ const logo = {
   toyotaVentures: { src: '/logos/toyota-ventures.svg', ratio: 9.09 },
   vitl: { src: '/logos/vitl.svg', ratio: 2.35, scale: 1.15 },
   aldi: { src: '/logos/aldi.webp', ratio: 2.5 },
+  gsk: { src: '/logos/gsk.webp', ratio: 3.28 },
   thg: { src: '/logos/thg.svg', ratio: 3.14 },
   zavvi: { src: '/logos/zavvi.webp', ratio: 2.8 },
   emaar: { src: '/logos/emaar.svg', ratio: 5.03 },
@@ -472,8 +473,8 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'GSK brand incubator',
-        text: 'New look · Relaunch',
-        size: 1.2,
+        logos: [logo.gsk],
+        text: 'GSK',
         tl: { x: 85.17, y: 51.43 },
         tr: { x: 89.77, y: 54.2 },
         bl: { x: 85.17, y: 55.9 },

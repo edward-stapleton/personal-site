@@ -22,10 +22,9 @@ import Walker from './Walker.astro';
 
 <style>
   /* Layout tokens for the paged, horizontal mode. Landscape: each page is one
-     viewport and the 16:9 scene is contained within it. Portrait: the scene
-     is at least half the height (and never narrower than the viewport), the
-     page widens so the camera pans across it in 2–3 steps, and the scene is
-     centred between the header and the caption sheet. */
+     viewport and the 16:9 scene is contained within it. Portrait: the whole
+     scene fits the viewport's width, one page per world, centred between the
+     header and the caption sheet. */
   :global(.js) {
     --vw: 100vw;
     --vh: 100svh;
@@ -46,12 +45,12 @@ import Walker from './Walker.astro';
   @media (max-aspect-ratio: 4/3) {
     :global(.js) {
       --sheet-h: clamp(180px, 24svh, 240px);
-      --scene-w: max(var(--vw), calc(var(--vh) * 0.5 * 16 / 9));
+      --scene-w: var(--vw);
       --scene-h: calc(var(--scene-w) * 9 / 16);
       --scene-top: calc(
         56px + max(8px, (var(--vh) - 56px - var(--rail-h) - var(--sheet-h) - var(--scene-h)) / 2)
       );
-      --page-w: var(--scene-w);
+      --page-w: var(--vw);
     }
   }
 
