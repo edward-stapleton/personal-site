@@ -24,13 +24,14 @@ import Walker from './Walker.astro';
   /* Layout tokens for the paged, horizontal mode. Landscape: each page is one
      viewport and the 16:9 scene is contained within it. Portrait: the whole
      scene fits the viewport's width, one page per world, centred between the
-     header and the caption sheet. */
+     header and the caption sheet. The scene never grows past the artwork's
+     native width (1672px), so big screens don't upscale it into blur. */
   :global(.js) {
     --vw: 100vw;
     --vh: 100svh;
     --rail-h: 56px;
     --avail-h: calc(var(--vh) - var(--rail-h) - 56px);
-    --scene-w: min(var(--vw), calc(var(--avail-h) * 16 / 9));
+    --scene-w: min(var(--vw), calc(var(--avail-h) * 16 / 9), 1672px);
     --scene-h: calc(var(--scene-w) * 9 / 16);
     --scene-top: calc(56px + (var(--avail-h) - var(--scene-h)) / 2);
     --page-w: var(--vw);

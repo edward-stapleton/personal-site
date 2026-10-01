@@ -141,14 +141,14 @@ export const art: Record<string, WorldArt> = {
       {
         label: 'Building the product',
         body: 'From test brews to a range: craft beer mixed with soda at 2.5% ABV, in four flavours (elderflower, raspberry, lemon and ginger beer). First in bottles, then in cans.',
-        role: 'Took the brand from idea to an award-winning range, spotting the white space for a craft beer shandy.',
+        role: 'Took the brand from idea to an award-winning range, spotting a gap in the market for a craft beer shandy.',
         dot: { x: 26, y: 15 },
         x: 14, y: 7, w: 20, h: 20,
       },
       {
         label: 'National retail',
         body: 'From a debut Sainsbury’s listing in 2020 to Aldi and Midcounties Co-op. Stocked from Edinburgh to Exeter.',
-        role: 'Won and managed national grocery accounts including Sainsbury’s and Aldi, growing from 52 grocery distribution points in 2021 to 3,400 in 2023. The Aldi lead came through my own LinkedIn.',
+        role: 'Won and managed national grocery accounts including Sainsbury’s and Aldi, growing from 52 supermarket listings in 2021 to 3,400 in 2023. The Aldi lead came through my own LinkedIn.',
         links: [
           { label: 'Sainsbury’s debut, Oxford Mail · Nov 2020', href: `${NEWS}shandy-shack-to-sell-ipa-shandy-at-sainsbury-s` },
           { label: 'Midcounties Co-op · Nov 2023', href: `${NEWS}were-now-co-operating-with-midcounties-co-operative` },
@@ -157,9 +157,9 @@ export const art: Record<string, WorldArt> = {
         x: 46, y: 26, w: 34, h: 18,
       },
       {
-        label: 'On-trade',
-        body: 'On draught and in can across 11 City Pub Group pubs in 2021, then on draught in 15 Stonegate pubs, the UK’s largest pub company, in 2025.',
-        role: 'Opened the on-trade alongside grocery, selling into pub groups on draught and in can.',
+        label: 'Pubs and bars',
+        body: 'On draught and in cans across 11 City Pub Group pubs in 2021, then on draught in 15 Stonegate pubs, the UK’s largest pub company, in 2025.',
+        role: 'Opened up pubs and bars alongside supermarkets, selling into pub groups on draught and in cans.',
         links: [
           { label: 'City Pub Group, 11 pubs · Jul 2021', href: `${NEWS}shandies-pouring-across-city-pub-group` },
           { label: 'Stonegate, 15 pubs · Aug 2025', href: `${NEWS}stonegate-just-got-shackd` },
@@ -213,7 +213,7 @@ export const art: Record<string, WorldArt> = {
       {
         label: 'Funding and exit',
         body: 'Equity rounds in 2021 and 2022, then acquired by SHS Drinks, owners of WKD and Shloer, in November 2024.',
-        role: 'Raised both rounds and drove top-line CAGR of +132% over four consecutive financial years ahead of the sale.',
+        role: 'Raised both rounds and grew revenue by +132% a year, compounded over four consecutive financial years, ahead of the sale.',
         links: [
           { label: 'Six-figure raise, The Grocer · 2021', href: `${GROCER}craft-beer-startup-shandy-shack-raises-six-figure-investment/653278.article` },
           { label: 'Second round, The Grocer · 2022', href: `${GROCER}shandy-shack-closes-second-funding-round-as-revenues-accelerate-towards-1m/668044.article` },
@@ -367,14 +367,16 @@ export const art: Record<string, WorldArt> = {
     // Roughly in date order.
     hotspots: [
       {
-        label: 'Accenture Song',
-        body: 'I joined through the graduate scheme and specialised in innovation and venture development. In the Open Innovation team I also built go-to-market materials for a FinTech joint venture with the CEO of a mobile engagement startup.',
+        label: 'Accenture',
+        body: 'Three years as a digital strategy consultant, working inside client organisations across four countries and five sectors. In the Open Innovation team I also built go-to-market materials for a FinTech joint venture with the CEO of a mobile engagement startup.',
+        role: 'Embedded with each client to learn their users, systems and stakeholders, then turned what I found into a plan their own teams could deliver: the core of forward-deployed work today.',
         dot: { x: 54, y: 45 },
         x: 39, y: 38, w: 19, h: 26,
       },
       {
         label: 'SSE',
-        body: 'Transforming the billing systems behind an energy challenger brand. I led a team of four on the billing and payments UX.',
+        body: 'Transforming the billing systems behind an energy challenger brand.',
+        role: 'Worked inside the client’s transformation programme, leading a team of four on the billing and payments UX.',
         links: [
           { label: 'SSE selects Accenture for retail transformation · 2013', href: 'https://www.tdworld.com/smart-utility/article/20963140/sse-selects-accenture-for-major-transformation-projects' },
         ],
@@ -395,7 +397,8 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'MOTC Qatar · TASMU',
-        body: 'Qatar’s Ministry of Transport and Communications (MOTC), 2017: I delivered the digital cluster strategy for TASMU, the Smart Qatar programme, bringing startups, incubators and universities together around its priority sectors: transport, logistics, environment, healthcare and sport.',
+        body: 'Qatar’s Ministry of Transport and Communications (MOTC), 2017: TASMU, the Smart Qatar programme, with priority sectors in transport, logistics, environment, healthcare and sport.',
+        role: 'Delivered the digital cluster strategy for a government client, bringing startups, incubators and universities together around TASMU’s priority sectors.',
         links: [
           { label: 'Accenture and MOTC sign TASMU MOU · 2017', href: 'https://newsroom.accenture.com/news/2017/motc-and-accenture-sign-mou-to-power-smart-qatar-program-tasmu-with-digital-innovation' },
         ],
@@ -404,7 +407,8 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Emaar Hospitality Group',
-        body: 'Dubai, 2017–18: for the group behind the Armani Hotel Dubai in the Burj Khalifa and Palace Downtown, I produced a roadmap for C-suite stakeholders to digitise the guest experience and operating model, and ran a design-thinking workshop for 25.',
+        body: 'Dubai, 2017–18: the group behind the Armani Hotel Dubai in the Burj Khalifa and Palace Downtown.',
+        role: 'Worked directly with the C-suite to produce a roadmap to digitise the guest experience and operating model, and ran a design-thinking workshop for 25.',
         links: [
           { label: 'Emaar Hospitality Group', href: 'https://www.emaarhospitality.com/en/' },
           { label: 'Emaar Hospitality and Accenture digital transformation · Dec 2017', href: 'https://www.gdnonline.com/Details/299370/Emaar-Hospitality-to-embark-on-digital-transformation-' },
@@ -517,7 +521,7 @@ export const art: Record<string, WorldArt> = {
     hotspots: [
       {
         label: 'Zeti',
-        body: 'Product & Operations Director at Zeti, a Startups 100 FinTech that finances zero-emission fleets pay-per-mile from live vehicle data. I’ve been part of it since 2018, first in a fractional role after delivering the MVP.',
+        body: 'Product & Operations Director at Zeti, a Startups 100 FinTech that finances zero-emission fleets pay-per-mile from live vehicle data. I’ve been part of it since 2018: fractional after delivering the MVP, then full-time from 2025.',
         dot: { x: 78.5, y: 30 },
         x: 66, y: 22, w: 21, h: 34,
       },
@@ -540,14 +544,21 @@ export const art: Record<string, WorldArt> = {
         x: 10, y: 14, w: 38, h: 26,
       },
       {
-        label: 'Black cabs',
-        body: 'Electric London black cabs charging up, financed by the mile.',
+        label: 'First fleet deal',
+        body: 'One of our first fleet deals, during incubation in 2019: Octopus financed 60 electric black cabs for Fulham Cab Company pay-per-mile, making it the UK’s largest electric taxi fleet.',
+        role: 'Built the MVP on Google Sheets: from March 2019 to late 2020 it ran all utilisation tracking and billing, from Samsara telematics exports, for 155 electric vehicles worth around £7.9m, all financed pay-per-mile.',
+        links: [
+          { label: 'Fulham Cab Company, Octopus · Oct 2019', href: 'https://octopusgroup.com/newsroom/latest-news/octopus-helps-fulham-cab-company-become-uks-largest-electric-taxi-fleet/' },
+        ],
         dot: { x: 24, y: 46 },
         x: 18, y: 40, w: 17, h: 18,
       },
       {
         label: 'Otto Car',
-        body: 'Otto Car, a customer: electric cars for ride-hailing drivers.',
+        body: 'Otto Car, a customer: electric cars for ride-hailing drivers, funded by Paragon on a pay-per-use model built on ZetiOS data.',
+        links: [
+          { label: 'Otto Car’s £1.3m facility, Fleet World · Jan 2026', href: 'https://fleetworld.co.uk/otto-car-lands-extra-1-3m-funding-facility-to-drive-low-emission-vehicle-fleet-growth/' },
+        ],
         dot: { x: 45, y: 61 },
         x: 36, y: 58, w: 20, h: 20,
       },
@@ -559,18 +570,22 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Paragon Bank',
-        body: 'Paragon Bank, a major customer, runs its vehicle finance on ZetiOS.',
+        body: 'Paragon Bank, a major customer, runs its asset finance on ZetiOS. In 2026 it made Zeti its fintech partner, with real-time emissions and asset-health data across its portfolio.',
+        links: [
+          { label: 'Paragon expands partnership, Development Finance Today · Feb 2026', href: 'https://developmentfinancetoday.co.uk/paragon-expands-green-partnership-with-zeti' },
+        ],
         dot: { x: 49, y: 10 },
         x: 43, y: 7, w: 9, h: 21,
       },
       {
         label: 'Investors and recognition',
-        body: 'I helped close seed and Series A from Toyota Ventures and HYCAP Group, secured a place on Accenture’s FinTech Innovation Lab, and Zeti made the Startups 100 in 2025.',
+        body: 'I helped close seed and Series A from Toyota Ventures and HYCAP Group, secured a place on Accenture’s FinTech Innovation Lab, and Zeti made the Startups 100 in 2025 and the Innovation Zero Awards 2026 shortlist.',
         links: [
-          { label: 'Toyota Ventures investment', href: 'https://assetfinanceconnect.com/toyota-ventures-investment-in-zeti-enabling-fleet-electrification-through-pay-as-you-drive-financing/' },
+          { label: 'Toyota Ventures investment, Finance Connect · Nov 2022', href: 'https://finance-connect.com/toyota-ventures-investment-in-zeti-enabling-fleet-electrification-through-pay-as-you-drive-financing/' },
           { label: 'HYCAP Group investment, UKTN · Jun 2024', href: 'https://www.uktech.news/mobility/jcb-heir-investment-firm-zeti-20240627' },
           { label: 'FinTech Innovation Lab London · Jan 2021', href: 'https://www.fintechinnovationlab.com/news/london/london-cohort-news-january-2021/' },
           { label: 'Startups 100 · 2025', href: 'https://startups.co.uk/startups-100/2025/zeti/' },
+          { label: 'Innovation Zero Awards shortlist · 2026', href: 'https://www.innovationzero.com/awards/finalists' },
         ],
         dot: { x: 70, y: 20 },
         x: 66, y: 12, w: 10, h: 19,
@@ -612,7 +627,7 @@ export const art: Record<string, WorldArt> = {
 
   today: {
     src: today,
-    alt: 'Isometric diorama of Herne Hill today: red-brick Peabody estate blocks around a garden walk with a white cupola, a cut-away home studio with two monitors, a projects quarter of a small hotel with sound waves, a glass phone-shaped kiosk with a piggy bank and a maker’s workshop, a five-a-side cage with players in mustard yellow, a blue finish arch in front of a small Colosseum, and a lawn with a bench and a red post box.',
+    alt: 'Isometric diorama of Herne Hill today: red-brick estate blocks around a garden walk with a white cupola, a cut-away home studio with two monitors, a projects quarter of a small hotel with sound waves, a glass phone-shaped kiosk with a piggy bank and a maker’s workshop, a five-a-side cage with players in mustard yellow, a blue finish arch in front of a small Colosseum, and a lawn with a bench and a red post box.',
     route: {
       enter: [
         { x: -3, y: 35.5 },
@@ -640,12 +655,6 @@ export const art: Record<string, WorldArt> = {
       ],
     },
     hotspots: [
-      {
-        label: 'Home',
-        body: 'Home: a Victorian red-brick Peabody estate in Herne Hill, south London. Striped brick, sash windows, chimney stacks and a shared garden.',
-        dot: { x: 25, y: 22 },
-        x: 8, y: 8, w: 27, h: 32,
-      },
       {
         label: 'Place',
         body: 'Place, the venture I’m building now: an ambient, AI-powered tour guide. It notices where you are and how fast you’re moving, tells you the story you most want to hear, and answers follow-up questions, with no screen required.',
@@ -910,7 +919,7 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Graduation',
-        body: 'Graduated in 2014 with a 2.1 in Modern Languages (French, Spanish and Catalan).',
+        body: 'Graduated in 2014 with Upper Second-Class Honours (2:1) in Modern Languages (French, Spanish and Catalan).',
         dot: { x: 50, y: 64 },
         x: 39, y: 59, w: 21, h: 21,
       },

@@ -5,7 +5,7 @@ export const expectedHeadings = [
   /Ed Stapleton/,
   /Zeti/,
   /Shandy Shack/,
-  /Accenture Song/,
+  /Accenture/,
   /The Hut Group/,
   /LoungeUp & Divino Villas/,
   /Durham University/,

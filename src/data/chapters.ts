@@ -108,12 +108,7 @@ export const chapters: Chapter[] = [
     officeLabel: 'The vibecoding desk',
     kind: 'intro',
     blocks: [
-      {
-        at: [0.3, 0.3, 2.6, 1.6, 1.9],
-        color: clay.brick,
-        label: 'Home',
-        body: 'Home: a Victorian red-brick Peabody estate in Herne Hill, south London. Striped brick, sash windows, chimney stacks and a shared garden.',
-      },
+      { at: [0.3, 0.3, 2.6, 1.6, 1.9], color: clay.brick, label: 'Home' },
       { at: [0.3, 2.3, 1.6, 2.4, 1.6], color: '#a94f39', label: 'Estate' },
       { at: [0.3, 5.2, 1.2, 2, 1.3], color: '#b25a42', label: 'Estate' },
       {
@@ -169,7 +164,7 @@ export const chapters: Chapter[] = [
     year: 2018,
     location: 'London',
     summary:
-      'Zeti finances zero-emission fleets pay-per-mile. I delivered the MVP during incubation at Octopus Investments in 2018 and now lead product and operations for ZetiOS, a Startups 100 FinTech backed by Toyota Ventures and HYCAP.',
+      'Zeti finances zero-emission fleets pay-per-mile. I delivered the MVP during incubation at Octopus Investments in 2018 and stayed on in a fractional role, then joined full-time in 2025 to lead product and operations for ZetiOS, a Startups 100 FinTech backed by Toyota Ventures and HYCAP.',
     skills: ['Product strategy', 'IoT SaaS', 'User research', 'OKRs and roadmaps', 'AI-assisted delivery', 'Investor demos'],
     eraBg: '#eee3d2',
     ground: '#b7c7a2',
@@ -232,7 +227,7 @@ export const chapters: Chapter[] = [
         label: 'Investors and recognition',
         body: 'I helped close seed and Series A from Toyota Ventures and HYCAP Group, secured a place on Accenture’s FinTech Innovation Lab, and Zeti made the Startups 100 in 2025.',
         links: [
-          { label: 'Toyota Ventures investment', href: 'https://assetfinanceconnect.com/toyota-ventures-investment-in-zeti-enabling-fleet-electrification-through-pay-as-you-drive-financing/' },
+          { label: 'Toyota Ventures investment, Finance Connect · Nov 2022', href: 'https://finance-connect.com/toyota-ventures-investment-in-zeti-enabling-fleet-electrification-through-pay-as-you-drive-financing/' },
           { label: 'HYCAP Group investment, UKTN · Jun 2024', href: 'https://www.uktech.news/mobility/jcb-heir-investment-firm-zeti-20240627' },
           { label: 'FinTech Innovation Lab London · Jan 2021', href: 'https://www.fintechinnovationlab.com/news/london/london-cohort-news-january-2021/' },
           { label: 'Startups 100 · 2025', href: 'https://startups.co.uk/startups-100/2025/zeti/' },
@@ -250,7 +245,7 @@ export const chapters: Chapter[] = [
     year: 2018,
     location: 'London (remote)',
     summary:
-      'An award-winning craft shandy I built from idea to acquisition: two equity rounds, +132% CAGR over four years, and 52 to 3,400 grocery distribution points, before selling to SHS Drinks (owners of WKD and Shloer) in November 2024.',
+      'An award-winning craft shandy I built from idea to acquisition: two equity rounds, revenue growth of +132% a year over four years, and from 52 to 3,400 supermarket listings, before selling to SHS Drinks (owners of WKD and Shloer) in November 2024.',
     skills: ['Venture creation', 'Key account management', 'Fundraising', 'Brand and PR', 'Growth strategy', 'Automation'],
     eraBg: '#efe2d0',
     ground: '#c9b98f',
@@ -322,14 +317,14 @@ export const chapters: Chapter[] = [
   {
     id: 'accenture',
     short: 'Accenture',
-    company: 'Accenture Song',
+    company: 'Accenture',
     role: 'Digital Strategy Consultant',
     period: '2015 — 2018',
     year: 2015,
     location: 'London · Paris · Dubai · Doha',
     summary:
-      'Joined through the graduate scheme and specialised in innovation and venture development for clients across energy, hospitality, government, pharma and financial services.',
-    skills: ['Innovation strategy', 'Design thinking', 'Venture development', 'Digital roadmaps', 'Go-to-market'],
+      'Where I learned to work forward-deployed: three years inside client organisations in London, Paris, Dubai and Doha, turning open-ended briefs into strategies, roadmaps and delivery. I joined through the graduate scheme and specialised in innovation and venture development across energy, hospitality, government, pharma and financial services.',
+    skills: ['Client-embedded delivery', 'C-suite stakeholders', 'Innovation strategy', 'Venture development', 'Digital roadmaps', 'Go-to-market', 'Design thinking'],
     eraBg: '#ece3d6',
     ground: '#b9c0b4',
     office: C,
@@ -607,7 +602,7 @@ export const chapters: Chapter[] = [
         at: [6.4, 6, 1, 1, 0.3],
         color: clay.ink,
         label: 'Graduation',
-        body: 'Graduated in 2014 with a 2.1 in Modern Languages (French, Spanish and Catalan).',
+        body: 'Graduated in 2014 with Upper Second-Class Honours (2:1) in Modern Languages (French, Spanish and Catalan).',
       },
     ],
     trees: [[1.8, 1.8], [4.6, 3.8], [1.6, 9.8], [10.2, 9.6]],
@@ -620,7 +615,7 @@ export const chapters: Chapter[] = [
     period: 'Next',
     year: 2026,
     location: 'Anywhere',
-    summary: 'Want to build something together, or just say hello?',
+    summary: 'Always happy to talk products, ventures and AI. Want to compare notes, or just say hello?',
     eraBg: '#f0e1cd',
     ground: '#b7c7a2',
     office: C,
