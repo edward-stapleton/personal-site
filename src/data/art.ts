@@ -212,7 +212,7 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Funding and exit',
-        body: 'Equity rounds in 2021 and 2022, then acquired by SHS Drinks, owners of WKD and Shloer, in November 2024.',
+        body: 'Equity rounds in 2021 and 2022, then acquired in November 2024 by SHS Drinks: the group behind WKD and Shloer, decades old and with a high-nine-figure turnover.',
         role: 'Raised both rounds and grew revenue by +132% a year, compounded over four consecutive financial years, ahead of the sale.',
         links: [
           { label: 'Six-figure raise, The Grocer · 2021', href: `${GROCER}craft-beer-startup-shandy-shack-raises-six-figure-investment/653278.article` },

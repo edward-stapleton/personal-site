@@ -245,7 +245,7 @@ export const chapters: Chapter[] = [
     year: 2018,
     location: 'London (remote)',
     summary:
-      'An award-winning craft shandy I built from idea to acquisition: two equity rounds, revenue growth of +132% a year over four years, and from 52 to 3,400 supermarket listings, before selling to SHS Drinks (owners of WKD and Shloer) in November 2024.',
+      'An award-winning craft shandy I built from idea to acquisition: two equity rounds, revenue growth of +132% a year over four years, and from 52 to 3,400 supermarket listings, before selling in November 2024 to SHS Drinks, the decades-old, high-nine-figure-turnover group behind WKD and Shloer.',
     skills: ['Venture creation', 'Key account management', 'Fundraising', 'Brand and PR', 'Growth strategy', 'Automation'],
     eraBg: '#efe2d0',
     ground: '#c9b98f',
@@ -307,7 +307,7 @@ export const chapters: Chapter[] = [
         at: [9, 7.8, 1.5, 0.6, 0.75],
         color: '#3c7fc0',
         label: 'SHS Drinks',
-        body: 'Acquired by SHS Drinks, owners of WKD and Shloer, in a seven-figure deal in November 2024.',
+        body: 'Acquired in November 2024 by SHS Drinks: the group behind WKD and Shloer, decades old and with a high-nine-figure turnover.',
         sign: 'SHS',
       },
       { at: [2, 10.2, 3.5, 0.75, 0.04], color: '#7fb4d6', label: 'River' },
