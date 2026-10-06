@@ -131,7 +131,7 @@ export const art: Record<string, WorldArt> = {
     // `role` lines come from Ed's 2026 CV; links lead with the CV's own picks.
     hotspots: [
       {
-        label: 'Where it started',
+        label: 'Where It Started',
         body: 'Summer 2018: three of us built a rickety pop-up bar and toured parties and events, anywhere that would let us pitch up. The Shack was our test market and brand launch, and with a remote team it was the closest thing we had to a head office.',
         role: 'Co-founded the business, then built a lean, in-house sales and operations hub on Zapier automations with Shopify and Typeform, saving five figures a year in software costs versus competitors.',
         links: [{ label: 'Our story', href: 'https://www.shandyshack.co.uk/pages/story' }],
@@ -139,14 +139,14 @@ export const art: Record<string, WorldArt> = {
         x: 18.5, y: 32, w: 17, h: 19,
       },
       {
-        label: 'Building the product',
+        label: 'Building the Product',
         body: 'From test brews to a range: craft beer mixed with soda at 2.5% ABV, in four flavours (elderflower, raspberry, lemon and ginger beer). First in bottles, then in cans.',
         role: 'Took the brand from idea to an award-winning range, spotting a gap in the market for a craft beer shandy.',
         dot: { x: 26, y: 15 },
         x: 14, y: 7, w: 20, h: 20,
       },
       {
-        label: 'National retail',
+        label: 'National Retail',
         body: 'From a debut Sainsbury’s listing in 2020 to Aldi and Midcounties Co-op. Stocked from Edinburgh to Exeter.',
         role: 'Won and managed national grocery accounts including Sainsbury’s and Aldi, growing from 52 supermarket listings in 2021 to 3,400 in 2023. The Aldi lead came through my own LinkedIn.',
         links: [
@@ -157,7 +157,7 @@ export const art: Record<string, WorldArt> = {
         x: 46, y: 26, w: 34, h: 18,
       },
       {
-        label: 'Pubs and bars',
+        label: 'Pubs and Bars',
         body: 'On draught and in cans across 11 City Pub Group pubs in 2021, then on draught in 15 Stonegate pubs, the UK’s largest pub company, in 2025.',
         role: 'Opened up pubs and bars alongside supermarkets, selling into pub groups on draught and in cans.',
         links: [
@@ -176,7 +176,7 @@ export const art: Record<string, WorldArt> = {
         x: 32.5, y: 26, w: 11, h: 15,
       },
       {
-        label: 'Events and partnerships',
+        label: 'Events and Partnerships',
         body: 'Festivals stayed at the heart of the brand: the headline bar at Wychwood Festival, Herne Hill Velodrome, and shandies on the Thames with Uber Boat by Thames Clippers.',
         role: 'Built a community around the brand, on the ground and online: a verified Instagram account with around 10,000 followers.',
         links: [
@@ -189,7 +189,7 @@ export const art: Record<string, WorldArt> = {
         x: 81, y: 30, w: 15, h: 19,
       },
       {
-        label: 'Earned press',
+        label: 'Earned Press',
         body: 'Millions of editorial views in the national media: ITV1 twice, BBC Radio 4, The Guardian, The Times and The Telegraph.',
         role: 'Drove awareness with a PR-led approach rather than paid media.',
         links: [
@@ -204,14 +204,14 @@ export const art: Record<string, WorldArt> = {
         x: 70, y: 8, w: 24, h: 20,
       },
       {
-        label: 'Great Taste award',
+        label: 'Great Taste Award',
         body: 'Great Taste award-winning producer, 2023: independent recognition for the product.',
         links: [{ label: 'Great Taste · Sep 2023', href: `${NEWS}producer-of-great-taste-officially` }],
         dot: { x: 57.6, y: 68 },
         x: 55, y: 65, w: 6, h: 14,
       },
       {
-        label: 'Funding and exit',
+        label: 'Funding and Exit',
         body: 'Equity rounds in 2021 and 2022, then acquired in November 2024 by SHS Drinks: the group behind WKD and Shloer, decades old and with a high-nine-figure turnover.',
         role: 'Raised both rounds and grew revenue by +132% a year, compounded over four consecutive financial years, ahead of the sale.',
         links: [
@@ -390,7 +390,7 @@ export const art: Record<string, WorldArt> = {
         x: 33, y: 62, w: 19, h: 20,
       },
       {
-        label: 'French bank · La Défense',
+        label: 'French Bank · La Défense',
         body: 'A major French bank, La Défense, Paris (2017): a blockchain opportunity assessment.',
         dot: { x: 32, y: 26 },
         x: 27, y: 8, w: 15, h: 22,
@@ -417,13 +417,13 @@ export const art: Record<string, WorldArt> = {
         x: 44, y: 3, w: 24, h: 33,
       },
       {
-        label: 'GSK digital accelerator',
+        label: 'GSK Digital Accelerator',
         body: 'GSK, 2018: helping set up health innovation centres to develop new digital health apps and services.',
         dot: { x: 28, y: 60 },
         x: 14, y: 46, w: 21, h: 22,
       },
       {
-        label: 'GSK brand incubator',
+        label: 'GSK Brand Incubator',
         body: 'Reimagining tail brands in GSK’s consumer health portfolio, and working out how to rebrand and relaunch them.',
         dot: { x: 77, y: 57 },
         x: 66, y: 49, w: 25, h: 24,
@@ -476,7 +476,7 @@ export const art: Record<string, WorldArt> = {
         bl: { x: 71.89, y: 30.18 },
       },
       {
-        label: 'GSK brand incubator',
+        label: 'GSK Brand Incubator',
         logos: [logo.gsk],
         text: 'GSK',
         tl: { x: 85.17, y: 51.43 },
@@ -527,44 +527,28 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Incubated at Octopus Investments',
-        body: 'Zeti was incubated inside Octopus Investments, where I delivered the MVP in 2018. Octopus is also a customer: ZetiOS gives capital providers real-time reporting on how their assets perform.',
+        body: 'Zeti was incubated inside Octopus Investments, a leading UK investment manager with £10bn AUM as of June 2025. I delivered and operated the MVP between 2018 and 2020 through which the first ~£8m of capital was deployed to fund around 155 electric vehicles on a pay-per-mile basis. After incubation, Octopus Investments became and still are a customer of Zeti’s.',
+        links: [
+          { label: 'Fulham Cab Company, Octopus · Oct 2019', href: 'https://octopusgroup.com/newsroom/latest-news/octopus-helps-fulham-cab-company-become-uks-largest-electric-taxi-fleet/' },
+        ],
         dot: { x: 60, y: 15.5 },
         x: 52, y: 12, w: 14, h: 20,
       },
       {
         label: 'ZetiOS',
-        body: 'I designed and delivered ZetiOS, an IoT-enabled SaaS platform for hard-asset finance and operations, setting its principles, OKRs and roadmap from user interviews and data. It grew from a no-code prototype into a proprietary platform.',
+        body: 'Today, Zeti’s main product is ZetiOS, an integrated, cloud-based platform for asset finance and management. Alongside the CTO, I led the team that designed and built it as the next iteration of Zeti Hub, the platform that replaced my original MVP. ZetiOS combines origination, servicing and asset intelligence modules to execute different types of loan and lease contracts for customers in the UK and the US. It boasts integrations to payment processing services (e.g. Stripe), market value data providers (e.g. Glass’s) and multiple telematics providers (e.g. GeoTab, Samsara) to unlock greater efficiency, risk awareness and innovation for customers.',
         dot: { x: 55, y: 36 },
         x: 37, y: 32, w: 26, h: 24,
       },
       {
-        label: 'Financing the energy transition',
-        body: 'Electric buses and trucks, chargers, rooftop solar and battery storage: the assets Zeti finances pay-per-mile, from live telematics data rather than fixed monthly payments.',
+        label: 'Widening Asset Classes',
+        body: 'While Zeti started out specialising in electric vehicle finance and management, we have since expanded to wider asset classes. For example, we help to finance solar arrays through the automatic apportionment of PPA receivables to service debt. We have also developed custom telematics for a hydrogen refueller company, and will soon monitor the impact of electric semi-trucks in California for an NGO responsible for deploying US federal grant funding.',
         dot: { x: 27, y: 19 },
         x: 10, y: 14, w: 38, h: 26,
       },
       {
-        label: 'First fleet deal',
-        body: 'One of our first fleet deals, during incubation in 2019: Octopus financed 60 electric black cabs for Fulham Cab Company pay-per-mile, making it the UK’s largest electric taxi fleet.',
-        role: 'Built the MVP on Google Sheets: from March 2019 to late 2020 it ran all utilisation tracking and billing, from Samsara telematics exports, for 155 electric vehicles worth around £7.9m, all financed pay-per-mile.',
-        links: [
-          { label: 'Fulham Cab Company, Octopus · Oct 2019', href: 'https://octopusgroup.com/newsroom/latest-news/octopus-helps-fulham-cab-company-become-uks-largest-electric-taxi-fleet/' },
-        ],
-        dot: { x: 24, y: 46 },
-        x: 18, y: 40, w: 17, h: 18,
-      },
-      {
-        label: 'Otto Car',
-        body: 'Otto Car, a customer: electric cars for ride-hailing drivers, funded by Paragon on a pay-per-use model built on ZetiOS data.',
-        links: [
-          { label: 'Otto Car’s £1.3m facility, Fleet World · Jan 2026', href: 'https://fleetworld.co.uk/otto-car-lands-extra-1-3m-funding-facility-to-drive-low-emission-vehicle-fleet-growth/' },
-        ],
-        dot: { x: 45, y: 61 },
-        x: 36, y: 58, w: 20, h: 20,
-      },
-      {
-        label: 'Robotaxis',
-        body: 'Robotaxis are coming to London’s roads, and usage-based finance fits a car that never stops working.',
+        label: 'Three-Statement Modelling for Robotaxis',
+        body: 'With the advent of autonomous passenger transport, I have designed and developed a three-statement model feature to track performance at the individual asset level, which allows for a significantly more intricate and precise approach to asset management. This has been co-developed with early market entrants in both the UK and the US.',
         dot: { x: 31, y: 62.5 },
         x: 26, y: 60, w: 10, h: 12,
       },
@@ -578,7 +562,7 @@ export const art: Record<string, WorldArt> = {
         x: 43, y: 7, w: 9, h: 21,
       },
       {
-        label: 'Investors and recognition',
+        label: 'Investors and Recognition',
         body: 'I helped close seed and Series A from Toyota Ventures and HYCAP Group, secured a place on Accenture’s FinTech Innovation Lab, and Zeti made the Startups 100 in 2025 and the Innovation Zero Awards 2026 shortlist.',
         links: [
           { label: 'Toyota Ventures investment, Finance Connect · Nov 2022', href: 'https://finance-connect.com/toyota-ventures-investment-in-zeti-enabling-fleet-electrification-through-pay-as-you-drive-financing/' },
@@ -657,19 +641,19 @@ export const art: Record<string, WorldArt> = {
     hotspots: [
       {
         label: 'Place',
-        body: 'Place, the venture I’m building now: an ambient, AI-powered tour guide. It notices where you are and how fast you’re moving, tells you the story you most want to hear, and answers follow-up questions, with no screen required.',
+        body: 'Alongside my main role with Zeti, I’m working on Place, an agentic, screen-free tour guide that allows travel and tourism organisations to deliver personalised experiences to their customers beyond the usual realm of their service.',
         dot: { x: 65, y: 14 },
         x: 59, y: 4, w: 13, h: 27,
       },
       {
-        label: 'Personal finance app',
-        body: 'My personal finance app: a hosted, three-statement model of my own finances (P&L, cash flow and balance sheet), with open-banking feeds that refresh every few hours, auto-categorised transactions and a monthly review. Built for me, by me, on Cloud Run and Supabase.',
+        label: 'Personal Finance',
+        body: 'I run a personal finance application that visualises an income statement and balance sheet according to Robert Kiyosaki’s principles. This uses a React/Tailwind front-end, a Supabase Postgres database and an integration to TrueLayer for open banking feeds.',
         dot: { x: 76, y: 22 },
         x: 72, y: 15, w: 8, h: 20,
       },
       {
-        label: 'The workshop',
-        body: 'The workshop: small tools and automations I vibecode and ship myself.',
+        label: 'Other Projects',
+        body: 'I love making digital products whenever I get the chance, and aside from Place and my personal finance application, I have also built a wedding website for my wife and me with an RSVP feature, and of course this website, using a mixture of integrations and tools.',
         dot: { x: 87, y: 28 },
         x: 80, y: 19, w: 15, h: 21,
       },
@@ -721,13 +705,13 @@ export const art: Record<string, WorldArt> = {
         x: 10, y: 10, w: 28, h: 35,
       },
       {
-        label: 'Collector’s editions',
+        label: 'Collector’s Editions',
         body: 'Collector’s-edition Blu-ray steelbooks, the crown jewels of the catalogue.',
         dot: { x: 33, y: 31 },
         x: 28, y: 27, w: 9, h: 13,
       },
       {
-        label: 'Games & memorabilia',
+        label: 'Games & Memorabilia',
         body: 'Video games, figures, statues and memorabilia.',
         dot: { x: 41, y: 35 },
         x: 37, y: 30, w: 8, h: 14,
@@ -739,7 +723,7 @@ export const art: Record<string, WorldArt> = {
         x: 45, y: 36, w: 7, h: 10,
       },
       {
-        label: 'Performance marketing',
+        label: 'Performance Marketing',
         body: 'I growth-hacked the Spanish store: optimising organic and paid search and social from Google Analytics data.',
         dot: { x: 69, y: 12 },
         x: 62, y: 7, w: 26, h: 28,
@@ -751,13 +735,13 @@ export const art: Record<string, WorldArt> = {
         x: 33, y: 54, w: 19, h: 20,
       },
       {
-        label: 'Influencers and affiliates',
+        label: 'Influencers and Affiliates',
         body: 'I managed international influencer and affiliate partners.',
         dot: { x: 79, y: 63 },
         x: 66, y: 58, w: 20, h: 18,
       },
       {
-        label: '35% above target',
+        label: '35% Above Target',
         body: 'The result: sales 35% above target.',
         dot: { x: 93, y: 34 },
         x: 89, y: 22, w: 8, h: 18,
@@ -821,19 +805,19 @@ export const art: Record<string, WorldArt> = {
         x: 26, y: 29, w: 16, h: 30,
       },
       {
-        label: 'Pool villa',
+        label: 'Pool Villa',
         body: 'Phone and email sales: I matched guests to the right villa, down to the number of bedrooms and the pool, and every call ended in a shortlist and, with luck, a booking.',
         dot: { x: 15, y: 47 },
         x: 6, y: 39, w: 20, h: 24,
       },
       {
-        label: 'Ibiza villa',
+        label: 'Ibiza Villa',
         body: 'I wrote listings for villas in Ibiza (Cala Conta, Cala Vadella) and Mallorca, and got them online.',
         dot: { x: 16, y: 22 },
         x: 10, y: 18, w: 14, h: 16,
       },
       {
-        label: 'Tuscan farmhouse',
+        label: 'Tuscan Farmhouse',
         body: 'Tuscany too: Greve in Chianti, Arezzo, Camaiore. I translated and edited every listing in English, French and Spanish.',
         dot: { x: 29, y: 15 },
         x: 22, y: 10, w: 14, h: 12,
@@ -930,7 +914,7 @@ export const art: Record<string, WorldArt> = {
         x: 68, y: 55, w: 14, h: 18,
       },
       {
-        label: 'Year abroad',
+        label: 'Year Abroad',
         body: 'The Erasmus year abroad: Paris, then Barcelona. Those placements became my first two jobs.',
         dot: { x: 88, y: 46 },
         x: 80, y: 40, w: 18, h: 20,
@@ -967,7 +951,7 @@ export const art: Record<string, WorldArt> = {
     },
     hotspots: [
       {
-        label: 'Your project here',
+        label: 'Your Project Here',
         body: 'This plot is free. Email edwardstapleton@me.com.',
         dot: { x: 81.5, y: 53 },
         x: 77, y: 34, w: 9, h: 16,
@@ -975,8 +959,8 @@ export const art: Record<string, WorldArt> = {
     ],
     signs: [
       {
-        label: 'Your project here',
-        text: 'Your project here',
+        label: 'Your Project Here',
+        text: 'Your Project Here',
         color: '#2f3441',
         tl: { x: 77.6, y: 39.1 },
         tr: { x: 85.6, y: 35.1 },
