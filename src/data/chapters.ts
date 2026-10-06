@@ -182,8 +182,8 @@ export const chapters: Chapter[] = [
       {
         at: [2.2, 0.3, 1.4, 1.4, 3],
         color: clay.sky,
-        label: 'Paragon Bank',
-        body: 'Paragon Bank, a major customer, runs its vehicle finance on ZetiOS.',
+        label: 'Paragon Bank Partnership',
+        body: 'Since late 2023, I have helped to nurture Zeti’s significant partnership with Paragon Bank, a UK FTSE 250 bank with £1.2bn turnover in 2025. As part of this partnership, we facilitate both pay-per-mile loans to vehicle fleet operators and an energy receivable financing proposition that intelligently fulfils developers’ debt obligations to the bank from their Power Purchase Agreement revenues. I oversee this relationship with a product and operations lens, with a Senior Product Manager driving solution delivery.',
         sign: 'Paragon',
       },
       {
@@ -225,8 +225,8 @@ export const chapters: Chapter[] = [
       {
         at: [3.2, 2.2, 1.2, 1.2, 0.8],
         color: clay.rose,
-        label: 'Investors and Recognition',
-        body: 'I helped close seed and Series A from Toyota Ventures and HYCAP Group, secured a place on Accenture’s FinTech Innovation Lab, and Zeti made the Startups 100 in 2025.',
+        label: 'Fundraising & Programme Success',
+        body: 'I supported pre-seed, seed (e.g. Toyota Ventures) and Series A (e.g. HYCAP Group) fundraising activity by delivering product demos and completing detailed due diligence requests. Furthermore, at pre-seed stage after spinning out from Octopus Investments, I was pivotal in securing Zeti a place on the prestigious Accenture FinTech Innovation Lab.',
         links: [
           { label: 'Toyota Ventures investment, Finance Connect · Nov 2022', href: 'https://finance-connect.com/toyota-ventures-investment-in-zeti-enabling-fleet-electrification-through-pay-as-you-drive-financing/' },
           { label: 'HYCAP Group investment, UKTN · Jun 2024', href: 'https://www.uktech.news/mobility/jcb-heir-investment-firm-zeti-20240627' },

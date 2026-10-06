@@ -520,12 +520,6 @@ export const art: Record<string, WorldArt> = {
     },
     hotspots: [
       {
-        label: 'Zeti',
-        body: 'Product & Operations Director at Zeti, a Startups 100 FinTech that finances zero-emission fleets pay-per-mile from live vehicle data. I’ve been part of it since 2018: fractional after delivering the MVP, then full-time from 2025.',
-        dot: { x: 78.5, y: 30 },
-        x: 66, y: 22, w: 21, h: 34,
-      },
-      {
         label: 'Incubated at Octopus Investments',
         body: 'Zeti was incubated inside Octopus Investments, a leading UK investment manager with £10bn AUM as of June 2025. I delivered and operated the MVP between 2018 and 2020 through which the first ~£8m of capital was deployed to fund around 155 electric vehicles on a pay-per-mile basis. After incubation, Octopus Investments became and still are a customer of Zeti’s.',
         links: [
@@ -553,8 +547,8 @@ export const art: Record<string, WorldArt> = {
         x: 26, y: 60, w: 10, h: 12,
       },
       {
-        label: 'Paragon Bank',
-        body: 'Paragon Bank, a major customer, runs its asset finance on ZetiOS. In 2026 it made Zeti its fintech partner, with real-time emissions and asset-health data across its portfolio.',
+        label: 'Paragon Bank Partnership',
+        body: 'Since late 2023, I have helped to nurture Zeti’s significant partnership with Paragon Bank, a UK FTSE 250 bank with £1.2bn turnover in 2025. As part of this partnership, we facilitate both pay-per-mile loans to vehicle fleet operators and an energy receivable financing proposition that intelligently fulfils developers’ debt obligations to the bank from their Power Purchase Agreement revenues. I oversee this relationship with a product and operations lens, with a Senior Product Manager driving solution delivery.',
         links: [
           { label: 'Paragon expands partnership, Development Finance Today · Feb 2026', href: 'https://developmentfinancetoday.co.uk/paragon-expands-green-partnership-with-zeti' },
         ],
@@ -562,8 +556,8 @@ export const art: Record<string, WorldArt> = {
         x: 43, y: 7, w: 9, h: 21,
       },
       {
-        label: 'Investors and Recognition',
-        body: 'I helped close seed and Series A from Toyota Ventures and HYCAP Group, secured a place on Accenture’s FinTech Innovation Lab, and Zeti made the Startups 100 in 2025 and the Innovation Zero Awards 2026 shortlist.',
+        label: 'Fundraising & Programme Success',
+        body: 'I supported pre-seed, seed (e.g. Toyota Ventures) and Series A (e.g. HYCAP Group) fundraising activity by delivering product demos and completing detailed due diligence requests. Furthermore, at pre-seed stage after spinning out from Octopus Investments, I was pivotal in securing Zeti a place on the prestigious Accenture FinTech Innovation Lab.',
         links: [
           { label: 'Toyota Ventures investment, Finance Connect · Nov 2022', href: 'https://finance-connect.com/toyota-ventures-investment-in-zeti-enabling-fleet-electrification-through-pay-as-you-drive-financing/' },
           { label: 'HYCAP Group investment, UKTN · Jun 2024', href: 'https://www.uktech.news/mobility/jcb-heir-investment-firm-zeti-20240627' },
@@ -573,12 +567,6 @@ export const art: Record<string, WorldArt> = {
         ],
         dot: { x: 70, y: 20 },
         x: 66, y: 12, w: 10, h: 19,
-      },
-      {
-        label: 'Demos in the UK and US',
-        body: 'I lead product demos to prospects, customers and equity and debt investors in the UK and US, and keep evolving how our product managers and engineers work with AI tooling.',
-        dot: { x: 64, y: 55 },
-        x: 56, y: 52, w: 16, h: 17,
       },
     ],
     signs: [
