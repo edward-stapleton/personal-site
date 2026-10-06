@@ -49,6 +49,7 @@ export function initTimeline() {
   const trails = root.querySelector<SVGSVGElement>('.tl__trails')!;
   const railItems = [...document.querySelectorAll<HTMLAnchorElement>('.rail__item')];
   const railFill = document.querySelector<HTMLElement>('.rail__fill');
+  const railSteps = [...document.querySelectorAll<HTMLButtonElement>('.rail__step')];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
   const worlds: World[] = [...track.querySelectorAll<HTMLElement>('.chapter')].map((el) => ({
@@ -199,6 +200,14 @@ export function initTimeline() {
         .find((el) => el.dataset.go === worlds[nearest].id)
         ?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
     }
+    const here = Math.round(f);
+    for (const btn of railSteps) {
+      const to = here + Number(btn.dataset.step);
+      btn.disabled = to < 0 || to > stops.length - 1;
+      const w = stops[to] && worlds[stops[to].world];
+      const item = w && railItems.find((el) => el.dataset.go === w.id);
+      if (item) btn.setAttribute('aria-label', `Go to ${item.textContent!.replace(/\s+/g, ' ').trim()}`);
+    }
     if (railFill) railFill.style.transform = `scaleX(${f / Math.max(1, stops.length - 1)})`;
     root!.classList.toggle('tl--moved', f > 0.05);
     // Once the visitor has moved, the rail's "go this way" nudge stops for good.
@@ -306,6 +315,10 @@ export function initTimeline() {
     if (!a) return;
     if (goToWorld(a.getAttribute('href')!.slice(1))) e.preventDefault();
   });
+
+  for (const btn of railSteps) {
+    btn.addEventListener('click', () => goToStop(Math.round(progress()) + Number(btn.dataset.step)));
+  }
 
   addEventListener('hashchange', () => goToWorld(location.hash.slice(1)));
 
