@@ -516,7 +516,8 @@ const ZOOM_FILL = 0.8;
 
 function initHotspotZoom(dialog: HTMLDialogElement) {
   const mobile = matchMedia('(max-width: 640px), (pointer: coarse)');
-  const root = document.getElementById('timeline');
+  // Flagged on <html> so the fixed header, outside the timeline, can follow.
+  const root = document.documentElement;
   let scene: HTMLElement | null = null;
 
   function reset() {
@@ -527,12 +528,12 @@ function initHotspotZoom(dialog: HTMLDialogElement) {
       scene.querySelector('.hotspot.is-active')?.classList.remove('is-active');
     }
     scene = null;
-    root?.classList.remove('tl--zoomed');
+    root.classList.remove('tl--zoomed');
   }
 
   function to(btn: HTMLButtonElement) {
     const next = btn.closest<HTMLElement>('.chapter__scene');
-    if (!next || !root || !mobile.matches) return reset();
+    if (!next || !mobile.matches) return reset();
     if (scene !== next) reset();
     scene = next;
     scene.querySelector('.hotspot.is-active')?.classList.remove('is-active');

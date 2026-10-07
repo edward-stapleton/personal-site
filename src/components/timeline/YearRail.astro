@@ -66,6 +66,16 @@ const linkedin = contact.find((c) => c.label === 'LinkedIn')!;
     justify-content: space-between;
     padding: var(--s-3) var(--s-5);
     pointer-events: none;
+    transition: background var(--dur-std), box-shadow var(--dur-std);
+  }
+
+  /* A zoomed-in scene runs up behind the header, so give it a backing. The
+     scene stays light in dark mode, and so does this. */
+  :global(.js.tl--zoomed) .tl-header {
+    background: rgba(250, 248, 243, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 1px 0 rgba(40, 30, 20, 0.08);
   }
 
   .tl-header > * {
