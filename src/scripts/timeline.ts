@@ -447,6 +447,7 @@ function initHotspots() {
   const role = dialog.querySelector<HTMLElement>('[data-panel-role]')!;
   const links = dialog.querySelector<HTMLUListElement>('[data-panel-links]')!;
   let current: HTMLButtonElement | null = null;
+  const zoom = initHotspotZoom(dialog);
 
   function show(btn: HTMLButtonElement) {
     current = btn;
@@ -472,6 +473,7 @@ function initHotspots() {
     links.hidden = items.length === 0;
     links.scrollTop = 0;
     if (!dialog!.open) dialog!.showModal();
+    zoom.to(btn);
   }
 
   // Step through a world's hotspots in story order, wrapping at either end.
@@ -496,6 +498,72 @@ function initHotspots() {
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();
   });
+  dialog.addEventListener('close', () => {
+    current = null;
+    zoom.reset();
+  });
+  addEventListener('resize', () => {
+    if (current) zoom.to(current);
+  });
+}
+
+// On phones the panel covers much of the illustration, so opening a hotspot
+// zooms its world in on that spot, centred in the space left above the panel
+// (or beside it, in landscape). Closing the panel zooms back out.
+const ZOOM_MAX = 2.6;
+/** Share of the free space the hotspot's box may fill once zoomed. */
+const ZOOM_FILL = 0.8;
+
+function initHotspotZoom(dialog: HTMLDialogElement) {
+  const mobile = matchMedia('(max-width: 640px), (pointer: coarse)');
+  const root = document.getElementById('timeline');
+  let scene: HTMLElement | null = null;
+
+  function reset() {
+    if (scene) {
+      scene.style.removeProperty('transform');
+      scene.style.removeProperty('--zoom');
+      scene.closest('.chapter')!.classList.remove('chapter--zoomed');
+      scene.querySelector('.hotspot.is-active')?.classList.remove('is-active');
+    }
+    scene = null;
+    root?.classList.remove('tl--zoomed');
+  }
+
+  function to(btn: HTMLButtonElement) {
+    const next = btn.closest<HTMLElement>('.chapter__scene');
+    if (!next || !root || !mobile.matches) return reset();
+    if (scene !== next) reset();
+    scene = next;
+    scene.querySelector('.hotspot.is-active')?.classList.remove('is-active');
+    btn.classList.add('is-active');
+
+    // The scene's resting place on screen: its chapter isn't zoomed, only
+    // panned with the track, so this holds mid-transition too.
+    const chapter = scene.closest<HTMLElement>('.chapter')!;
+    const box = chapter.getBoundingClientRect();
+    const left = box.left + scene.offsetLeft;
+    const top = box.top + scene.offsetTop;
+
+    const header = document.querySelector<HTMLElement>('.tl-header')?.offsetHeight ?? 56;
+    const rail = document.querySelector<HTMLElement>('.rail')?.offsetHeight ?? 56;
+    const sheet = dialog.offsetWidth >= innerWidth - 1;
+    const free = sheet
+      ? { x: 0, y: header, w: innerWidth, h: innerHeight - dialog.offsetHeight - header }
+      : { x: 0, y: header, w: dialog.getBoundingClientRect().left, h: innerHeight - header - rail };
+    if (free.w <= 0 || free.h <= 0) return reset();
+
+    const [bx, by, bw, bh] = [btn.offsetLeft, btn.offsetTop, btn.offsetWidth, btn.offsetHeight];
+    const s = clamp(Math.min((free.w * ZOOM_FILL) / bw, (free.h * ZOOM_FILL) / bh), 1, ZOOM_MAX);
+    const tx = free.x + free.w / 2 - left - s * (bx + bw / 2);
+    const ty = free.y + free.h / 2 - top - s * (by + bh / 2);
+    scene.style.setProperty('--zoom', s.toFixed(3));
+    scene.style.transform = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s.toFixed(3)})`;
+    chapter.classList.add('chapter--zoomed');
+    root.classList.add('tl--zoomed');
+  }
+
+  return { to, reset };
 }
 
 /** Where a world's exit route crosses EXIT_X, and the route points before it. */

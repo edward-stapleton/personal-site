@@ -28,6 +28,12 @@
     z-index: 3;
     pointer-events: none;
     will-change: transform;
+    transition: opacity var(--dur-std);
+  }
+
+  /* Ed steps out of shot while a world is zoomed in on a hotspot. */
+  :global(.tl--zoomed) .walker {
+    opacity: 0;
   }
 
   .walker__sprite {
