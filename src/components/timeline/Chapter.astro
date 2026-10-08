@@ -514,6 +514,11 @@ const headingId = `${chapter.id}-title`;
     opacity: 0.45;
   }
 
+  /* The panel below already names the hotspot, so no label pill while zoomed. */
+  .chapter--zoomed .hotspot__label {
+    display: none;
+  }
+
   .hotspot__label {
     position: absolute;
     left: var(--dot-x, 50%);
