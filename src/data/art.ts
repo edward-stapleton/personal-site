@@ -128,27 +128,23 @@ export const art: Record<string, WorldArt> = {
       ],
     },
     // In story order: the dots are numbered and the panel steps through them.
-    // `role` lines come from Ed's 2026 CV; links lead with the CV's own picks.
     hotspots: [
       {
         label: 'Where It Started',
-        body: 'Summer 2018: three of us built a rickety pop-up bar and toured parties and events, anywhere that would let us pitch up. The Shack was our test market and brand launch, and with a remote team it was the closest thing we had to a head office.',
-        role: 'Co-founded the business, then built a lean, in-house sales and operations hub on Zapier automations with Shopify and Typeform, saving five figures a year in software costs versus competitors.',
+        body: 'In summer 2018, three of us built a rickety pop-up bar and toured parties and events. The Shack was our test market and brand launch. With a remote team, it was also the nearest thing we had to a head office. Behind it I built a lean sales and operations hub on Zapier, Shopify and Typeform, saving five figures a year in software costs compared with competitors.',
         links: [{ label: 'Our story', href: 'https://www.shandyshack.co.uk/pages/story' }],
         dot: { x: 29.5, y: 34 },
         x: 18.5, y: 32, w: 17, h: 19,
       },
       {
         label: 'Building the Product',
-        body: 'From test brews to a range: craft beer mixed with soda at 2.5% ABV, in four flavours (elderflower, raspberry, lemon and ginger beer). First in bottles, then in cans.',
-        role: 'Took the brand from idea to an award-winning range, spotting a gap in the market for a craft beer shandy.',
+        body: 'I spotted a gap for a craft beer shandy and took it from test brews to an award-winning range in four flavours (elderflower, raspberry, lemon and ginger beer), first in bottles and then in cans.',
         dot: { x: 26, y: 15 },
         x: 14, y: 7, w: 20, h: 20,
       },
       {
         label: 'National Retail',
-        body: 'From a debut Sainsbury’s listing in 2020 to Aldi and Midcounties Co-op. Stocked from Edinburgh to Exeter.',
-        role: 'Won and managed national grocery accounts including Sainsbury’s and Aldi, growing from 52 supermarket listings in 2021 to 3,400 in 2023. The Aldi lead came through my own LinkedIn.',
+        body: 'I won and managed our national grocery accounts, from a debut Sainsbury’s listing in 2020 to Aldi (a lead that came through my own LinkedIn) and Midcounties Co-op. We grew from 52 listings in 2021 to 3,400 in 2023, stocked from Edinburgh to Exeter.',
         links: [
           { label: 'Sainsbury’s debut, Oxford Mail · Nov 2020', href: `${NEWS}shandy-shack-to-sell-ipa-shandy-at-sainsbury-s` },
           { label: 'Midcounties Co-op · Nov 2023', href: `${NEWS}were-now-co-operating-with-midcounties-co-operative` },
@@ -158,27 +154,23 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Pubs and Bars',
-        body: 'On draught and in cans across 11 City Pub Group pubs in 2021, then on draught in 15 Stonegate pubs, the UK’s largest pub company, in 2025.',
-        role: 'Opened up pubs and bars alongside supermarkets, selling into pub groups on draught and in cans.',
+        body: 'Alongside supermarkets, I sold into pub groups, starting with draught and cans across 11 City Pub Group pubs in 2021.',
         links: [
           { label: 'City Pub Group, 11 pubs · Jul 2021', href: `${NEWS}shandies-pouring-across-city-pub-group` },
-          { label: 'Stonegate, 15 pubs · Aug 2025', href: `${NEWS}stonegate-just-got-shackd` },
         ],
         dot: { x: 64, y: 47 },
         x: 57, y: 42, w: 17, h: 20,
       },
       {
         label: 'Collaborations',
-        body: 'Our first collaboration range, with Diddly Squat Farm Shop, in April 2022.',
-        role: 'Led brand and growth strategy, including partnerships that put the brand in front of new audiences.',
+        body: 'Partnerships put the brand in front of new audiences, starting with our first collaboration range, with Diddly Squat Farm Shop, in April 2022.',
         links: [{ label: 'Diddly Squat Farm Shop · Apr 2022', href: `${NEWS}our-first-collab-shandy-range-diddly-squat-farm-shop` }],
         dot: { x: 39, y: 29 },
         x: 32.5, y: 26, w: 11, h: 15,
       },
       {
         label: 'Events and Partnerships',
-        body: 'Festivals stayed at the heart of the brand: the headline bar at Wychwood Festival, Herne Hill Velodrome, and shandies on the Thames with Uber Boat by Thames Clippers.',
-        role: 'Built a community around the brand, on the ground and online: a verified Instagram account with around 10,000 followers.',
+        body: 'Festivals stayed at the heart of the brand: the headline bar at Wychwood Festival, Herne Hill Velodrome, and shandies on the Thames with Uber Boat by Thames Clippers. Online, we built a verified Instagram account with around 10,000 followers.',
         links: [
           { label: 'Instagram, @shandy.shack', href: 'https://www.instagram.com/shandy.shack/' },
           { label: 'Wychwood Festival · Jun 2023', href: `${NEWS}wychwood-festival-shandies` },
@@ -190,14 +182,14 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Earned Press',
-        body: 'Millions of editorial views in the national media: ITV1 twice, BBC Radio 4, The Guardian, The Times and The Telegraph.',
-        role: 'Drove awareness with a PR-led approach rather than paid media.',
+        body: 'We grew awareness through PR rather than paid media, earning millions of editorial views: ITV1 twice, BBC Radio 4, The Guardian, The Times, The Telegraph and the Evening Standard.',
         links: [
           { label: 'ITV1, This Morning · Jul 2023', href: `${NEWS}mid-strength-takes-on-this-morning` },
           { label: 'BBC Radio 4, You & Yours · May 2021', href: `${NEWS}discussing-the-shandy-revival-with-you-yours-on-bbc-radio-4` },
           { label: 'The Guardian · Apr 2021', href: `${NEWS}shandy-poised-for-a-revival-says-the-guardian` },
           { label: 'The Times · Aug 2023', href: `${NEWS}its-shandy-oclock-in-the-times` },
           { label: 'The Telegraph · Feb 2024', href: `${NEWS}proper-shandy-telegraph-selects-shack-as-real-deal` },
+          { label: 'Evening Standard · May 2023', href: 'https://www.standard.co.uk/lifestyle/what-to-drink-this-summer-cocktail-trends-london-b1080298.html' },
           { label: 'All news and press', href: NEWS },
         ],
         dot: { x: 77.5, y: 23 },
@@ -205,15 +197,14 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Great Taste Award',
-        body: 'Great Taste award-winning producer, 2023: independent recognition for the product.',
+        body: 'In 2023 we became a Great Taste award-winning producer, independent recognition for the product.',
         links: [{ label: 'Great Taste · Sep 2023', href: `${NEWS}producer-of-great-taste-officially` }],
         dot: { x: 57.6, y: 68 },
         x: 55, y: 65, w: 6, h: 14,
       },
       {
         label: 'Funding and Exit',
-        body: 'Equity rounds in 2021 and 2022, then acquired in November 2024 by SHS Drinks: the group behind WKD and Shloer, decades old and with a high-nine-figure turnover.',
-        role: 'Raised both rounds and grew revenue by +132% a year, compounded over four consecutive financial years, ahead of the sale.',
+        body: 'I raised equity rounds in 2021 and 2022, then grew revenue by +132% a year, compounded over four financial years. In November 2024 we sold to SHS Drinks, the decades-old group behind WKD and Shloer.',
         links: [
           { label: 'Six-figure raise, The Grocer · 2021', href: `${GROCER}craft-beer-startup-shandy-shack-raises-six-figure-investment/653278.article` },
           { label: 'Second round, The Grocer · 2022', href: `${GROCER}shandy-shack-closes-second-funding-round-as-revenues-accelerate-towards-1m/668044.article` },

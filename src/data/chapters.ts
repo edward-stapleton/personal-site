@@ -246,7 +246,7 @@ export const chapters: Chapter[] = [
     year: 2018,
     location: 'London (remote)',
     summary:
-      'An award-winning craft shandy I built from idea to acquisition: two equity rounds, revenue growth of +132% a year over four years, and from 52 to 3,400 supermarket listings, before selling in November 2024 to SHS Drinks, the decades-old, high-nine-figure-turnover group behind WKD and Shloer.',
+      'Shandy Shack is an award-winning craft shandy brand: craft beer mixed with soda at 2.5% ABV. I co-founded it in 2018 and, as CEO, took it from a pop-up bar to national shelves: two equity rounds, revenue growth of +132% a year over four years, and from 52 to 3,400 supermarket listings. In November 2024 it was sold to SHS Drinks, the group behind WKD and Shloer.',
     skills: ['Venture creation', 'Key account management', 'Fundraising', 'Brand and PR', 'Growth strategy', 'Automation'],
     eraBg: '#efe2d0',
     ground: '#c9b98f',
@@ -286,9 +286,8 @@ export const chapters: Chapter[] = [
       {
         at: [7, 6, 1.8, 1.4, 1.2],
         color: clay.brick,
-        label: 'Stonegate pub',
-        body: 'Stonegate, the UK’s largest pub company, got Shack’d in August 2025.',
-        sign: 'Stonegate',
+        label: 'Pub',
+        body: 'On draught and in cans across 11 City Pub Group pubs in 2021.',
       },
       {
         at: [8.6, 3.6, 1.8, 1.4, 0.6],
@@ -302,13 +301,13 @@ export const chapters: Chapter[] = [
         at: [4, 9.4, 0.5, 0.5, 0.8],
         color: clay.mustard,
         label: 'Great Taste',
-        body: 'Great Taste award-winning producer, 2023.',
+        body: 'In 2023 we became a Great Taste award-winning producer.',
       },
       {
         at: [9, 7.8, 1.5, 0.6, 0.75],
         color: '#3c7fc0',
         label: 'SHS Drinks',
-        body: 'Acquired in November 2024 by SHS Drinks: the group behind WKD and Shloer, decades old and with a high-nine-figure turnover.',
+        body: 'Sold to SHS Drinks in November 2024.',
         sign: 'SHS',
       },
       { at: [2, 10.2, 3.5, 0.75, 0.04], color: '#7fb4d6', label: 'River' },
