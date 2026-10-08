@@ -61,6 +61,9 @@ export type Sign = {
   fit?: number;
   /** Overall size of the logo or wordmark on the panel (default 1). */
   size?: number;
+  /** Outline of anything standing in front of the panel, in scene %, so the
+   *  sign is cut away behind it. */
+  infront?: P[];
 };
 
 /** `scale` evens out optical size between wordmarks of different weights. */
@@ -92,6 +95,7 @@ const logo = {
   thisMorning: { src: '/logos/this-morning.webp', ratio: 2.81 },
   uberBoat: { src: '/logos/uber-boat.webp', ratio: 2.81 },
   wychwood: { src: '/logos/wychwood.webp', ratio: 10.53 },
+  zeti: { src: '/logos/zeti.webp', ratio: 3.16 },
 } satisfies Record<string, Logo>;
 
 export type WorldArt = {
@@ -287,8 +291,8 @@ export const art: Record<string, WorldArt> = {
         logos: [logo.herneHill],
         tone: 'color',
         text: 'Herne Hill Velodrome',
-        fit: 0.58,
-        // Follows the wall’s slope, sitting a touch below the rail.
+        fit: 0.4,
+        // Follows the wall’s slope; kept small so the wall's curve doesn't show it up.
         tl: { x: 86.72, y: 52.61 },
         tr: { x: 93.3, y: 49.76 },
         bl: { x: 86.72, y: 55.99 },
@@ -585,6 +589,23 @@ export const art: Record<string, WorldArt> = {
         tl: { x: 67.94, y: 22.64 },
         tr: { x: 71.41, y: 24.55 },
         bl: { x: 67.94, y: 25.82 },
+      },
+      {
+        label: 'Zeti',
+        logos: [logo.zeti],
+        tone: 'color',
+        text: 'ZETI',
+        fit: 0.4,
+        // The demo stage screen, with the speaker standing in front of it.
+        tl: { x: 61.41, y: 54.52 },
+        tr: { x: 66.57, y: 56.35 },
+        bl: { x: 61.41, y: 59.73 },
+        infront: [
+          { x: 63.88, y: 58.61 }, { x: 64.04, y: 58.42 }, { x: 64.22, y: 58.58 }, { x: 64.25, y: 58.95 },
+          { x: 64.19, y: 59.27 }, { x: 64.44, y: 59.51 }, { x: 64.52, y: 60.47 }, { x: 64.47, y: 61.26 },
+          { x: 64.41, y: 63.55 }, { x: 63.67, y: 63.55 }, { x: 63.64, y: 61.13 }, { x: 63.4, y: 60.47 },
+          { x: 63.35, y: 60.2 }, { x: 63.58, y: 59.67 }, { x: 63.86, y: 59.35 }, { x: 63.85, y: 58.95 },
+        ],
       },
     ],
   },

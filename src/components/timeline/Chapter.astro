@@ -53,7 +53,8 @@ const signs = (world?.signs ?? []).map((sign) => {
     const [w, hh] = [l.ratio * bh * k, bh * k];
     return { href: l.src, x: 50 - w / 2, y: (h - hh) / 2, width: w, height: hh };
   });
-  return { ...sign, h, size, placed, transform: `matrix(${m.map((n) => n.toFixed(4)).join(' ')})` };
+  const infront = sign.infront?.map((q) => { const v = px(q); return `${v.x.toFixed(1)},${v.y.toFixed(1)}`; }).join(' ');
+  return { ...sign, h, size, placed, infront, transform: `matrix(${m.map((n) => n.toFixed(4)).join(' ')})` };
 });
 const inkFilter = `${chapter.id}-logo-ink`;
 const whiteFilter = `${chapter.id}-logo-white`;
@@ -95,43 +96,51 @@ const headingId = `${chapter.id}-title`;
                 <filter id={inkFilter} color-interpolation-filters="sRGB">
                   <feColorMatrix values="0 0 0 0 0.11  0 0 0 0 0.11  0 0 0 0 0.13  0 0 0 0.92 0" />
                 </filter>
+                {signs.map((sign, i) => sign.infront && (
+                  <mask id={`${chapter.id}-sign-${i}`} maskUnits="userSpaceOnUse" x="0" y="0" width={SCENE_W} height={SCENE_H}>
+                    <rect width={SCENE_W} height={SCENE_H} fill="#fff" />
+                    <polygon points={sign.infront} fill="#000" />
+                  </mask>
+                ))}
               </defs>
-              {signs.map((sign) => (
-                <g transform={sign.transform}>
-                  {sign.placed.length > 0 ? (
-                    <g class="sign__logos">
-                      {sign.placed.map((l, i) => (
-                        <g class:list={['sign__logo', { 'is-on': i === 0 }]}>
-                          <image
-                            href={l.href}
-                            x={l.x.toFixed(2)}
-                            y={l.y.toFixed(2)}
-                            width={l.width.toFixed(2)}
-                            height={l.height.toFixed(2)}
-                            preserveAspectRatio="xMidYMid meet"
-                            filter={
-                              sign.tone === 'color'
-                                ? undefined
-                                : `url(#${sign.tone === 'ink' ? inkFilter : whiteFilter})`
-                            }
-                          />
-                        </g>
-                      ))}
-                    </g>
-                  ) : (
-                    <text
-                      x="50"
-                      y={sign.h / 2}
-                      text-anchor="middle"
-                      dominant-baseline="middle"
-                      font-family={sign.font === 'serif' ? 'Georgia, Times New Roman, serif' : 'Geist, sans-serif'}
-                      font-weight={sign.font === 'serif' ? '700' : '600'}
-                      font-size={sign.size.toFixed(1)}
-                      fill={sign.color ?? '#fff'}
-                    >
-                      {sign.text}
-                    </text>
-                  )}
+              {signs.map((sign, i) => (
+                <g mask={sign.infront ? `url(#${chapter.id}-sign-${i})` : undefined}>
+                  <g transform={sign.transform}>
+                    {sign.placed.length > 0 ? (
+                      <g class="sign__logos">
+                        {sign.placed.map((l, i) => (
+                          <g class:list={['sign__logo', { 'is-on': i === 0 }]}>
+                            <image
+                              href={l.href}
+                              x={l.x.toFixed(2)}
+                              y={l.y.toFixed(2)}
+                              width={l.width.toFixed(2)}
+                              height={l.height.toFixed(2)}
+                              preserveAspectRatio="xMidYMid meet"
+                              filter={
+                                sign.tone === 'color'
+                                  ? undefined
+                                  : `url(#${sign.tone === 'ink' ? inkFilter : whiteFilter})`
+                              }
+                            />
+                          </g>
+                        ))}
+                      </g>
+                    ) : (
+                      <text
+                        x="50"
+                        y={sign.h / 2}
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        font-family={sign.font === 'serif' ? 'Georgia, Times New Roman, serif' : 'Geist, sans-serif'}
+                        font-weight={sign.font === 'serif' ? '700' : '600'}
+                        font-size={sign.size.toFixed(1)}
+                        fill={sign.color ?? '#fff'}
+                      >
+                        {sign.text}
+                      </text>
+                    )}
+                  </g>
                 </g>
               ))}
             </svg>
