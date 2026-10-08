@@ -380,9 +380,35 @@ const headingId = `${chapter.id}-title`;
       border-width: 1px 0 0;
       border-radius: var(--r-lg) var(--r-lg) 0 0;
       padding: var(--s-4) var(--s-5) var(--s-3);
-      max-height: calc(var(--vh) - var(--scene-top) - var(--scene-h) - var(--rail-h) + var(--s-5));
+      /* Keep to the sheet height the scene is centred above, so the artwork
+         stays clear on landing; longer summaries scroll inside. */
+      max-height: min(
+        var(--sheet-h),
+        calc(var(--vh) - var(--scene-top) - var(--scene-h) - var(--rail-h) + var(--s-5))
+      );
       overflow: auto;
     }
+
+    /* Fade the bottom edge while there's more summary to scroll to. */
+    @supports (animation-timeline: scroll()) {
+      :global(.js) .caption {
+        mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade, 0px)), transparent);
+        animation: caption-fade linear both;
+        animation-timeline: scroll(self);
+      }
+    }
+  }
+
+  @property --fade {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 0px;
+  }
+
+  @keyframes caption-fade {
+    from { --fade: 28px; }
+    95% { --fade: 28px; }
+    to { --fade: 0px; }
   }
 
   /* ---- Caption type ----------------------------------------------------- */
@@ -461,12 +487,6 @@ const headingId = `${chapter.id}-title`;
   }
 
   @media (max-aspect-ratio: 4/3) {
-    .caption__summary {
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
     .caption__quote,
     .caption__skills {
       display: none;
