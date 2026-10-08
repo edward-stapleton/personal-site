@@ -287,10 +287,11 @@ export const art: Record<string, WorldArt> = {
         logos: [logo.herneHill],
         tone: 'color',
         text: 'Herne Hill Velodrome',
-        fit: 0.75,
-        tl: { x: 86.72, y: 52.4 },
-        tr: { x: 93.3, y: 50.2 },
-        bl: { x: 86.72, y: 55.5 },
+        fit: 0.58,
+        // Follows the wall’s slope, sitting a touch below the rail.
+        tl: { x: 86.72, y: 52.61 },
+        tr: { x: 93.3, y: 49.76 },
+        bl: { x: 86.72, y: 55.99 },
       },
       {
         label: 'Uber Boat by Thames Clippers',
