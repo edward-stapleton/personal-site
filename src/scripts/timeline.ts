@@ -26,10 +26,10 @@ type Stop = { world: number; cam: number };
 
 /** Seconds for one page-to-page move: slower when Ed walks to the next world,
  *  so he can be followed, and quicker for a pan within one world. */
-const WALK_SECONDS = 2.6;
-const PAN_SECONDS = 1.3;
+const WALK_SECONDS = 1.73;
+const PAN_SECONDS = 0.87;
 /** Longest a scroll across several pages may take. */
-const JUMP_SECONDS = 2.5;
+const JUMP_SECONDS = 1.67;
 /** Fade out/in, in ms, for a rail jump of more than one world. */
 const FADE_MS = 180;
 
@@ -134,7 +134,7 @@ export function initTimeline() {
 
   // The native snap glide is quick (~300ms). The scene instead follows the
   // scroll position at walking pace, so each transition reads as Ed walking
-  // over; big rail jumps speed up to cover the distance in ~2.5s.
+  // over; big rail jumps speed up to cover the distance in ~1.7s.
   let shown = 0;
   let lastTime = 0;
 
