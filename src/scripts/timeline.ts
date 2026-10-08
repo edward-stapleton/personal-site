@@ -441,7 +441,6 @@ function initHotspots() {
   if (!dialog) return;
   const title = dialog.querySelector<HTMLElement>('[data-panel-title]')!;
   const body = dialog.querySelector<HTMLElement>('[data-panel-body]')!;
-  const chapter = dialog.querySelector<HTMLElement>('[data-panel-chapter]')!;
   const count = dialog.querySelector<HTMLElement>('[data-panel-count]')!;
   const roleWrap = dialog.querySelector<HTMLElement>('[data-panel-role-wrap]')!;
   const role = dialog.querySelector<HTMLElement>('[data-panel-role]')!;
@@ -453,7 +452,6 @@ function initHotspots() {
     current = btn;
     title.textContent = btn.dataset.label ?? '';
     body.textContent = btn.dataset.body ?? '';
-    chapter.textContent = btn.dataset.chapter ?? '';
     count.textContent = `${btn.dataset.index} of ${btn.dataset.total}`;
     role.textContent = btn.dataset.role ?? '';
     roleWrap.hidden = !btn.dataset.role;
