@@ -140,17 +140,17 @@ export const art: Record<string, WorldArt> = {
         x: 18.5, y: 32, w: 17, h: 19,
       },
       {
-        label: 'Building the Product',
-        body: 'I spotted a gap for a craft beer shandy and took it from test brews to an award-winning range in four flavours (elderflower, raspberry, lemon and ginger beer), first in bottles and then in cans.',
+        label: 'Asset-Light, Resource-Light Product Innovation',
+        body: 'Having taught ourselves how to brew over winter 2018, we assembled an effective team of contractors and partners to help us polish and scale our innovative range of shandies without bloating our payroll or burdening ourselves with expensive brewing assets. This culminated in achieving stable, efficient single-site production with healthy gross margin across both branded and private label work, with production led by our COO.',
         dot: { x: 26, y: 15 },
         x: 14, y: 7, w: 20, h: 20,
       },
       {
-        label: 'National Retail',
-        body: 'I won and managed our national grocery accounts, from a debut Sainsbury’s listing in 2020 to Aldi (a lead that came through my own LinkedIn) and Midcounties Co-op. We grew from 52 listings in 2021 to 3,400 in 2023, stocked from Edinburgh to Exeter.',
+        label: 'Winning & Scaling National Retail Distribution',
+        body: 'I won and managed a portfolio of national grocery accounts within an exceptionally competitive landscape of vying incumbent and challenger beer brands. This started from a trial in 52 Sainsbury’s stores in late 2020 and grew to a total of 3,400 supermarket distribution points in 2023, including consecutive seasonal listings with Aldi (a lead that came through my own LinkedIn).',
         links: [
           { label: 'Sainsbury’s debut, Oxford Mail · Nov 2020', href: `${NEWS}shandy-shack-to-sell-ipa-shandy-at-sainsbury-s` },
-          { label: 'Midcounties Co-op · Nov 2023', href: `${NEWS}were-now-co-operating-with-midcounties-co-operative` },
+          { label: 'Aldi’s shandy range, Facebook · 2023', href: 'https://www.facebook.com/AldiUK/photos/well-be-sipping-shandys-all-spring-and-summer-long-with-our-new-range-%EF%B8%8F-head-in-/6304684569592292/' },
         ],
         dot: { x: 54, y: 31 },
         x: 46, y: 26, w: 34, h: 18,
