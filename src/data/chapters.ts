@@ -246,7 +246,7 @@ export const chapters: Chapter[] = [
     year: 2018,
     location: 'London (remote)',
     summary:
-      'Shandy Shack is an award-winning craft shandy brand: craft beer mixed with soda at 2.5% ABV. I co-founded it in 2018 and, as CEO, took it from a pop-up bar to national shelves: two equity rounds, revenue growth of +132% a year over four years, and from 52 to 3,400 supermarket listings. In November 2024 it was sold to SHS Drinks, the group behind WKD and Shloer.',
+      'Shandy Shack is one of the UK’s leading mid-strength beer brands, which revolutionised the shandy by combining craft-quality beer with innovative flavours such as elderflower and raspberry. I co-founded the brand with friends in 2018, and as CEO, I grew the idea from a humble pop-up bar to a 2024 exit to SHS Drinks, a nine-figure turnover UK drinks group comprising brands like WKD and Shloer, via two equity fundraises, major supermarket listings and national media attention.',
     skills: ['Venture creation', 'Key account management', 'Fundraising', 'Brand and PR', 'Growth strategy', 'Automation'],
     eraBg: '#efe2d0',
     ground: '#c9b98f',

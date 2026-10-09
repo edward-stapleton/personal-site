@@ -134,9 +134,8 @@ export const art: Record<string, WorldArt> = {
     // In story order: the dots are numbered and the panel steps through them.
     hotspots: [
       {
-        label: 'Where It Started',
-        body: 'In summer 2018, three of us built a rickety pop-up bar and toured parties and events. The Shack was our test market and brand launch. With a remote team, it was also the nearest thing we had to a head office. Behind it I built a lean sales and operations hub on Zapier, Shopify and Typeform, saving five figures a year in software costs compared with competitors.',
-        links: [{ label: 'Our story', href: 'https://www.shandyshack.co.uk/pages/story' }],
+        label: 'Origins',
+        body: 'In the summer of 2018, I joined Tom and Fred in launching Shandy Shack for three main reasons: a deep-seated personal motivation to help people drink less, the allure of a fading ancestral involvement in the international brewing industry and a conviction that shandy was a sleeping giant of a drinks format that deserved a renaissance.\n\nWith ‘Lean Startup’ theory in mind, we knocked up a pop-up bar, entered the festival circuit and started gathering feedback to inform our proposition.',
         dot: { x: 29.5, y: 34 },
         x: 18.5, y: 32, w: 17, h: 19,
       },
