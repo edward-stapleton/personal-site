@@ -363,7 +363,7 @@ export const art: Record<string, WorldArt> = {
     hotspots: [
       {
         label: 'Accenture Song (formerly Interactive)',
-        body: 'As I started to specialise within Accenture, I was placed into Accenture Song (then known as Interactive), which was effectively a digital ‘super-agency’ comprising both trained consultants and multi-disciplinary creatives from acquired companies such as Fjord, Karmarama and Droga5.',
+        body: 'As I started to specialise within Accenture, I was placed into Accenture Song (then known as Interactive), which was effectively a digital ‘super-agency’ comprising both trained consultants and multi-disciplinary creatives from acquired companies such as Fjord and Karmarama.',
         dot: { x: 54, y: 45 },
         x: 39, y: 38, w: 19, h: 26,
       },
