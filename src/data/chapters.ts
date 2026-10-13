@@ -324,7 +324,7 @@ export const chapters: Chapter[] = [
     location: 'London · Paris · Dubai · Doha',
     summary:
       'My time moving through Accenture’s prestigious graduate scheme into specialist roles in innovation and venture development gave me a fulfilling and robust foundation for the ventures that followed. Combined with the engineering skills I’ve picked up more recently, three years of international, client-facing projects across energy, hospitality, government, pharma and financial services are the basis of the forward-deployed work I do today.',
-    skills: ['Client-embedded delivery', 'C-suite stakeholders', 'Innovation strategy', 'Venture development', 'Digital roadmaps', 'Go-to-market', 'Design thinking'],
+    skills: ['Client-embedded delivery', 'C-suite stakeholder management', 'Innovation strategy', 'Venture development', 'Product roadmaps', 'Go-to-market', 'Design thinking'],
     eraBg: '#ece3d6',
     ground: '#b9c0b4',
     office: C,
