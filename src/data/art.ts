@@ -369,7 +369,7 @@ export const art: Record<string, WorldArt> = {
       },
       {
         label: 'Large-Scale Digital Transformation of a Major Energy Supplier',
-        body: 'My first major deployment within Accenture was the digital transformation of energy retailer SSE centred around the rollout of a suite of modern Oracle products. As a digital analyst, I applied my agile training to collaboratively design user flows and to write accompanying user stories covering major processes related to consumer energy billing and payments.',
+        body: 'My first major deployment within Accenture was the digital transformation of energy retailer SSE, centred around the rollout of a suite of modern Oracle products. As a digital analyst, I applied my agile training to collaboratively design user flows and write accompanying user stories covering major processes related to consumer energy billing and payments. I oversaw a small cross-functional team: a client stakeholder acting as an internal business analyst, an Accenture designer and an Accenture developer who served as technical lead.',
         links: [
           { label: 'SSE selects Accenture for retail transformation · 2013', href: 'https://www.tdworld.com/smart-utility/article/20963140/sse-selects-accenture-for-major-transformation-projects' },
         ],
