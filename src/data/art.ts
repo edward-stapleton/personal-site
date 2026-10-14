@@ -362,16 +362,14 @@ export const art: Record<string, WorldArt> = {
     // Roughly in date order.
     hotspots: [
       {
-        label: 'Accenture',
-        body: 'Three years as a digital strategy consultant, working inside client organisations across four countries and five sectors. In the Open Innovation team I also built go-to-market materials for a FinTech joint venture with the CEO of a mobile engagement startup.',
-        role: 'Embedded with each client to learn their users, systems and stakeholders, then turned what I found into a plan their own teams could deliver: the core of forward-deployed work today.',
+        label: 'Accenture Song (formerly Interactive)',
+        body: 'As I started to specialise within Accenture, I was placed into Accenture Song (then known as Interactive), which was effectively a digital ‘super-agency’ comprising both trained consultants and multi-disciplinary creatives from acquired companies such as Fjord and Karmarama.',
         dot: { x: 54, y: 45 },
         x: 39, y: 38, w: 19, h: 26,
       },
       {
-        label: 'SSE',
-        body: 'Transforming the billing systems behind an energy challenger brand.',
-        role: 'Worked inside the client’s transformation programme, leading a team of four on the billing and payments UX.',
+        label: 'Large-Scale Digital Transformation of a Major Energy Supplier',
+        body: 'My first major deployment within Accenture was the digital transformation of energy retailer SSE, centred around the rollout of a suite of modern Oracle products. As a digital analyst, I applied my agile training to collaboratively design user flows and write accompanying user stories covering major processes related to consumer energy billing and payments. I oversaw a small cross-functional team: a client stakeholder acting as an internal business analyst, an Accenture designer and an Accenture developer who served as technical lead.',
         links: [
           { label: 'SSE selects Accenture for retail transformation · 2013', href: 'https://www.tdworld.com/smart-utility/article/20963140/sse-selects-accenture-for-major-transformation-projects' },
         ],
