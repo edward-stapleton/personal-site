@@ -417,7 +417,7 @@ export const chapters: Chapter[] = [
     year: 2014,
     location: 'Manchester',
     summary:
-      'My first role out of university: running Zavvi.es, a ~£5m eCommerce store for games, collector’s-edition Blu-rays, memorabilia and merch. We beat sales targets by 35%.',
+      'My first role out of university: running Zavvi.es, a ~£1m eCommerce store for games, collector’s-edition Blu-rays, memorabilia and merch. We beat sales targets by 35%.',
     skills: ['eCommerce', 'Growth hacking', 'Paid and organic search', 'Google Analytics', 'Affiliates and influencers'],
     eraBg: '#eee3d2',
     ground: '#c3c7c9',

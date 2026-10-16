@@ -117,7 +117,7 @@ export function initTimeline() {
     });
     trails.setAttribute('width', String(track.scrollWidth));
     trails.setAttribute('height', String(viewport.clientHeight));
-    const dot = Math.max(3, (worlds[0].scene.offsetHeight || 400) * 0.008);
+    const dot = Math.max(2, (worlds[0].scene.offsetHeight || 400) * 0.0055);
     trails.style.setProperty('--dot', `${dot}px`);
     trails.replaceChildren(
       ...bridges.map((pts) => {
