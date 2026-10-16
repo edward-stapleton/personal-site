@@ -156,8 +156,8 @@ export const art: Record<string, WorldArt> = {
         x: 46, y: 26, w: 34, h: 18,
       },
       {
-        label: 'Pubs and Bars',
-        body: 'Alongside supermarkets, I sold into pub groups, starting with draught and cans across 11 City Pub Group pubs in 2021.',
+        label: 'Creating the Ultimate ‘Shandy Moment’ in Prestigious Pubs',
+        body: 'Alongside scaling our supermarket business, we secured a draught launch with the prestigious hospitality operator City Pub Group, which was later acquired by Young’s for £162m in March 2024. Our launch saw Shandy Shack appear on tap and in cans in 11 sites, including the historic Aragon House on Parsons Green and Cambridge railway station’s famous Old Ticket Office, with an accompanying physical and digital marketing programme that I coordinated.',
         links: [
           { label: 'City Pub Group, 11 pubs · Jul 2021', href: `${NEWS}shandies-pouring-across-city-pub-group` },
         ],
@@ -165,15 +165,19 @@ export const art: Record<string, WorldArt> = {
         x: 57, y: 42, w: 17, h: 20,
       },
       {
-        label: 'Collaborations',
-        body: 'Partnerships put the brand in front of new audiences, starting with our first collaboration range, with Diddly Squat Farm Shop, in April 2022.',
-        links: [{ label: 'Diddly Squat Farm Shop · Apr 2022', href: `${NEWS}our-first-collab-shandy-range-diddly-squat-farm-shop` }],
+        label: 'Originating High-Profile Product Partnerships',
+        body: 'In late 2021, I originated a product collaboration with Diddly Squat Farm Shop, the outlet made famous by Amazon Prime hit series Clarkson’s Farm, at the launch of Jeremy Clarkson’s Hawkstone Brewery. Our co-branded range of shandies has been hugely successful since launching in 2022, receiving millions of views on social media and expanding our brand’s reach into new audiences and markets.',
+        links: [
+          { label: 'Diddly Squat Farm Shop · Apr 2022', href: `${NEWS}our-first-collab-shandy-range-diddly-squat-farm-shop` },
+          { label: 'Clarkson’s Farm star Gerald drinking Diddly Squat Shandy, Instagram · Apr 2022', href: 'https://www.instagram.com/p/CcVGZqElhjS/' },
+          { label: 'Shandy Shack × Diddly Squat collaboration, Instagram · Nov 2022', href: 'https://www.instagram.com/p/CkinbxODNnk/' },
+        ],
         dot: { x: 39, y: 29 },
         x: 32.5, y: 26, w: 11, h: 15,
       },
       {
-        label: 'Events and Partnerships',
-        body: 'Festivals stayed at the heart of the brand: the headline bar at Wychwood Festival, Herne Hill Velodrome, and shandies on the Thames with Uber Boat by Thames Clippers. Online, we built a verified Instagram account with around 10,000 followers.',
+        label: 'Driving Brand Awareness with Authentic Experiences',
+        body: 'Having started life as a festival pop-up bar, Shandy Shack never lost its love of live events. I secured and ran the headline bar at Oxfordshire’s Wychwood Festival in 2023, brought shandies trackside to the historic Herne Hill Velodrome, and partnered with Uber Boat by Thames Clippers to serve Shandy Shack on the Thames in summer 2024. Each one fed a social presence that grew into a verified Instagram account with around 10,000 followers.',
         links: [
           { label: 'Instagram, @shandy.shack', href: 'https://www.instagram.com/shandy.shack/' },
           { label: 'Wychwood Festival · Jun 2023', href: `${NEWS}wychwood-festival-shandies` },
@@ -184,8 +188,8 @@ export const art: Record<string, WorldArt> = {
         x: 81, y: 30, w: 15, h: 19,
       },
       {
-        label: 'Earned Press',
-        body: 'We grew awareness through PR rather than paid media, earning millions of editorial views: ITV1 twice, BBC Radio 4, The Guardian, The Times, The Telegraph and the Evening Standard.',
+        label: 'Capitalising on Shandy’s ‘Talkability’ in National Media',
+        body: 'Rather than spending on paid media, I made Shandy Shack the face of the shandy revival through earned PR, reaching millions of readers, listeners and viewers. Highlights include two appearances on ITV1, a discussion of the shandy’s comeback on BBC Radio 4’s You & Yours, a Guardian piece declaring shandy poised for a revival, a Telegraph feature naming us the real deal in proper shandy, and coverage in The Times and the Evening Standard.',
         links: [
           { label: 'ITV1, This Morning · Jul 2023', href: `${NEWS}mid-strength-takes-on-this-morning` },
           { label: 'BBC Radio 4, You & Yours · May 2021', href: `${NEWS}discussing-the-shandy-revival-with-you-yours-on-bbc-radio-4` },
@@ -199,15 +203,15 @@ export const art: Record<string, WorldArt> = {
         x: 70, y: 8, w: 24, h: 20,
       },
       {
-        label: 'Great Taste Award',
-        body: 'In 2023 we became a Great Taste award-winning producer, independent recognition for the product.',
+        label: 'Achieving Critical Acclaim for Products',
+        body: 'Our range won independent acclaim at the Great Taste Awards, the world’s largest and most trusted food and drink accolade, judged blind by experts. Our Elderflower Lager Top and IPA Shandy each earned one star across 2021 and 2022, before our Ginger Beer Shandy and Rhubarb Lager each earned two stars in 2023.',
         links: [{ label: 'Great Taste · Sep 2023', href: `${NEWS}producer-of-great-taste-officially` }],
         dot: { x: 57.6, y: 68 },
         x: 55, y: 65, w: 6, h: 14,
       },
       {
-        label: 'Funding and Exit',
-        body: 'I raised equity rounds in 2021 and 2022, then grew revenue by +132% a year, compounded over four financial years. In November 2024 we sold to SHS Drinks, the decades-old group behind WKD and Shloer.',
+        label: 'Leading Fundraising through to Successful Exit',
+        body: 'I led two equity fundraises, a six-figure round in 2021 and a second in 2022 as revenues accelerated towards £1m. That capital fuelled a compound annual revenue growth rate of 132% across four financial years. In November 2024, I led the sale of Shandy Shack to SHS Drinks, the nine-figure turnover UK drinks group behind WKD and Shloer, where the brand continues to grow, having since secured listings with M&S and Stonegate, the UK’s largest pub group.',
         links: [
           { label: 'Six-figure raise, The Grocer · 2021', href: `${GROCER}craft-beer-startup-shandy-shack-raises-six-figure-investment/653278.article` },
           { label: 'Second round, The Grocer · 2022', href: `${GROCER}shandy-shack-closes-second-funding-round-as-revenues-accelerate-towards-1m/668044.article` },
