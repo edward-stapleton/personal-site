@@ -49,7 +49,8 @@ export type Chapter = {
   /** Short name for the year rail. */
   short: string;
   company: string;
-  role: string;
+  /** Omitted on the closing slide. */
+  role?: string;
   period: string;
   year: number;
   location: string;
@@ -610,8 +611,7 @@ export const chapters: Chapter[] = [
   {
     id: 'where-next',
     short: 'Next',
-    company: 'Where Next?',
-    role: 'Your Project Here',
+    company: 'So, what’s next?',
     period: 'Next',
     year: 2026,
     location: 'Anywhere',
@@ -627,9 +627,7 @@ export const chapters: Chapter[] = [
         at: [8.4, 4, 1.4, 0.12, 1.3],
         kind: 'billboard',
         color: clay.white,
-        label: 'Your Project Here',
-        body: 'This plot is free. Email edwardstapleton@me.com.',
-        sign: 'Your Project Here',
+        label: 'Billboard',
       },
       { at: [5.6, 7.2, 0.8, 0.6, 0.5], color: clay.mustard, label: 'Digger' },
     ],

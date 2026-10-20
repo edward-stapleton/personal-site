@@ -379,6 +379,18 @@ export function initTimeline() {
 
   addEventListener('scroll', queue, { passive: true });
 
+  // Portrait: tapping the caption sheet opens it up to the hotspot panel's
+  // height; tapping elsewhere or changing page folds it back.
+  const collapseCaptions = () =>
+    root.querySelectorAll('.caption.is-expanded').forEach((c) => c.classList.remove('is-expanded'));
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const caption = target.closest<HTMLElement>('.caption');
+    if (!caption) return collapseCaptions();
+    if (!target.closest('a')) caption.classList.add('is-expanded');
+  });
+  addEventListener('scroll', collapseCaptions, { passive: true });
+
   initHotspots();
   preloadWorlds();
   initSignCycles(() => worlds[activeWorld]?.el);

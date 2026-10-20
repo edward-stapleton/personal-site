@@ -193,7 +193,7 @@ const headingId = `${chapter.id}-title`;
           </h2>
         )
       }
-      <p class="caption__role mono">{chapter.role}</p>
+      {chapter.role && <p class="caption__role mono">{chapter.role}</p>}
       <p class="caption__summary">{chapter.summary}</p>
       {
         chapter.skills && (
@@ -387,6 +387,12 @@ const headingId = `${chapter.id}-title`;
         calc(var(--vh) - var(--scene-top) - var(--scene-h) - var(--rail-h) + var(--s-5))
       );
       overflow: auto;
+      transition: max-height var(--dur-slow) var(--ease-out-expressive);
+    }
+
+    /* Tapped open (see timeline.ts): up to the hotspot panel's height. */
+    :global(.js) .caption.is-expanded {
+      max-height: 55svh;
     }
 
     /* Fade the bottom edge while there's more summary to scroll to. */

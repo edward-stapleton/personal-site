@@ -885,23 +885,6 @@ export const art: Record<string, WorldArt> = {
         { x: 103, y: 43 },
       ],
     },
-    hotspots: [
-      {
-        label: 'Your Project Here',
-        body: 'This plot is free. Email edwardstapleton@me.com.',
-        dot: { x: 81.5, y: 53 },
-        x: 77, y: 34, w: 9, h: 16,
-      },
-    ],
-    signs: [
-      {
-        label: 'Your Project Here',
-        text: 'Your Project Here',
-        color: '#2f3441',
-        tl: { x: 77.6, y: 39.1 },
-        tr: { x: 85.6, y: 35.1 },
-        bl: { x: 77.6, y: 48.7 },
-      },
-    ],
+    hotspots: [],
   },
 };
