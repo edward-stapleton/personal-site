@@ -274,7 +274,10 @@ export function initTimeline() {
   function settle() {
     const w = worlds[stops[Math.round(progress())].world];
     const hash = `#${w.id}`;
-    if (location.hash !== hash) history.replaceState(null, '', hash);
+    if (location.hash !== hash) {
+      history.replaceState(null, '', hash);
+      dispatchEvent(new CustomEvent('timeline:world', { detail: w.id })); // picked up by analytics.ts
+    }
   }
 
   function goToStop(index: number, smooth = true) {
