@@ -57,5 +57,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://edwardstapl
   </head>
   <body>
     <slot />
+    <script>
+      import { initAnalytics } from '../scripts/analytics';
+      initAnalytics();
+    </script>
   </body>
 </html>
