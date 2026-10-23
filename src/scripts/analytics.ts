@@ -6,7 +6,7 @@
 
 import posthog from 'posthog-js';
 
-const POSTHOG_TOKEN = 'phc_REPLACE_ME';
+const POSTHOG_TOKEN = 'phc_wYpiMzEnLCExHtkFTWXCAnJW9emzeqKzuStPu5B4S7vQ';
 const LIVE_HOSTS = ['edwardstapleton.co.uk', 'www.edwardstapleton.co.uk'];
 
 /** Where on the page a contact link sits, so header and end-of-timeline clicks can be compared. */
@@ -25,7 +25,7 @@ function contactEvent(href: string) {
 
 export function initAnalytics() {
   const debug = new URLSearchParams(location.search).has('posthog-debug');
-  if (!(LIVE_HOSTS.includes(location.hostname) || debug) || POSTHOG_TOKEN.endsWith('REPLACE_ME')) return;
+  if (!(LIVE_HOSTS.includes(location.hostname) || debug)) return;
 
   posthog.init(POSTHOG_TOKEN, {
     api_host: 'https://eu.i.posthog.com',
