@@ -381,21 +381,20 @@ export const art: Record<string, WorldArt> = {
         x: 13, y: 25, w: 20, h: 15,
       },
       {
-        label: 'Startup Sessions',
-        body: 'I organised Startup Sessions, a speaker series bringing the CEOs of Monzo, Bulb and Vitl to talk to Accenture audiences.',
+        label: 'Bringing External Innovation into Accenture',
+        body: 'Even during my time at Accenture, I was eager to stay close to startup culture and innovation. I conceived and ran Startup Sessions, a founder speaker series at Accenture’s London headquarters on Fenchurch Street. Former Monzo CEO Tom Blomfield dished out then ‘Mondo’ (this was prior to the 2016 rebrand) cards to around 100 employees in August 2016, shortly after Monzo had raised their first ever crowdfunding round for £1m in 96 seconds. As I sought to appeal to other so-called industry groups within the company, I invited other speakers such as Hayden Wood, the CEO of energy retail scale-up Bulb, and Jonny Relph, CEO of Vitl. This sort of work allowed me to secure a place working full-time in Accenture’s Open Innovation team, where I co-ordinated partnerships between startups in Accenture’s ecosystem and corporate clients.',
         dot: { x: 42.5, y: 70 },
         x: 33, y: 62, w: 19, h: 20,
       },
       {
-        label: 'French Bank · La Défense',
-        body: 'A major French bank, La Défense, Paris (2017): a blockchain opportunity assessment.',
+        label: 'Assessing Blockchain’s Potential for a Major French Bank',
+        body: 'In spring 2017, I spent two months at La Défense in Paris assessing where blockchain could create real value for a major French bank. Working in French as a strategy analyst, I evaluated payments use cases through stakeholder research across the bank, then identified the most valuable and feasible use case and the best technology platform to deliver it. I produced the business case and indicative architecture behind our final recommendation: an international payments partnership.',
         dot: { x: 32, y: 26 },
         x: 27, y: 8, w: 15, h: 22,
       },
       {
-        label: 'MOTC Qatar · TASMU',
-        body: 'Qatar’s Ministry of Transport and Communications (MOTC), 2017: TASMU, the Smart Qatar programme, with priority sectors in transport, logistics, environment, healthcare and sport.',
-        role: 'Delivered the digital cluster strategy for a government client, bringing startups, incubators and universities together around TASMU’s priority sectors.',
+        label: 'Designing a National Digital Cluster for Qatar',
+        body: 'In summer 2017, I helped Qatar’s Ministry of Transport and Communications design the digital cluster strategy for TASMU, its Smart Qatar programme. Inspired by organisations like Tech City UK, the cluster was a virtual body bringing startups, incubators and universities together around five priority sectors: transport, logistics, environment, healthcare and sport. I interviewed large tech firms, universities and accelerators across the country, ran design-thinking workshops with local entrepreneurs and delivered a full operating model, from job descriptions to process maps, benchmarked against international peers.',
         links: [
           { label: 'Accenture and MOTC sign TASMU MOU · 2017', href: 'https://newsroom.accenture.com/news/2017/motc-and-accenture-sign-mou-to-power-smart-qatar-program-tasmu-with-digital-innovation' },
         ],
@@ -403,9 +402,8 @@ export const art: Record<string, WorldArt> = {
         x: 69, y: 17, w: 30, h: 26,
       },
       {
-        label: 'Emaar Hospitality Group',
-        body: 'Dubai, 2017–18: the group behind the Armani Hotel Dubai in the Burj Khalifa and Palace Downtown.',
-        role: 'Worked directly with the C-suite to produce a roadmap to digitise the guest experience and operating model, and ran a design-thinking workshop for 25.',
+        label: 'Reimagining the Guest Experience for a Luxury Hotel Group',
+        body: 'Off the back of Qatar, I was invited onto Accenture’s work with Emaar Hospitality Group in Dubai, whose 13 hotels across the Armani, Address, Vida and Rove brands include the Armani Hotel Dubai in the Burj Khalifa. Over the winter of 2017 into 2018, I mapped the guest journey as it stood, identifying 126 friction points, and the journey it should become. I ran a two-day design-thinking workshop for 25 people, then produced a two-year roadmap and a Digital Hub operating model, updating the CEO, COO and General Manager weekly.',
         links: [
           { label: 'Emaar Hospitality Group', href: 'https://www.emaarhospitality.com/en/' },
           { label: 'Emaar Hospitality and Accenture digital transformation · Dec 2017', href: 'https://www.gdnonline.com/Details/299370/Emaar-Hospitality-to-embark-on-digital-transformation-' },
@@ -414,16 +412,10 @@ export const art: Record<string, WorldArt> = {
         x: 44, y: 3, w: 24, h: 33,
       },
       {
-        label: 'GSK Digital Accelerator',
-        body: 'GSK, 2018: helping set up health innovation centres to develop new digital health apps and services.',
+        label: 'Reimagining Tail Brands for GSK Consumer Healthcare',
+        body: 'In 2018, I joined GSK to help set up a digital innovation hub within its consumer health business. Part of the hub’s remit was a brand incubator, taking a fresh look at the tail brands in GSK’s consumer health portfolio: the smaller, lower-selling products that rarely get the spotlight. Working alongside GSK’s digital innovation leadership, we explored how each could be rebranded and relaunched, using the same agile, test-and-learn approach the hub applied to new digital health apps and services.',
         dot: { x: 28, y: 60 },
         x: 14, y: 46, w: 21, h: 22,
-      },
-      {
-        label: 'GSK Brand Incubator',
-        body: 'Reimagining tail brands in GSK’s consumer health portfolio, and working out how to rebrand and relaunch them.',
-        dot: { x: 77, y: 57 },
-        x: 66, y: 49, w: 25, h: 24,
       },
     ],
     signs: [
