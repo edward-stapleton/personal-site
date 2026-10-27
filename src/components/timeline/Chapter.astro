@@ -173,7 +173,7 @@ const headingId = `${chapter.id}-title`;
   <div class="chapter__caption">
     <div class="caption">
       {
-        chapter.kind !== 'intro' && (
+        !chapter.kind && (
           <p class="caption__meta mono-label">
             <span class="caption__year">{chapter.period}</span>
             <span aria-hidden="true">·</span>
