@@ -482,7 +482,7 @@ export const chapters: Chapter[] = [
     year: 2012,
     location: 'Paris · Barcelona',
     summary:
-      'My Erasmus year abroad, spent working: product marketing in French and English for a Paris hotel-tech startup (now D-EDGE CRM), then selling luxury villa rentals by phone and email in Barcelona, and writing the listings that sold them.',
+      'As part of my Modern Languages degree at Durham, I spent my Erasmus year abroad working rather than studying, first in Paris and then in Barcelona. At LoungeUp, a VC-backed hotel-tech startup, I effectively ran the marketing side of the business in French and English, before joining Divino Villas, a luxury villa rental agency, to sell holidays across four languages. It was my first taste of startup life, and of the travel and hospitality sector I’ve since returned to with Emaar and Place.',
     quote: {
       text: 'In just a few days he was up to speed, and after a couple of months we saw very good progress on most of our marketing KPIs.',
       cite: 'CEO, LoungeUp',
