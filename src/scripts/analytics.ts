@@ -3,6 +3,8 @@
 // Cookieless, so there's no consent banner. Only runs on the live domain, so
 // localhost stays out of the numbers; add ?posthog-debug to the URL to send
 // events from anywhere. The /horwell/ and /place/ previews don't load this.
+// Open the site once with ?posthog-exclude to stop counting this browser, or
+// ?posthog-include to undo it; ?posthog-debug still sends events from it.
 
 import posthog from 'posthog-js';
 
@@ -23,9 +25,20 @@ function contactEvent(href: string) {
   return null;
 }
 
+function excluded(params: URLSearchParams) {
+  try {
+    if (params.has('posthog-exclude')) localStorage.setItem('posthog-exclude', '1');
+    if (params.has('posthog-include')) localStorage.removeItem('posthog-exclude');
+    return localStorage.getItem('posthog-exclude') === '1';
+  } catch {
+    return false;
+  }
+}
+
 export function initAnalytics() {
-  const debug = new URLSearchParams(location.search).has('posthog-debug');
-  if (!(LIVE_HOSTS.includes(location.hostname) || debug)) return;
+  const params = new URLSearchParams(location.search);
+  const debug = params.has('posthog-debug');
+  if (!((LIVE_HOSTS.includes(location.hostname) && !excluded(params)) || debug)) return;
 
   posthog.init(POSTHOG_TOKEN, {
     api_host: 'https://eu.i.posthog.com',
