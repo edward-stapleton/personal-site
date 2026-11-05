@@ -370,14 +370,27 @@ const headingId = `${chapter.id}-title`;
 
   /* Portrait: caption becomes an edge-to-edge bottom sheet under the scene. */
   @media (max-aspect-ratio: 4/3) {
+    /* The sheet's backing lives on the wrapper so the scroll fade below masks
+       only the text. Masking the backing too let the (always light) scene
+       show through as a pale strip above the rail in dark mode. */
     :global(.js) .chapter__caption {
       bottom: var(--rail-h);
       padding: 0;
+      background: color-mix(in srgb, var(--paper) 86%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--line);
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+      box-shadow: 0 10px 30px -18px rgba(40, 30, 20, 0.35);
     }
 
     :global(.js) .caption {
       max-width: none;
-      border-width: 1px 0 0;
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: 0;
+      box-shadow: none;
       border-radius: var(--r-lg) var(--r-lg) 0 0;
       padding: var(--s-4) var(--s-5) var(--s-3);
       /* Keep to the sheet height the scene is centred above, so the artwork
