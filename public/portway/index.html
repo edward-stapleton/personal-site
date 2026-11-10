@@ -185,7 +185,10 @@
     .callouts b { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
 
     /* ---------- Plan ---------- */
-    .plan { flex: 1 1 auto; max-height: 460px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; min-height: 0; }
+    .plan { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: auto; gap: 12px; }
+    .plan .pcard { gap: 8px; padding: 16px 20px; }
+    .plan .pcard__save b { font-size: clamp(1.8rem, 2.8vw, 2.6rem); }
+    .plan .pcard--opt .pcard__save b { font-size: clamp(1.4rem, 2vw, 1.9rem); }
     .pcard--tariff { border-color: var(--positive); }
     .pcard--tariff .pcard__n { color: var(--positive); }
     .pcard { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 2.4vw, 28px); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper-2); }
@@ -262,7 +265,7 @@
     .figs .f-sm b { font-size: clamp(1.15rem, 1.9vw, 1.6rem); }
 
     /* ---------- Payback cost row ---------- */
-    .costrow { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .costrow { flex: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
     .costrow div { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
     .costrow strong { font-size: 17px; font-variant-numeric: tabular-nums; }
     .costrow div:last-child strong { color: var(--ink); }
@@ -483,6 +486,10 @@
           const toNight = Math.min(surplus * s.batteryEfficiency, night * 0.5); night -= toNight;
           surplus -= toNight / s.batteryEfficiency; exported = Math.max(surplus, 0);
           if (day > 0) { const shift = Math.min(day, s.batteryKwh * 0.9 * days); day -= shift; night += shift / s.batteryEfficiency; }
+        }
+        if (opts.batteryOnly && !opts.solar && !opts.solarOnly) {
+          // Battery without panels: charge in the cheap hours, run the house in the day.
+          const shift = Math.min(day, s.batteryKwh * 0.9 * days); day -= shift; night += shift / s.batteryEfficiency;
         }
         const cost = day * R.day + night * R.night + days * R.standingPerDay - exported * exportRate;
         months.push({ day, night, kwh: day + night, gen, exported, cost });
@@ -791,7 +798,7 @@
         const host = stage.querySelector('[data-chart="payback"]'), c = C();
         const { svg, W, H } = frame(host);
         const years = HZ + 2;
-        const opts = [['solarOnly', c.pos, 2.5], ['solar', c.accent, 2.5], ['heatPump', c.warning || c.ink3, 1.8]];
+        const opts = [['solarOnly', c.pos, 2.5], ['solar', c.accent, 2.5], ['batteryOnly', c.sun, 2], ['heatPump', c.ink3, 1.8]];
         const lines = opts.map(([k, col, w]) => {
           const m = D.measures[k], sv = optionSaving(k), mid = (m.cost[0] + m.cost[1]) / 2;
           return { k, col, w, m, sv, mid, pts: Array.from({ length: years + 1 }, (_, yr) => -mid + sv * yr) };
@@ -815,12 +822,16 @@
             const f = (0 - ln.pts[i - 1]) / (ln.pts[i] - ln.pts[i - 1]), bx = x(i - 1 + f);
             el('circle', { cx: bx, cy: y(0), r: 6, fill: ln.col, stroke: c.paper, 'stroke-width': 2 }, svg);
           }
-          if (!compact()) {
-            const end = ln.pts[years];
-            const t = el('text', { x: W - 8, y: y(end) - 8, 'text-anchor': 'end', class: 'ann-b' }, svg, `${ln.m.short}: ${(ln.mid / ln.sv).toFixed(1)} yrs`);
-            t.setAttribute('style', `fill:${ln.col};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
-          }
         });
+        if (!compact()) {
+          // End labels, nudged apart so they never overlap
+          const labs = lines.map((ln) => ({ ln, yy: y(ln.pts[years]) - 8 })).sort((p, q) => p.yy - q.yy);
+          for (let i = 1; i < labs.length; i++) if (labs[i].yy - labs[i - 1].yy < 18) labs[i].yy = labs[i - 1].yy + 18;
+          labs.forEach(({ ln, yy }) => {
+            const t = el('text', { x: W - 8, y: yy, 'text-anchor': 'end', class: 'ann-b' }, svg, `${ln.m.short}: ${(ln.mid / ln.sv).toFixed(1)} yrs`);
+            t.setAttribute('style', `fill:${ln.col};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
+          });
+        }
         if (compact()) legend(host, lines.map((ln) => [`${ln.m.short} ${(ln.mid / ln.sv).toFixed(0)} yrs`, ln.col]));
         // Price ceilings
         const ce = stage.querySelector('[data-ceilings]');
@@ -835,8 +846,8 @@
       const chips = stage.querySelector('[data-chips]'), figs = stage.querySelector('[data-figs]');
       const kk = (m) => `£${(m.cost[0] / 1000).toFixed(1).replace('.0', '')}k-£${(m.cost[1] / 1000).toFixed(1).replace('.0', '')}k`;
       const solarOpts = Object.entries(D.measures).filter(([, m]) => m.group === 'solar');
-      chips.innerHTML = `<span class="chips__label mono-label">Solar</span>` +
-        `<label class="chip"><input type="radio" name="solar" value="" ${solarOpts.some(([, m]) => m.on) ? '' : 'checked'}/><i></i>No panels</label>` +
+      chips.innerHTML = `<span class="chips__label mono-label">Solar and battery</span>` +
+        `<label class="chip"><input type="radio" name="solar" value="" ${solarOpts.some(([, m]) => m.on) ? '' : 'checked'}/><i></i>None</label>` +
         solarOpts.map(([k, m]) => `<label class="chip"><input type="radio" name="solar" value="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>${kk(m)}</span></label>`).join('') +
         `<span class="chips__label mono-label">Heating</span>` +
         Object.entries(D.measures).filter(([, m]) => !m.group && m.kind !== 'tariff').map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>${kk(m)}</span></label>`).join('');
