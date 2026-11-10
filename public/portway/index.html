@@ -195,6 +195,12 @@
     .pcard__save b { font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: var(--positive); font-variant-numeric: tabular-nums; }
     .pcard--opt .pcard__save b { color: var(--ink-3); font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
     .pcard__desc { color: var(--ink-2); font-size: 15px; }
+    .verdict { align-self: flex-start; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; }
+    .verdict--in { background: color-mix(in srgb, var(--positive) 14%, transparent); color: var(--positive); }
+    .verdict--maybe { background: color-mix(in srgb, var(--warning) 16%, transparent); color: var(--warning); }
+    .verdict--out { background: var(--paper-3); color: var(--ink-3); }
+    .costrow .ceil-maybe strong { color: var(--warning); }
+    .costrow span.sub { font-size: 13px; color: var(--ink-3); }
     .pcard__meta { display: flex; justify-content: space-between; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
     .pcard__meta span:last-child { color: var(--ink-3); }
 
@@ -253,7 +259,7 @@
     .costrow { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
     .costrow div { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
     .costrow strong { font-size: 17px; font-variant-numeric: tabular-nums; }
-    .costrow div:last-child strong { color: var(--positive); }
+    .costrow div:last-child strong { color: var(--ink); }
 
     /* ---------- Lists ---------- */
     .s-list, .s-plan { justify-content: center; }
@@ -610,8 +616,11 @@
       if (plan) plan.innerHTML = Object.entries(D.measures).map(([k, m], i) => {
         const save = base.total - runModel(D, { [k]: true }).total;
         const pb = `${Math.round(m.cost[0] / save)}-${Math.round(m.cost[1] / save)} yrs`;
+        const H = s.horizonYears || 15, ceil = save * H;
+        const verdict = m.cost[0] > ceil ? ['out', 'Ruled out'] : m.cost[1] > ceil ? ['maybe', `Only if under £${(Math.floor(ceil / 100) * 100).toLocaleString('en-GB')}`] : ['in', `Pays back within ${H} years`];
         return `<article class="pcard${m.on ? '' : ' pcard--opt'}">
-          <span class="pcard__n">${m.on ? String(i + 1).padStart(2, '0') : 'Optional'}</span>
+          <span class="pcard__n">${m.on ? String(i + 1).padStart(2, '0') : 'Not in the plan'}</span>
+          <span class="verdict verdict--${verdict[0]}">${verdict[1]}</span>
           <h3>${m.label}</h3>
           <p class="pcard__desc">${m.desc}</p>
           <div class="pcard__save"><span class="mono-label">Saves a year</span><b>${gbp(save)}</b></div>
@@ -753,39 +762,49 @@
       function drawPayback() {
         const host = stage.querySelector('[data-chart="payback"]'), c = C();
         const { svg, W, H } = frame(host);
-        const saving = base.total - runModel(D, { insulation: true, solar: true, heatPump: true }).total;
-        const cost = [19000, 28000], years = 25, batteryYear = 13, batteryCost = 4000;
-        const series = cost.map((c0) => { let v = -c0; const pts = [v]; for (let yr = 1; yr <= years; yr++) { v += saving; if (yr === batteryYear) v -= batteryCost; pts.push(v); } return pts; });
-        const minV = -30000, maxV = niceMax(Math.max(...series[0]) * 1.05);
+        const plan = { insulation: true, solar: true, heatPump: true };
+        const saving = base.total - runModel(D, plan).total;
+        let lo = 0, hi = 0; for (const k in plan) { lo += D.measures[k].cost[0]; hi += D.measures[k].cost[1]; }
+        const cost = [lo, hi], years = s.horizonYears || 15;
+        const series = cost.map((c0) => Array.from({ length: years + 1 }, (_, yr) => -c0 + saving * yr));
+        const minV = -30000, maxV = 15000;
         const L = compact() ? 40 : 56, top = 36, bottom = 26;
         const x = (yr) => L + (W - L - 8) * (yr / years), y = (v) => top + (H - top - bottom) * (1 - (v - minV) / (maxV - minV));
-        for (let v = -30000; v <= maxV; v += 10000) {
+        for (let v = minV; v <= maxV; v += 5000) {
           el('line', { x1: L, x2: W, y1: y(v), y2: y(v), class: v === 0 ? 'base' : 'gl' }, svg);
-          el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg, gbpK(v));
+          if (v % 10000 === 0 || v === maxV) el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg, gbpK(v));
         }
-        [0, 5, 10, 15, 20, 25].forEach((yr) => el('text', { x: x(yr), y: H - 6, 'text-anchor': 'middle' }, svg, yr === 0 ? 'Now' : `${yr} yrs`));
-        // Band between the cheap and expensive cases
+        for (let yr = 0; yr <= years; yr += compact() ? 5 : 3) el('text', { x: x(yr), y: H - 6, 'text-anchor': 'middle' }, svg, yr === 0 ? 'Now' : `${yr} yrs`);
         const up = series[0].map((v, i) => `${x(i)},${y(v)}`), dn = series[1].map((v, i) => `${x(i)},${y(v)}`).reverse();
         el('polygon', { points: [...up, ...dn].join(' '), fill: c.soft, opacity: .9 }, svg);
         series.forEach((pts, k) => el('polyline', { points: pts.map((v, i) => `${x(i)},${y(v)}`).join(' '), fill: 'none', stroke: c.accent, 'stroke-width': k ? 1.5 : 2.5, 'stroke-dasharray': k ? '5 4' : 'none' }, svg));
-        // Break-even markers
         series.forEach((pts, k) => {
           const i = pts.findIndex((v) => v >= 0); if (i < 1) return;
           const f = (0 - pts[i - 1]) / (pts[i] - pts[i - 1]), bx = x(i - 1 + f);
           el('circle', { cx: bx, cy: y(0), r: 6, fill: c.pos, stroke: c.paper, 'stroke-width': 2 }, svg);
-          if (!compact() || k === 0) {
-            const t = el('text', { x: bx, y: y(0) + (k ? 24 : -14), 'text-anchor': 'middle', class: 'ann-b' }, svg, `Paid back in ${(i - 1 + f).toFixed(0)} yrs`);
-            t.setAttribute('style', `fill:${c.pos};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
-          }
+          const t = el('text', { x: bx, y: y(0) + (k ? 24 : -14), 'text-anchor': 'middle', class: 'ann-b' }, svg, `Paid back in ${(i - 1 + f).toFixed(0)} yrs`);
+          t.setAttribute('style', `fill:${c.pos};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
         });
-        el('text', { x: x(batteryYear), y: y(series[0][batteryYear]) - 14, 'text-anchor': 'middle', class: 'ann' }, svg, compact() ? '' : 'New battery, ~£4k');
-        const end = series[0][years], end2 = series[1][years];
-        const e1 = el('text', { x: L + 12, y: top + 18, class: 'v v--big' }, svg, `+${gbpK(end2)} to +${gbpK(end)}`);
-        e1.setAttribute('style', `fill:${c.pos}`);
-        el('text', { x: L + 12, y: top + 40, class: 'ann' }, svg, `ahead after 25 years, saving ${gbp(saving)} a year`);
+        const endLo = series[0][years], endHi = series[1][years];
+        const lab = (v) => (v >= 0 ? '+' : '') + gbpK(v);
         if (!compact()) {
-          el('text', { x: W - 8, y: y(end) - 10, 'text-anchor': 'end', class: 'ann-b' }, svg, 'Lower quotes');
-          el('text', { x: W - 8, y: y(end2) + 20, 'text-anchor': 'end', class: 'ann' }, svg, 'Higher quotes');
+          el('text', { x: W - 8, y: y(endLo) - 10, 'text-anchor': 'end', class: 'ann-b' }, svg, `Lower quotes: ${lab(endLo)}`);
+          const tH = el('text', { x: W - 8, y: y(endHi) + 20, 'text-anchor': 'end', class: 'ann-b' }, svg, `Higher quotes: ${lab(endHi)}`);
+          if (endHi < 0) tH.setAttribute('style', `fill:${c.ink3}`);
+        }
+        const e1 = el('text', { x: L + 12, y: top + 18, class: 'v v--big' }, svg, `${gbp(saving)} a year saved`);
+        e1.setAttribute('style', `fill:${c.pos}`);
+        el('text', { x: L + 12, y: top + 40, class: 'ann' }, svg, `Plan costs ${gbpK(lo)}-${gbpK(hi)}. Position after ${years} years shown on the right.`);
+        // Price ceilings
+        const ce = stage.querySelector('[data-ceilings]');
+        if (ce) {
+          const items = Object.keys(plan).map((k) => {
+            const sv = base.total - runModel(D, { [k]: true }).total, m = D.measures[k], ceil = Math.floor((sv * years) / 100) * 100;
+            return `<div class="${m.cost[1] > ceil ? 'ceil-maybe' : ''}"><span class="mono-label">${m.short}: ceiling</span><strong>£${ceil.toLocaleString('en-GB')}</strong><span class="sub">Estimate £${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span></div>`;
+          });
+          const tot = Math.floor((saving * years) / 100) * 100;
+          items.push(`<div><span class="mono-label">Whole plan: ceiling</span><strong>£${tot.toLocaleString('en-GB')}</strong><span class="sub">Most it can cost to pay back in ${years} years</span></div>`);
+          ce.innerHTML = items.join('');
         }
       }
 
@@ -821,6 +840,8 @@
         f('.f-before', gbp(today.total)); f('.f-after', gbp(r.total)); f('.f-save', gbp(saving));
         f('.f-cost', lo ? `£${(lo / 1000).toFixed(1).replace('.0', '')}k-£${(hi / 1000).toFixed(1).replace('.0', '')}k` : '£0');
         f('.f-pb', kitSaving > 0 && lo ? `${Math.round(lo / kitSaving)}-${Math.round(hi / kitSaving)} years` : '-');
+        const pbEl = figs.querySelector('.f-pb b'), Hz = s.horizonYears || 15;
+        pbEl.style.color = !lo || kitSaving <= 0 ? '' : lo / kitSaving > Hz ? css('--negative') : hi / kitSaving > Hz ? css('--warning') : css('--positive');
         const c = C();
         bars(stage.querySelector('[data-chart="calc"]'), { labels: M, mode: 'group', series: [
           { name: 'Today, E.ON', color: c.muted, textColor: c.ink3, values: today.months.map((m) => m.cost) },
