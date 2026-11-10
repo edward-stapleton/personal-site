@@ -185,7 +185,9 @@
     .callouts b { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
 
     /* ---------- Plan ---------- */
-    .plan { flex: 1 1 auto; max-height: 440px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 0.8fr); gap: 16px; min-height: 0; }
+    .plan { flex: 1 1 auto; max-height: 460px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; min-height: 0; }
+    .pcard--tariff { border-color: var(--positive); }
+    .pcard--tariff .pcard__n { color: var(--positive); }
     .pcard { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 2.4vw, 28px); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper-2); }
     .pcard--opt { background: transparent; border-style: dashed; }
     .pcard__n { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
@@ -200,6 +202,8 @@
     .verdict--maybe { background: color-mix(in srgb, var(--warning) 16%, transparent); color: var(--warning); }
     .verdict--out { background: var(--paper-3); color: var(--ink-3); }
     .costrow .ceil-maybe strong { color: var(--warning); }
+    .costrow .ceil-in strong { color: var(--positive); }
+    .costrow .ceil-out strong { color: var(--ink-4); text-decoration: line-through; }
     .costrow span.sub { font-size: 13px; color: var(--ink-3); }
     .pcard__meta { display: flex; justify-content: space-between; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
     .pcard__meta span:last-child { color: var(--ink-3); }
@@ -245,6 +249,8 @@
     .chip input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 2px; }
     .chip span { color: var(--ink-3); font-size: 13px; font-variant-numeric: tabular-nums; }
     .chip--alt { border-style: dashed; }
+    .chips__label { align-self: center; margin-right: 2px; }
+    .chips__label:not(:first-child) { margin-left: 12px; }
     .tariff { flex: none; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
     .seg--lg button { padding: 8px 18px; font-family: var(--font-sans); font-size: 15px; font-weight: 500; }
     .seg--lg button small { font-family: var(--font-mono); font-size: 12px; opacity: .7; margin-left: 6px; }
@@ -447,7 +453,7 @@
 
     /* ================= Model ================= */
     function runModel(D, opts) {
-      const s = D.spec, R = opts.rates || D.rates, exportRate = opts.exportRate || 0.06;
+      const s = D.spec, R = opts.rates || D.rates, exportRate = opts.exportRate || s.exportRate || 0.06;
       const months = [];
       for (let i = 0; i < 12; i++) {
         const days = D.days[i];
@@ -464,6 +470,12 @@
         }
         if (opts.hotWater) hw /= s.hotWaterCop;
         let day = otherDay + heatDay, night = otherNight + heatNight + hw, exported = 0, gen = 0;
+        if (opts.solarOnly && !opts.solar) {
+          // Panels without a battery: only what's used as it's made counts, the rest is exported.
+          gen = D.solarPerKwp[i] * s.solarKwp;
+          const used = Math.min(gen * (s.selfUseNoBattery || 0.35), day);
+          day -= used; exported = gen - used;
+        }
         if (opts.solar) {
           gen = D.solarPerKwp[i] * s.solarKwp;
           const toDay = Math.min(gen * s.batteryEfficiency, day); day -= toDay;
@@ -620,20 +632,27 @@
         ['sb-heat', heatGbp, 'Heating'], ['sb-other', otherGbp, 'Everything else'], ['sb-stand', standGbp, 'Standing']
       ].map(([c, v, n]) => `<div class="${c}" style="flex:${v}"><strong>${gbp(v)}</strong><span>${n} · ${Math.round((v / allGbp) * 100)}%</span></div>`).join('');
 
-      // ---- Plan cards with standalone savings
+      // ---- Plan cards: each option on its own, judged against the payback horizon
+      const RNOW = D.ratesNow || D.rates, today = runModel(D, { rates: RNOW });
+      const HZ = s.horizonYears || 10;
+      const optionSaving = (k) => D.measures[k].kind === 'tariff' ? today.total - base.total : base.total - runModel(D, { [k]: true }).total;
       const plan = stage.querySelector('[data-plan]');
       if (plan) plan.innerHTML = Object.entries(D.measures).map(([k, m], i) => {
-        const save = base.total - runModel(D, { [k]: true }).total;
-        const pb = `${Math.round(m.cost[0] / save)}-${Math.round(m.cost[1] / save)} yrs`;
-        const H = s.horizonYears || 15, ceil = save * H;
-        const verdict = m.cost[0] > ceil ? ['out', 'Ruled out'] : m.cost[1] > ceil ? ['maybe', `Only if under £${(Math.floor(ceil / 100) * 100).toLocaleString('en-GB')}`] : ['in', `Pays back within ${H} years`];
-        return `<article class="pcard${m.on ? '' : ' pcard--opt'}">
-          <span class="pcard__n">${m.on ? String(i + 1).padStart(2, '0') : 'Not in the plan'}</span>
+        const save = optionSaving(k), ceil = save * HZ;
+        let verdict, cls = '';
+        if (m.kind === 'tariff') { verdict = ['in', 'Do this now']; cls = ' pcard--tariff'; }
+        else if (m.cost[0] > ceil) { verdict = ['out', 'Ruled out']; cls = ' pcard--opt'; }
+        else if (m.cost[1] > ceil) verdict = ['maybe', `Only if under £${(Math.floor(ceil / 100) * 100).toLocaleString('en-GB')}`];
+        else verdict = ['in', 'Recommended'];
+        const pb = m.kind === 'tariff' ? 'Free' : `${Math.round(m.cost[0] / save)}-${Math.round(m.cost[1] / save)} yrs`;
+        const cost = m.kind === 'tariff' ? 'No cost' : `£${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}`;
+        return `<article class="pcard${cls}">
+          <span class="pcard__n">${String.fromCharCode(65 + i)}</span>
           <span class="verdict verdict--${verdict[0]}">${verdict[1]}</span>
           <h3>${m.label}</h3>
           <p class="pcard__desc">${m.desc}</p>
           <div class="pcard__save"><span class="mono-label">Saves a year</span><b>${gbp(save)}</b></div>
-          <div class="pcard__meta"><span>£${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span><span>${pb}</span></div>
+          <div class="pcard__meta"><span>${cost}</span><span>${pb}</span></div>
         </article>`;
       }).join('');
 
@@ -771,59 +790,58 @@
       function drawPayback() {
         const host = stage.querySelector('[data-chart="payback"]'), c = C();
         const { svg, W, H } = frame(host);
-        const plan = { insulation: true, solar: true, heatPump: true };
-        const saving = base.total - runModel(D, plan).total;
-        let lo = 0, hi = 0; for (const k in plan) { lo += D.measures[k].cost[0]; hi += D.measures[k].cost[1]; }
-        const cost = [lo, hi], years = s.horizonYears || 15;
-        const series = cost.map((c0) => Array.from({ length: years + 1 }, (_, yr) => -c0 + saving * yr));
-        const minV = -30000, maxV = 15000;
-        const L = compact() ? 40 : 56, top = 36, bottom = 26;
-        const x = (yr) => L + (W - L - 8) * (yr / years), y = (v) => top + (H - top - bottom) * (1 - (v - minV) / (maxV - minV));
-        for (let v = minV; v <= maxV; v += 5000) {
-          el('line', { x1: L, x2: W, y1: y(v), y2: y(v), class: v === 0 ? 'base' : 'gl' }, svg);
-          if (v % 10000 === 0 || v === maxV) el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg, gbpK(v));
-        }
-        for (let yr = 0; yr <= years; yr += compact() ? 5 : 3) el('text', { x: x(yr), y: H - 6, 'text-anchor': 'middle' }, svg, yr === 0 ? 'Now' : `${yr} yrs`);
-        const up = series[0].map((v, i) => `${x(i)},${y(v)}`), dn = series[1].map((v, i) => `${x(i)},${y(v)}`).reverse();
-        el('polygon', { points: [...up, ...dn].join(' '), fill: c.soft, opacity: .9 }, svg);
-        series.forEach((pts, k) => el('polyline', { points: pts.map((v, i) => `${x(i)},${y(v)}`).join(' '), fill: 'none', stroke: c.accent, 'stroke-width': k ? 1.5 : 2.5, 'stroke-dasharray': k ? '5 4' : 'none' }, svg));
-        series.forEach((pts, k) => {
-          const i = pts.findIndex((v) => v >= 0); if (i < 1) return;
-          const f = (0 - pts[i - 1]) / (pts[i] - pts[i - 1]), bx = x(i - 1 + f);
-          el('circle', { cx: bx, cy: y(0), r: 6, fill: c.pos, stroke: c.paper, 'stroke-width': 2 }, svg);
-          const t = el('text', { x: bx > W * 0.8 ? bx + 6 : bx, y: y(0) + (k ? 24 : -14), 'text-anchor': bx > W * 0.8 ? 'end' : 'middle', class: 'ann-b' }, svg, `Paid back in ${(i - 1 + f).toFixed(0)} yrs`);
-          t.setAttribute('style', `fill:${c.pos};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
+        const years = HZ + 2;
+        const opts = [['solarOnly', c.pos, 2.5], ['solar', c.accent, 2.5], ['heatPump', c.warning || c.ink3, 1.8]];
+        const lines = opts.map(([k, col, w]) => {
+          const m = D.measures[k], sv = optionSaving(k), mid = (m.cost[0] + m.cost[1]) / 2;
+          return { k, col, w, m, sv, mid, pts: Array.from({ length: years + 1 }, (_, yr) => -mid + sv * yr) };
         });
-        const endLo = series[0][years], endHi = series[1][years];
-        const lab = (v) => (v >= 0 ? '+' : '') + gbpK(v);
-        if (!compact()) {
-          el('text', { x: W - 8, y: y(endLo) - 10, 'text-anchor': 'end', class: 'ann-b' }, svg, `Lower quotes: ${lab(endLo)}`);
-          const tH = el('text', { x: W - 8, y: y(endHi) + 20, 'text-anchor': 'end', class: 'ann-b' }, svg, `Higher quotes: ${lab(endHi)}`);
-          if (endHi < 0) tH.setAttribute('style', `fill:${c.ink3}`);
+        const minV = -16000, maxV = 8000;
+        const L = compact() ? 40 : 56, top = 20, bottom = 26;
+        const x = (yr) => L + (W - L - 8) * (yr / years), y = (v) => top + (H - top - bottom) * (1 - (v - minV) / (maxV - minV));
+        for (let v = minV; v <= maxV; v += 4000) {
+          el('line', { x1: L, x2: W, y1: y(v), y2: y(v), class: v === 0 ? 'base' : 'gl' }, svg);
+          el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg, gbpK(v));
         }
-        const e1 = el('text', { x: L + 12, y: top + 18, class: 'v v--big' }, svg, `${gbp(saving)} a year saved`);
-        e1.setAttribute('style', `fill:${c.pos}`);
-        el('text', { x: L + 12, y: top + 40, class: 'ann' }, svg, compact() ? `Plan costs ${gbpK(lo)}-${gbpK(hi)}` : `Plan costs ${gbpK(lo)}-${gbpK(hi)}. Position after ${years} years shown on the right.`);
+        for (let yr = 0; yr <= years; yr += 2) el('text', { x: x(yr), y: H - 6, 'text-anchor': 'middle' }, svg, yr === 0 ? 'Now' : `${yr} yrs`);
+        // 10-year limit
+        const hx = x(HZ);
+        el('rect', { x: hx, y: top, width: W - hx, height: H - top - bottom, fill: c.p3, opacity: .6 }, svg);
+        const hl = el('text', { x: hx + 8, y: top + 16, class: 'ann-b' }, svg, `${HZ}-year limit`);
+        lines.forEach((ln) => {
+          el('polyline', { points: ln.pts.map((v, i) => `${x(i)},${y(Math.max(v, minV))}`).join(' '), fill: 'none', stroke: ln.col, 'stroke-width': ln.w }, svg);
+          const i = ln.pts.findIndex((v) => v >= 0);
+          if (i >= 1) {
+            const f = (0 - ln.pts[i - 1]) / (ln.pts[i] - ln.pts[i - 1]), bx = x(i - 1 + f);
+            el('circle', { cx: bx, cy: y(0), r: 6, fill: ln.col, stroke: c.paper, 'stroke-width': 2 }, svg);
+          }
+          if (!compact()) {
+            const end = ln.pts[years];
+            const t = el('text', { x: W - 8, y: y(end) - 8, 'text-anchor': 'end', class: 'ann-b' }, svg, `${ln.m.short}: ${(ln.mid / ln.sv).toFixed(1)} yrs`);
+            t.setAttribute('style', `fill:${ln.col};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
+          }
+        });
+        if (compact()) legend(host, lines.map((ln) => [`${ln.m.short} ${(ln.mid / ln.sv).toFixed(0)} yrs`, ln.col]));
         // Price ceilings
         const ce = stage.querySelector('[data-ceilings]');
-        if (ce) {
-          const items = Object.keys(plan).map((k) => {
-            const sv = base.total - runModel(D, { [k]: true }).total, m = D.measures[k], ceil = Math.floor((sv * years) / 100) * 100;
-            return `<div class="${m.cost[1] > ceil ? 'ceil-maybe' : ''}"><span class="mono-label">${m.short}: ceiling</span><strong>£${ceil.toLocaleString('en-GB')}</strong><span class="sub">Estimate £${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span></div>`;
-          });
-          const tot = Math.floor((saving * years) / 100) * 100;
-          items.push(`<div><span class="mono-label">Whole plan: ceiling</span><strong>£${tot.toLocaleString('en-GB')}</strong><span class="sub">Most it can cost to pay back in ${years} years</span></div>`);
-          ce.innerHTML = items.join('');
-        }
+        if (ce) ce.innerHTML = Object.entries(D.measures).filter(([, m]) => m.kind !== 'tariff').map(([k, m]) => {
+          const ceil = Math.floor((optionSaving(k) * HZ) / 100) * 100;
+          const state = m.cost[0] > ceil ? 'ceil-out' : m.cost[1] > ceil ? 'ceil-maybe' : 'ceil-in';
+          return `<div class="${state}"><span class="mono-label">${m.short}: ceiling</span><strong>£${ceil.toLocaleString('en-GB')}</strong><span class="sub">Estimate £${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span></div>`;
+        }).join('');
       }
 
       // ---- Calculator
       const chips = stage.querySelector('[data-chips]'), figs = stage.querySelector('[data-figs]');
-      chips.innerHTML = Object.entries(D.measures).map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>£${(m.cost[0] / 1000).toFixed(1).replace('.0', '')}k-£${(m.cost[1] / 1000).toFixed(1).replace('.0', '')}k</span></label>`).join('') +
-        `<label class="chip chip--alt"><input type="checkbox" data-export/><i></i>Better export tariff <span>15p not 6p</span></label>`;
+      const kk = (m) => `£${(m.cost[0] / 1000).toFixed(1).replace('.0', '')}k-£${(m.cost[1] / 1000).toFixed(1).replace('.0', '')}k`;
+      const solarOpts = Object.entries(D.measures).filter(([, m]) => m.group === 'solar');
+      chips.innerHTML = `<span class="chips__label mono-label">Solar</span>` +
+        `<label class="chip"><input type="radio" name="solar" value="" ${solarOpts.some(([, m]) => m.on) ? '' : 'checked'}/><i></i>No panels</label>` +
+        solarOpts.map(([k, m]) => `<label class="chip"><input type="radio" name="solar" value="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>${kk(m)}</span></label>`).join('') +
+        `<span class="chips__label mono-label">Heating</span>` +
+        Object.entries(D.measures).filter(([, m]) => !m.group && m.kind !== 'tariff').map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>${kk(m)}</span></label>`).join('');
       figs.innerHTML = [['f-before', 'Bill today, E.ON'], ['f-after', 'Bill after'], ['f-save', 'Saving a year'], ['f-sm f-cost', 'Cost to fit'], ['f-sm f-pb', 'Kit pays back in']].map(([c, l]) => `<div class="${c}"><span class="mono-label">${l}</span><b></b></div>`).join('');
       // Tariff switch: today's E.ON tariff vs Octopus Snug
-      const RNOW = D.ratesNow || D.rates, today = runModel(D, { rates: RNOW });
       const tariffEl = document.createElement('div');
       tariffEl.className = 'tariff';
       tariffEl.innerHTML = `<span class="mono-label">Tariff</span>
@@ -840,8 +858,10 @@
       }));
       function drawCalc() {
         const rates = tariff === 'snug' ? D.rates : RNOW;
-        const opts = { rates, exportRate: chips.querySelector('[data-export]').checked ? 0.15 : 0.06 };
+        const opts = { rates };
         let lo = 0, hi = 0;
+        const sol = chips.querySelector('input[name="solar"]:checked')?.value;
+        if (sol) { opts[sol] = true; lo += D.measures[sol].cost[0]; hi += D.measures[sol].cost[1]; }
         chips.querySelectorAll('[data-measure]').forEach((i) => { const k = i.dataset.measure; opts[k] = i.checked; if (i.checked) { lo += D.measures[k].cost[0]; hi += D.measures[k].cost[1]; } });
         const r = runModel(D, opts), saving = today.total - r.total;
         const kitSaving = runModel(D, { rates }).total - r.total;
@@ -849,7 +869,7 @@
         f('.f-before', gbp(today.total)); f('.f-after', gbp(r.total)); f('.f-save', gbp(saving));
         f('.f-cost', lo ? `£${(lo / 1000).toFixed(1).replace('.0', '')}k-£${(hi / 1000).toFixed(1).replace('.0', '')}k` : '£0');
         f('.f-pb', kitSaving > 0 && lo ? `${Math.round(lo / kitSaving)}-${Math.round(hi / kitSaving)} years` : '-');
-        const pbEl = figs.querySelector('.f-pb b'), Hz = s.horizonYears || 15;
+        const pbEl = figs.querySelector('.f-pb b'), Hz = s.horizonYears || 10;
         pbEl.style.color = !lo || kitSaving <= 0 ? '' : lo / kitSaving > Hz ? css('--negative') : hi / kitSaving > Hz ? css('--warning') : css('--positive');
         const c = C();
         bars(stage.querySelector('[data-chart="calc"]'), { labels: M, mode: 'group', series: [
