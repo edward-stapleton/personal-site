@@ -80,6 +80,22 @@
     /* ---------- Deck shell ---------- */
     .deck { position: fixed; inset: 0; display: flex; flex-direction: column; }
     .deck__top { flex: none; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--pad-x); border-bottom: 1px solid var(--line); }
+    .deck__actions { display: flex; align-items: center; gap: 20px; }
+    .pdfbtn { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s ease, border-color .15s ease; }
+    .pdfbtn:hover { background: var(--paper-2); border-color: var(--ink-4); }
+    .pdfbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .pdfbtn:disabled { opacity: .6; cursor: progress; }
+    .pdfbtn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    /* Used only to render the PDF: every slide laid out as its own 16:9 page */
+    body.print-mode { height: auto; }
+    .print-mode .deck { position: static; display: block; }
+    .print-mode .deck__top, .print-mode .deck__bar { display: none; }
+    .print-mode .deck__stage { overflow: visible; }
+    .print-mode .slide { position: relative; inset: auto; width: 1600px; height: 900px; opacity: 1; visibility: visible; transform: none; transition: none; overflow: hidden; break-after: page; }
+    .print-mode .slide::after { content: 'Ed Stapleton · Home energy plan · November 2026'; position: absolute; left: var(--pad-x); bottom: 14px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-4); }
+    .print-mode .slide:last-child { break-after: auto; }
+    .print-mode .seg { display: none; }
+    .print-mode .s-cover::after { color: #fff; left: auto; right: 16px; }
     .deck__stage { position: relative; flex: 1; min-height: 0; overflow: hidden; }
     .deck__bar { flex: none; display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 var(--pad-x); border-top: 1px solid var(--line); }
     .progress { flex: 1; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
@@ -283,6 +299,9 @@
       .splitbar > div { padding: 0 10px; }
       .splitbar span { display: none; }
       .s-head { flex-direction: column; align-items: flex-start; }
+      #deck-title { display: none; }
+      .pdfbtn span { display: none; }
+      .pdfbtn { padding: 0 9px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .slide, .slide.is-active, .gate, .progress span { transition: none !important; }
@@ -309,7 +328,10 @@
   <div class="deck" id="deck" hidden>
     <header class="deck__top">
       <a class="wordmark" href="/" aria-label="Ed Stapleton, home"><span>Ed Stapleton</span><span class="dot" aria-hidden="true"></span></a>
-      <span class="mono-label" id="deck-title"></span>
+      <div class="deck__actions">
+        <span class="mono-label" id="deck-title"></span>
+        <button class="pdfbtn" id="pdf" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg><span>Download PDF</span></button>
+      </div>
     </header>
     <div class="deck__stage" id="stage" aria-live="polite"></div>
     <nav class="deck__bar" aria-label="Slides">
@@ -342,6 +364,12 @@
       }
       return bundle;
     }
+    let currentPassword = '';
+    async function decryptBytes(password, b) {
+      const baseKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+      const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: fromB64(b.salt), iterations: b.iterations }, baseKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      return crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(b.iv) }, key, fromB64(b.data));
+    }
     async function decrypt(password) {
       const b = await loadBundle();
       const baseKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
@@ -365,6 +393,7 @@
       button.disabled = true; button.textContent = 'Checking…'; feedback.textContent = ''; input.removeAttribute('aria-invalid');
       try {
         const html = await decrypt(password);
+        currentPassword = password;
         try { sessionStorage.setItem(SESSION_KEY, password); } catch {}
         reveal(html, true);
       } catch (err) {
@@ -374,7 +403,7 @@
     input.addEventListener('input', () => { if (input.hasAttribute('aria-invalid')) { input.removeAttribute('aria-invalid'); feedback.textContent = ''; } });
     let saved = null;
     try { saved = sessionStorage.getItem(SESSION_KEY); } catch {}
-    if (saved) decrypt(saved).then((html) => reveal(html, false)).catch(() => { try { sessionStorage.removeItem(SESSION_KEY); } catch {} });
+    if (saved) decrypt(saved).then((html) => { currentPassword = saved; reveal(html, false); }).catch(() => { try { sessionStorage.removeItem(SESSION_KEY); } catch {} });
     function reveal(html, animate) {
       const go = () => { gate.remove(); deckEl.hidden = false; startDeck(html); };
       if (animate) { gate.classList.add('leaving'); setTimeout(go, 350); } else go();
@@ -537,7 +566,7 @@
       stage.querySelectorAll('[data-house-svg]').forEach((h) => { h.innerHTML = houseSvg(); });
 
       const base = runModel(D, {});
-      const s = D.spec, R = D.rates, M = D.months;
+      const s = D.spec, R = D.rates, RN = D.ratesNow || D.rates, M = D.months;
       const baseKwh = D.days.map((d, i) => Math.min(s.baselinePerDay * d, D.dayKwh[i] + D.nightKwh[i]));
       const heatKwh = D.days.map((d, i) => D.dayKwh[i] + D.nightKwh[i] - baseKwh[i]);
 
@@ -546,10 +575,10 @@
       D.days.forEach((d, i) => {
         const b = s.baselinePerDay * d, bn = b * s.baselineNightShare, bd = b - bn;
         const hd = Math.max(D.dayKwh[i] - bd, 0), hn = Math.max(D.nightKwh[i] - bn, 0);
-        heatGbp += hd * R.day + hn * R.night;
-        otherGbp += (D.dayKwh[i] - hd) * R.day + (D.nightKwh[i] - hn) * R.night;
+        heatGbp += hd * RN.day + hn * RN.night;
+        otherGbp += (D.dayKwh[i] - hd) * RN.day + (D.nightKwh[i] - hn) * RN.night;
       });
-      const standGbp = D.days.reduce((a, d) => a + d * R.standingPerDay, 0), allGbp = heatGbp + otherGbp + standGbp;
+      const standGbp = D.days.reduce((a, d) => a + d * RN.standingPerDay, 0), allGbp = heatGbp + otherGbp + standGbp;
       const sb = stage.querySelector('[data-splitbar]');
       if (sb) sb.innerHTML = [
         ['sb-heat', heatGbp, 'Heating'], ['sb-other', otherGbp, 'Everything else'], ['sb-stand', standGbp, 'Standing']
@@ -633,9 +662,9 @@
         const host = stage.querySelector('[data-chart="bill"]'), c = C();
         if (unit === 'gbp') {
           bars(host, { labels: M, highlight: [jan, aug], series: [
-            { name: 'Standing charge', color: c.p3, values: D.days.map((d) => d * R.standingPerDay) },
-            { name: 'Night rate', color: c.ink4, values: D.nightKwh.map((k) => k * R.night) },
-            { name: 'Day rate', color: c.accent, values: D.dayKwh.map((k) => k * R.day) } ],
+            { name: 'Standing charge', color: c.p3, values: D.days.map((d) => d * RN.standingPerDay) },
+            { name: 'Night rate', color: c.ink4, values: D.nightKwh.map((k) => k * RN.night) },
+            { name: 'Day rate', color: c.accent, values: D.dayKwh.map((k) => k * RN.day) } ],
             legendItems: [['Day rate', c.accent], ['Night rate', c.ink4], ['Standing charge', c.p3]] });
         } else {
           bars(host, { labels: M, highlight: [jan, aug], fmt: kwhF, series: [
@@ -726,7 +755,7 @@
       const chips = stage.querySelector('[data-chips]'), figs = stage.querySelector('[data-figs]');
       chips.innerHTML = Object.entries(D.measures).map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>£${(m.cost[0] / 1000).toFixed(1).replace('.0', '')}k-£${(m.cost[1] / 1000).toFixed(1).replace('.0', '')}k</span></label>`).join('') +
         `<label class="chip chip--alt"><input type="checkbox" data-export/><i></i>Better export tariff <span>15p not 6p</span></label>`;
-      figs.innerHTML = [['f-before', 'Bill today'], ['f-after', 'Bill after'], ['f-save', 'Saving a year'], ['f-sm f-cost', 'Cost to fit'], ['f-sm f-pb', 'Pays back in']].map(([c, l]) => `<div class="${c}"><span class="mono-label">${l}</span><b></b></div>`).join('');
+      figs.innerHTML = [['f-before', 'On Snug, as now'], ['f-after', 'Bill after'], ['f-save', 'Saving a year'], ['f-sm f-cost', 'Cost to fit'], ['f-sm f-pb', 'Pays back in']].map(([c, l]) => `<div class="${c}"><span class="mono-label">${l}</span><b></b></div>`).join('');
       function drawCalc() {
         const opts = { exportRate: chips.querySelector('[data-export]').checked ? 0.15 : 0.06 };
         let lo = 0, hi = 0;
@@ -738,9 +767,9 @@
         f('.f-pb', saving > 0 && lo ? `${Math.round(lo / saving)}-${Math.round(hi / saving)} years` : '-');
         const c = C();
         bars(stage.querySelector('[data-chart="calc"]'), { labels: M, mode: 'group', series: [
-          { name: 'Today', color: c.muted, textColor: c.ink3, values: base.months.map((m) => m.cost) },
+          { name: 'On Snug, as now', color: c.muted, textColor: c.ink3, values: base.months.map((m) => m.cost) },
           { name: 'With your plan', color: c.accent, textColor: c.accent, values: r.months.map((m) => Math.max(m.cost, 0)) } ],
-          legendItems: [['Today', c.muted], ['With your plan', c.accent]] });
+          legendItems: [['On Snug, as now', c.muted], ['With your plan', c.accent]] });
       }
       chips.addEventListener('change', drawCalc);
 
@@ -756,6 +785,31 @@
       new ResizeObserver(redraw).observe(stage);
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', redraw);
       document.fonts?.ready.then(redraw);
+
+      // ---- PDF download (an encrypted copy, unlocked with the same password)
+      const pdfBtn = document.getElementById('pdf');
+      pdfBtn.addEventListener('click', async () => {
+        const label = pdfBtn.querySelector('span'), was = 'Download PDF';
+        pdfBtn.disabled = true; label.textContent = 'Preparing…';
+        try {
+          const res = await fetch('deck.pdf.enc.json', { cache: 'no-cache' });
+          if (!res.ok) throw new Error('load');
+          const bytes = await decryptBytes(currentPassword, await res.json());
+          const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+          const a = document.createElement('a');
+          a.href = url; a.download = 'Home energy plan - 52 Portway Drive.pdf';
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
+          label.textContent = was;
+        } catch {
+          label.textContent = 'Try again';
+        } finally { pdfBtn.disabled = false; }
+      });
+      window.__portwayPrintMode = () => {
+        document.body.classList.add('print-mode');
+        slides.forEach((sl) => { sl.inert = false; sl.removeAttribute('aria-hidden'); });
+        drawAll();
+      };
 
       // ---- Navigation
       const prev = document.getElementById('prev'), next = document.getElementById('next');
