@@ -239,6 +239,9 @@
     .chip input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 2px; }
     .chip span { color: var(--ink-3); font-size: 13px; font-variant-numeric: tabular-nums; }
     .chip--alt { border-style: dashed; }
+    .tariff { flex: none; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .seg--lg button { padding: 8px 18px; font-family: var(--font-sans); font-size: 15px; font-weight: 500; }
+    .seg--lg button small { font-family: var(--font-mono); font-size: 12px; opacity: .7; margin-left: 6px; }
     .figs { flex: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
     .figs > div { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--line); }
     .figs b { font-size: clamp(1.5rem, 2.8vw, 2.5rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1.05; font-variant-numeric: tabular-nums; }
@@ -429,7 +432,7 @@
 
     /* ================= Model ================= */
     function runModel(D, opts) {
-      const s = D.spec, R = D.rates, exportRate = opts.exportRate || 0.06;
+      const s = D.spec, R = opts.rates || D.rates, exportRate = opts.exportRate || 0.06;
       const months = [];
       for (let i = 0; i < 12; i++) {
         const days = D.days[i];
@@ -633,7 +636,7 @@
           <div class="urow__name"><span class="mono-label">Plan</span><strong>Air-to-air heat pumps</strong></div>
           <div class="urow__in"><span class="unit unit--in">${bolt}</span></div>
           <div class="urow__out"><span class="urow__arrow">1 unit in →</span><span class="unit unit--out">${flame}</span><span class="unit unit--out">${flame}</span><span class="unit unit--out">${flame}</span><span class="unit unit--out unit--half">${''}</span><span class="urow__arrow">3.5 units of heat</span></div>
-          <div class="urow__total"><b>${kwhF(hpElec)}</b><span>kWh a year (heaters stay in the hall and bathrooms)</span></div>
+          <div class="urow__total"><b>${kwhF(hpElec)}</b><span>kWh a year (the playroom and small rooms keep their heaters)</span></div>
         </div>`;
 
       // ---- Rooms to scale
@@ -644,12 +647,13 @@
           const label = kind === 'keep' ? 'Keep heater' : kind === 'optional' ? `${kw} · optional` : kw;
           return `<div class="room room--${kind}" style="--a:${area};--b:${(area / total) * 300}">
             <div><strong>${name}</strong><br><small>${area.toFixed(1).replace('.0', '')} m²</small></div>
-            <div>${kind === 'keep' ? `<em>${label}</em>` : `<span class="room__kw">${kw}</span>${note ? `<br><em>${note}</em>` : kind === 'optional' ? '<br><em>Optional</em>' : ''}`}</div>
+            <div>${kind === 'keep' ? `<em>${note || label}</em>` : `<span class="room__kw">${kw}</span>${note ? `<br><em>${note}</em>` : kind === 'optional' ? '<br><em>Optional</em>' : ''}`}</div>
           </div>`;
         }).join('');
         const heated = D.rooms.filter((r) => r[2] === 'unit').reduce((a, r) => a + r[1], 0);
         const ha = stage.querySelector('[data-rooms-area]');
-        if (ha) ha.textContent = `~${Math.round(heated / 5) * 5}-${Math.round((heated + D.rooms.find((r) => r[2] === 'optional')[1]) / 5) * 5} m²`;
+        const opt = D.rooms.filter((r) => r[2] === 'optional').reduce((a, r) => a + r[1], 0);
+        if (ha) ha.textContent = opt ? `~${Math.round(heated / 5) * 5}-${Math.round((heated + opt) / 5) * 5} m²` : `~${Math.round(heated / 5) * 5} m²`;
       }
 
       // ---- Gantt
@@ -789,21 +793,39 @@
       const chips = stage.querySelector('[data-chips]'), figs = stage.querySelector('[data-figs]');
       chips.innerHTML = Object.entries(D.measures).map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>£${(m.cost[0] / 1000).toFixed(1).replace('.0', '')}k-£${(m.cost[1] / 1000).toFixed(1).replace('.0', '')}k</span></label>`).join('') +
         `<label class="chip chip--alt"><input type="checkbox" data-export/><i></i>Better export tariff <span>15p not 6p</span></label>`;
-      figs.innerHTML = [['f-before', 'On Snug, as now'], ['f-after', 'Bill after'], ['f-save', 'Saving a year'], ['f-sm f-cost', 'Cost to fit'], ['f-sm f-pb', 'Pays back in']].map(([c, l]) => `<div class="${c}"><span class="mono-label">${l}</span><b></b></div>`).join('');
+      figs.innerHTML = [['f-before', 'Bill today, E.ON'], ['f-after', 'Bill after'], ['f-save', 'Saving a year'], ['f-sm f-cost', 'Cost to fit'], ['f-sm f-pb', 'Kit pays back in']].map(([c, l]) => `<div class="${c}"><span class="mono-label">${l}</span><b></b></div>`).join('');
+      // Tariff switch: today's E.ON tariff vs Octopus Snug
+      const RNOW = D.ratesNow || D.rates, today = runModel(D, { rates: RNOW });
+      const tariffEl = document.createElement('div');
+      tariffEl.className = 'tariff';
+      tariffEl.innerHTML = `<span class="mono-label">Tariff</span>
+        <div class="seg seg--lg" role="group" aria-label="Tariff">
+          <button type="button" data-tariff="now" aria-pressed="false">${RNOW.name || 'Today'} <small>${(RNOW.day * 100).toFixed(1)}p / ${(RNOW.night * 100).toFixed(1)}p</small></button>
+          <button type="button" data-tariff="snug" aria-pressed="true">${D.rates.name || 'New'} <small>${(D.rates.day * 100).toFixed(0)}p / ${(D.rates.night * 100).toFixed(2)}p</small></button>
+        </div>`;
+      chips.before(tariffEl);
+      let tariff = 'snug';
+      tariffEl.querySelectorAll('[data-tariff]').forEach((b) => b.addEventListener('click', () => {
+        tariff = b.dataset.tariff;
+        tariffEl.querySelectorAll('[data-tariff]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        drawCalc();
+      }));
       function drawCalc() {
-        const opts = { exportRate: chips.querySelector('[data-export]').checked ? 0.15 : 0.06 };
+        const rates = tariff === 'snug' ? D.rates : RNOW;
+        const opts = { rates, exportRate: chips.querySelector('[data-export]').checked ? 0.15 : 0.06 };
         let lo = 0, hi = 0;
         chips.querySelectorAll('[data-measure]').forEach((i) => { const k = i.dataset.measure; opts[k] = i.checked; if (i.checked) { lo += D.measures[k].cost[0]; hi += D.measures[k].cost[1]; } });
-        const r = runModel(D, opts), saving = base.total - r.total;
+        const r = runModel(D, opts), saving = today.total - r.total;
+        const kitSaving = runModel(D, { rates }).total - r.total;
         const f = (sel, v) => { figs.querySelector(sel + ' b').textContent = v; };
-        f('.f-before', gbp(base.total)); f('.f-after', gbp(r.total)); f('.f-save', gbp(saving));
+        f('.f-before', gbp(today.total)); f('.f-after', gbp(r.total)); f('.f-save', gbp(saving));
         f('.f-cost', lo ? `£${(lo / 1000).toFixed(1).replace('.0', '')}k-£${(hi / 1000).toFixed(1).replace('.0', '')}k` : '£0');
-        f('.f-pb', saving > 0 && lo ? `${Math.round(lo / saving)}-${Math.round(hi / saving)} years` : '-');
+        f('.f-pb', kitSaving > 0 && lo ? `${Math.round(lo / kitSaving)}-${Math.round(hi / kitSaving)} years` : '-');
         const c = C();
         bars(stage.querySelector('[data-chart="calc"]'), { labels: M, mode: 'group', series: [
-          { name: 'On Snug, as now', color: c.muted, textColor: c.ink3, values: base.months.map((m) => m.cost) },
-          { name: 'With your plan', color: c.accent, textColor: c.accent, values: r.months.map((m) => Math.max(m.cost, 0)) } ],
-          legendItems: [['On Snug, as now', c.muted], ['With your plan', c.accent]] });
+          { name: 'Today, E.ON', color: c.muted, textColor: c.ink3, values: today.months.map((m) => m.cost) },
+          { name: 'With your choices', color: c.accent, textColor: c.accent, values: r.months.map((m) => Math.max(m.cost, 0)) } ],
+          legendItems: [['Today, E.ON', c.muted], ['With your choices', c.accent]] });
       }
       chips.addEventListener('change', drawCalc);
 
