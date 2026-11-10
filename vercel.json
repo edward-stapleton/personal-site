@@ -10,6 +10,11 @@
       "source": "/place/pitch-deck",
       "destination": "/place/pitch-deck/",
       "permanent": true
+    },
+    {
+      "source": "/portway",
+      "destination": "/portway/",
+      "permanent": true
     }
   ],
   "rewrites": [
