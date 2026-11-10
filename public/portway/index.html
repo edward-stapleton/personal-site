@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Ed Stapleton</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#fafaf7" />
+  <script>
+    // The page is decrypted with Web Crypto, which browsers only allow on secure pages.
+    if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      location.replace('https:' + location.href.slice(5));
+    }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preload" href="fonts/geist-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/geist-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+  <style>
+    @font-face { font-family: 'Geist'; font-weight: 400; font-display: swap; src: url(fonts/geist-latin-400-normal.woff2) format('woff2'); }
+    @font-face { font-family: 'Geist'; font-weight: 500; font-display: swap; src: url(fonts/geist-latin-500-normal.woff2) format('woff2'); }
+    @font-face { font-family: 'Geist'; font-weight: 600; font-display: swap; src: url(fonts/geist-latin-600-normal.woff2) format('woff2'); }
+    @font-face { font-family: 'Geist Mono'; font-weight: 400; font-display: swap; src: url(fonts/geist-mono-latin-400-normal.woff2) format('woff2'); }
+    @font-face { font-family: 'Geist Mono'; font-weight: 500; font-display: swap; src: url(fonts/geist-mono-latin-500-normal.woff2) format('woff2'); }
+    @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/instrument-serif-latin-400-italic.woff2) format('woff2'); }
+
+    /* Ed Stapleton brand tokens, from the "Quiet machine" design system (src/styles/global.css) */
+    :root {
+      --paper: #fafaf7; --paper-2: #f4f3ee; --paper-3: #eceae2;
+      --ink: #0a0a0b; --ink-2: #2a2a2c; --ink-3: #5a5a5e; --ink-4: #8a8a8e;
+      --line: #e0ded7; --accent: #2547f5; --accent-soft: #dfe5fe;
+      --positive: #1e7a4c; --warning: #b26b12;
+      --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+      --r-sm: 4px; --r-md: 10px; --r-lg: 16px;
+      --ease: cubic-bezier(0.32, 0.72, 0, 1);
+      --sun: #e3a514;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --paper: #0a0a0b; --paper-2: #161618; --paper-3: #1f1f22;
+        --ink: #fafaf7; --ink-2: #d6d5cf; --ink-3: #8a8a8e; --ink-4: #5a5a5e;
+        --line: #2a2a2c; --accent: #4d6bff; --accent-soft: #1c2450;
+        --positive: #3fb47a; --warning: #e0a04a;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: var(--font-sans); font-size: 18px; line-height: 1.55; color: var(--ink); background: var(--paper);
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    button { font: inherit; color: inherit; }
+    .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+    .mono-label {
+      display: block; margin: 0; font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3);
+    }
+    .wordmark { display: inline-flex; align-items: baseline; gap: 2px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+    .wordmark .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+    /* ---------- Gate ---------- */
+    .gate { display: grid; place-items: center; min-height: 100vh; min-height: 100dvh; padding: 16px; transition: opacity .35s ease; }
+    .gate.leaving { opacity: 0; }
+    .gate__inner { width: min(100%, 360px); display: flex; flex-direction: column; gap: 20px; }
+    .gate__inner .wordmark { font-size: 18px; }
+    .gate h1 { margin: 0; font-size: clamp(2.2rem, 8vw, 3.25rem); line-height: 1.04; letter-spacing: -0.035em; font-weight: 600; }
+    .gate h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+    .unlock { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+    .unlock input {
+      height: 48px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper-2);
+      color: var(--ink); font: inherit; font-size: 16px; outline: none; transition: border-color .15s ease;
+    }
+    .unlock input:focus-visible { border-color: var(--accent); }
+    .unlock input[aria-invalid="true"] { border-color: #b53d2e; }
+    .unlock button {
+      height: 48px; border: 0; border-radius: var(--r-md); background: var(--ink); color: var(--paper);
+      font-weight: 600; cursor: pointer; transition: opacity .15s ease, transform .1s ease;
+    }
+    .unlock button:hover { opacity: .88; }
+    .unlock button:active { transform: scale(.98); }
+    .unlock button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .unlock button:disabled { opacity: .6; cursor: progress; }
+    .feedback { margin: 0; min-height: 1.5em; font-size: 15px; color: #b53d2e; }
+    .shake { animation: shake .4s ease; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+
+    /* ---------- Deck shell ---------- */
+    .deck { position: fixed; inset: 0; display: flex; flex-direction: column; }
+    .deck__top {
+      flex: none; height: 56px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(16px, 4vw, 40px); border-bottom: 1px solid var(--line);
+    }
+    .deck__title { color: var(--ink-3); }
+    .deck__stage { position: relative; flex: 1; overflow: hidden; }
+    .slide {
+      position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding: clamp(24px, 5vh, 56px) clamp(16px, 5vw, 72px) 40px;
+      display: flex; flex-direction: column; justify-content: center; gap: 20px;
+      opacity: 0; visibility: hidden; transform: translateX(24px);
+      transition: opacity .45s var(--ease), transform .45s var(--ease), visibility 0s linear .45s;
+    }
+    .slide.is-before { transform: translateX(-24px); }
+    .slide.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity .45s var(--ease), transform .45s var(--ease); }
+    .slide > * { width: 100%; max-width: 1160px; margin-inline: auto; }
+    .deck__bar {
+      flex: none; display: flex; align-items: center; gap: 16px; height: 64px;
+      padding: 0 clamp(16px, 4vw, 40px); border-top: 1px solid var(--line);
+    }
+    .progress { flex: 1; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
+    .progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .45s var(--ease); }
+    .count { font-family: var(--font-mono); font-size: 13px; color: var(--ink-3); min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
+    .navbtn {
+      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper);
+      display: grid; place-items: center; cursor: pointer; transition: background .15s ease, border-color .15s ease;
+    }
+    .navbtn:hover { background: var(--paper-2); border-color: var(--ink-4); }
+    .navbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .navbtn:disabled { opacity: .35; cursor: default; }
+    .navbtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ---------- Slide content ---------- */
+    .slide h1, .slide h2 { margin: 0; font-weight: 600; letter-spacing: -0.035em; line-height: 1.06; }
+    .slide h1 { font-size: clamp(2.5rem, 6.5vw, 5.25rem); }
+    .slide h2 { font-size: clamp(1.8rem, 4.2vw, 3.25rem); max-width: 22ch; margin-inline: 0; }
+    .slide h3 { margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+    .slide p { margin: 0; }
+    .serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+    .hl { color: var(--accent); }
+    .lede { font-size: clamp(1.1rem, 1.8vw, 1.375rem); color: var(--ink-2); max-width: 36ch; }
+    .byline { color: var(--ink-3); font-size: 15px; }
+    .prose { display: flex; flex-direction: column; gap: 14px; color: var(--ink-2); max-width: 46ch; }
+    .prose strong, .checks strong { color: var(--ink); font-weight: 600; }
+    .foot { color: var(--ink-3); font-size: 15px; max-width: 80ch; }
+
+    .cover { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 4vw, 64px); align-items: center; }
+    .cover__text { display: flex; flex-direction: column; gap: 22px; }
+    .cover__art { margin: 0; }
+
+    .split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+    .split--wide-left { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; }
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 56px); }
+
+    .stats { display: flex; flex-direction: column; gap: 22px; }
+    .stat { display: flex; flex-direction: column; gap: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .stat__n { font-size: clamp(1.6rem, 3vw, 2.25rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .stat__l { color: var(--ink-3); font-size: 15px; }
+
+    .chart-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .chart-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .chart-note { font-size: 13px; color: var(--ink-3); }
+    .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .chart .axis { font-family: var(--font-mono); font-size: 11px; fill: var(--ink-3); }
+    .chart .grid { stroke: var(--line); stroke-width: 1; }
+    .chart .bar { transition: height .5s var(--ease), y .5s var(--ease); }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-3); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+    .chart-tip {
+      position: fixed; pointer-events: none; z-index: 50; background: var(--ink); color: var(--paper);
+      font-size: 13px; padding: 6px 10px; border-radius: 6px; opacity: 0; transition: opacity .12s ease; white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--paper); }
+    .seg button { border: 0; background: none; padding: 4px 14px; border-radius: 999px; font-family: var(--font-mono); font-size: 12px; cursor: pointer; color: var(--ink-3); }
+    .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+    .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+    .checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; color: var(--ink-2); }
+    .checks li { position: relative; padding-left: 28px; }
+    .checks li::before {
+      content: ''; position: absolute; left: 0; top: 7px; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--positive) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2l2 2 4-4.4' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;
+    }
+    .checks li.warn::before { background: var(--warning) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 3.6v4.2M7 10.2v.1' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E") center/14px no-repeat; }
+    .slide[data-title="Assumptions"] .checks li::before { background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M5.2 5.4a1.9 1.9 0 113 1.5c-.7.4-1.2.8-1.2 1.6M7 10.3v.1' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center/14px no-repeat; }
+
+    .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper-2); }
+    .card p { color: var(--ink-2); font-size: 16px; }
+    .card__n { font-family: var(--font-mono); font-size: 13px; color: var(--ink-3); }
+    .card--accent { border-color: var(--accent); }
+    .card--accent .card__n { color: var(--accent); }
+    .card--muted { background: transparent; border-style: dashed; }
+    .card__cost { margin-top: auto !important; padding-top: 12px; border-top: 1px solid var(--line); font-weight: 600; color: var(--ink) !important; font-variant-numeric: tabular-nums; }
+
+    .spec { margin: 0; display: flex; flex-direction: column; }
+    .spec div { display: grid; grid-template-columns: 9.5em 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+    .spec dt { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding-top: 4px; }
+    .spec dd { margin: 0; color: var(--ink); }
+
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .compare__col { padding: 24px; border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; gap: 10px; }
+    .compare__col--pick { border-color: var(--accent); background: var(--paper-2); }
+    .compare__col--pick .mono-label { color: var(--accent); }
+    .compare ul { margin: 6px 0 0; padding-left: 1.1em; color: var(--ink-2); display: flex; flex-direction: column; gap: 6px; }
+
+    .table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    .table th { text-align: left; font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding: 0 0 10px; border-bottom: 1px solid var(--ink); }
+    .table td { padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+    .table .num { text-align: right; white-space: nowrap; padding-left: 16px; }
+    .table tr.muted td { color: var(--ink-3); font-style: italic; }
+    .table tfoot td { font-weight: 600; color: var(--ink); border-bottom: 0; }
+
+    .timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; counter-reset: t; }
+    .timeline li { position: relative; padding-top: 22px; display: flex; flex-direction: column; gap: 6px; }
+    .timeline li::before { content: ''; position: absolute; top: 0; left: 0; right: -14px; height: 2px; background: var(--line); }
+    .timeline li::after { content: ''; position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+    .timeline li:last-child::before { right: 0; }
+    .timeline li:last-child::after { background: var(--positive); }
+    .timeline p { font-size: 15px; color: var(--ink-3); }
+
+    .owners { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+    .owners li { display: grid; grid-template-columns: 8.5em 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); color: var(--ink-2); }
+    .owner { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); padding-top: 4px; }
+
+    /* Calculator */
+    .calc { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
+    .calc__controls { display: flex; flex-direction: column; gap: 10px; }
+    .calc__controls > div { display: flex; flex-direction: column; gap: 10px; }
+    .toggle { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-md); cursor: pointer; background: var(--paper); transition: border-color .15s ease, background .15s ease; }
+    .toggle:has(input:checked) { border-color: var(--accent); background: var(--paper-2); }
+    .toggle--small { border-style: dashed; }
+    .toggle input { position: absolute; opacity: 0; pointer-events: none; }
+    .toggle__ui { width: 38px; height: 22px; border-radius: 999px; background: var(--paper-3); position: relative; transition: background .2s ease; border: 1px solid var(--line); }
+    .toggle__ui::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .2s var(--ease); }
+    .toggle input:checked + .toggle__ui { background: var(--accent); border-color: var(--accent); }
+    .toggle input:checked + .toggle__ui::after { transform: translateX(16px); }
+    .toggle input:focus-visible + .toggle__ui { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .toggle__text { display: flex; flex-direction: column; gap: 2px; font-size: 15px; line-height: 1.35; }
+    .toggle__text span { color: var(--ink-3); font-size: 13px; }
+    .calc__out { display: flex; flex-direction: column; gap: 16px; }
+    .calc__figs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .calc__figs > div { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .calc__n { font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .calc__n--accent { color: var(--accent); }
+    .calc__n--pos { color: var(--positive); }
+    .calc__n--sm { font-size: clamp(1.05rem, 1.6vw, 1.3rem); }
+
+    .house-large svg, .cover__art svg { width: 100%; height: auto; display: block; }
+
+    @media (max-width: 900px) {
+      .cover, .split, .split--wide-left, .cols, .compare, .calc { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .timeline { grid-template-columns: 1fr 1fr; row-gap: 24px; }
+      .timeline li::before { right: 0; }
+      .calc__figs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .slide { justify-content: flex-start; }
+      .cover__art { order: -1; max-width: 520px; }
+    }
+    @media (max-width: 520px) {
+      body { font-size: 16px; }
+      .cards { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: 1fr; }
+      .calc__figs { grid-template-columns: 1fr 1fr; }
+      .spec div, .owners li { grid-template-columns: 1fr; gap: 2px; }
+      .deck__title { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .slide, .slide.is-active, .gate, .progress span, .chart .bar { transition: none !important; }
+      .shake { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="gate" id="gate">
+    <div class="gate__inner">
+      <a class="wordmark" href="/" aria-label="Ed Stapleton, home"><span>Ed Stapleton</span><span class="dot" aria-hidden="true"></span></a>
+      <p class="mono-label">Private page</p>
+      <h1>Home energy <em>plan.</em></h1>
+      <form class="unlock" id="unlock" novalidate>
+        <label class="visually-hidden" for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Password"
+               autocomplete="current-password" autocapitalize="off" spellcheck="false" aria-describedby="feedback" required />
+        <button type="submit">Open</button>
+      </form>
+      <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+    </div>
+  </main>
+
+  <div class="deck" id="deck" hidden>
+    <header class="deck__top">
+      <a class="wordmark" href="/" aria-label="Ed Stapleton, home"><span>Ed Stapleton</span><span class="dot" aria-hidden="true"></span></a>
+      <span class="mono-label deck__title" id="deck-title"></span>
+    </header>
+    <div class="deck__stage" id="stage" aria-live="polite"></div>
+    <nav class="deck__bar" aria-label="Slides">
+      <button class="navbtn" id="prev" type="button" aria-label="Previous slide"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+      <span class="count" id="count"></span>
+      <button class="navbtn" id="next" type="button" aria-label="Next slide"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+    </nav>
+  </div>
+  <div class="chart-tip" id="tip" role="presentation"></div>
+
+  <script>
+  (function () {
+    const form = document.getElementById('unlock');
+    const input = document.getElementById('password');
+    const button = form.querySelector('button');
+    const feedback = document.getElementById('feedback');
+    const gate = document.getElementById('gate');
+    const deckEl = document.getElementById('deck');
+    const SESSION_KEY = 'portway-deck-pw';
+    const fromB64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+    let bundle;
+    async function loadBundle() {
+      if (!bundle) {
+        const res = await fetch('deck.enc.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('load');
+        bundle = await res.json();
+      }
+      return bundle;
+    }
+
+    async function decrypt(password) {
+      const b = await loadBundle();
+      const baseKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+      const key = await crypto.subtle.deriveKey(
+        { name: 'PBKDF2', hash: 'SHA-256', salt: fromB64(b.salt), iterations: b.iterations },
+        baseKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      try {
+        const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(b.iv) }, key, fromB64(b.data));
+        return new TextDecoder().decode(plain);
+      } catch { throw new Error('password'); }
+    }
+
+    function fail(message) {
+      feedback.textContent = message;
+      input.setAttribute('aria-invalid', 'true');
+      form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
+      input.focus(); input.select();
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = input.value;
+      if (!password) { fail('Please enter the password.'); return; }
+      if (!window.crypto || !crypto.subtle) { fail('This browser can’t open the page. Please use an up-to-date browser.'); return; }
+      button.disabled = true; button.textContent = 'Checking…'; feedback.textContent = ''; input.removeAttribute('aria-invalid');
+      try {
+        const html = await decrypt(password);
+        try { sessionStorage.setItem(SESSION_KEY, password); } catch {}
+        open(html, true);
+      } catch (err) {
+        fail(err.message === 'password' ? 'That password isn’t right. Please try again.' : 'Couldn’t load the page. Check your connection and try again.');
+      } finally { button.disabled = false; button.textContent = 'Open'; }
+    });
+    input.addEventListener('input', () => { if (input.hasAttribute('aria-invalid')) { input.removeAttribute('aria-invalid'); feedback.textContent = ''; } });
+
+    let saved = null;
+    try { saved = sessionStorage.getItem(SESSION_KEY); } catch {}
+    if (saved) decrypt(saved).then((html) => open(html, false)).catch(() => { try { sessionStorage.removeItem(SESSION_KEY); } catch {} });
+
+    function open(html, animate) {
+      const reveal = () => { gate.remove(); deckEl.hidden = false; startDeck(html); };
+      if (animate) { gate.classList.add('leaving'); setTimeout(reveal, 350); } else reveal();
+    }
+
+    /* ---------------- Model ---------------- */
+    function runModel(D, opts) {
+      const s = D.spec, R = D.rates, exportRate = opts.exportRate || 0.06;
+      const months = [];
+      for (let i = 0; i < 12; i++) {
+        const days = D.days[i];
+        const base = s.baselinePerDay * days, baseNight = base * s.baselineNightShare, baseDay = base - baseNight;
+        let heatDay = Math.max(D.dayKwh[i] - baseDay, 0), heatNight = Math.max(D.nightKwh[i] - baseNight, 0);
+        let hw = s.hotWaterPerDay * days;
+        const otherDay = baseDay, otherNight = baseNight - hw;
+        if (opts.insulation) { heatDay *= 1 - s.insulationCut; heatNight *= 1 - s.insulationCut; }
+        if (opts.heatPump) {
+          const heat = heatDay + heatNight, left = heat * (1 - s.heatPumpCoverage), hp = heat * s.heatPumpCoverage / s.heatPumpScop;
+          const share = heat ? heatDay / heat : 0.5;
+          heatDay = left * share + hp * s.heatPumpDayShare;
+          heatNight = left * (1 - share) + hp * (1 - s.heatPumpDayShare);
+        }
+        if (opts.hotWater) hw /= s.hotWaterCop;
+        let day = otherDay + heatDay, night = otherNight + heatNight + hw, exported = 0, gen = 0;
+        if (opts.solar) {
+          gen = D.solarPerKwp[i] * s.solarKwp;
+          const toDay = Math.min(gen * s.batteryEfficiency, day); day -= toDay;
+          let surplus = gen - toDay / s.batteryEfficiency;
+          const toNight = Math.min(surplus * s.batteryEfficiency, night * 0.5); night -= toNight;
+          surplus -= toNight / s.batteryEfficiency; exported = Math.max(surplus, 0);
+          if (day > 0) { const shift = Math.min(day, s.batteryKwh * 0.9 * days); day -= shift; night += shift / s.batteryEfficiency; }
+        }
+        const cost = day * R.day + night * R.night + days * R.standingPerDay - exported * exportRate;
+        months.push({ day, night, kwh: day + night, gen, exported, cost });
+      }
+      return { months, total: months.reduce((a, m) => a + m.cost, 0) };
+    }
+
+    /* ---------------- Charts ---------------- */
+    const NS = 'http://www.w3.org/2000/svg';
+    const tip = document.getElementById('tip');
+    const gbp = (n) => (n < 0 ? '-£' : '£') + Math.round(Math.abs(n)).toLocaleString('en-GB');
+    const kwh = (n) => Math.round(n).toLocaleString('en-GB') + ' kWh';
+    function el(name, attrs, parent) { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+    function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
+
+    // series: [{name, color, values}], mode: 'stack' | 'group'
+    function barChart(host, { labels, series, mode = 'stack', fmt = gbp, height = 260 }) {
+      host.innerHTML = '';
+      const W = 640, H = height, L = 44, B = 24, T = 8, Rp = 4;
+      const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img' }, host);
+      const totals = labels.map((_, i) => mode === 'stack' ? series.reduce((a, s) => a + Math.max(s.values[i], 0), 0) : Math.max(...series.map((s) => s.values[i])));
+      const max = niceMax(Math.max(...totals) * 1.05 || 1);
+      const y = (v) => T + (H - T - B) * (1 - v / max);
+      for (let k = 0; k <= 4; k++) {
+        const v = (max / 4) * k, yy = y(v);
+        el('line', { x1: L, x2: W - Rp, y1: yy, y2: yy, class: 'grid' }, svg);
+        const t = el('text', { x: L - 8, y: yy + 4, 'text-anchor': 'end', class: 'axis' }, svg);
+        t.textContent = fmt === gbp ? '£' + Math.round(v).toLocaleString('en-GB') : Math.round(v).toLocaleString('en-GB');
+      }
+      const step = (W - L - Rp) / labels.length, bw = step * 0.62;
+      labels.forEach((lab, i) => {
+        const x0 = L + step * i + (step - bw) / 2;
+        let acc = 0;
+        series.forEach((s, j) => {
+          const v = Math.max(s.values[i], 0);
+          let x = x0, w = bw, top, h;
+          if (mode === 'stack') { top = y(acc + v); h = y(acc) - y(acc + v); acc += v; }
+          else { w = bw / series.length; x = x0 + w * j; top = y(v); h = y(0) - y(v); }
+          const r = el('rect', { x, y: top, width: Math.max(w - (mode === 'group' ? 2 : 0), 1), height: Math.max(h, 0), fill: s.color, rx: 2, class: 'bar' }, svg);
+          r.addEventListener('pointerenter', (e) => {
+            if (e.pointerType === 'mouse' && !e.clientX && !e.clientY) return;
+            tip.textContent = `${lab} · ${s.name}: ${fmt(s.values[i])}`;
+            tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 34 + 'px'; tip.style.opacity = 1;
+          });
+          r.addEventListener('pointermove', (e) => { tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 34 + 'px'; });
+          r.addEventListener('pointerleave', () => { tip.style.opacity = 0; });
+        });
+        const t = el('text', { x: L + step * i + step / 2, y: H - 6, 'text-anchor': 'middle', class: 'axis' }, svg);
+        t.textContent = lab;
+      });
+      if (series.length > 1) {
+        const lg = document.createElement('div'); lg.className = 'legend';
+        lg.innerHTML = series.map((s) => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('');
+        host.appendChild(lg);
+      }
+    }
+
+    /* ---------------- House illustration ---------------- */
+    function houseSvg() {
+      // Front (south) elevation: two storeys, pitched roof with 16 panels, gable chimney, garage.
+      let panels = '';
+      const px0 = 118, py0 = 92, pw = 33, ph = 25, gap = 3;
+      for (let r = 0; r < 2; r++) for (let c = 0; c < 8; c++) {
+        const x = px0 + c * (pw + gap) + r * 0, y = py0 + r * (ph + gap);
+        panels += `<rect x="${x}" y="${y}" width="${pw}" height="${ph}" rx="1.5" fill="var(--ink)" stroke="var(--ink-3)" stroke-width="0.6"/>` +
+          `<line x1="${x + pw / 2}" y1="${y}" x2="${x + pw / 2}" y2="${y + ph}" stroke="var(--ink-3)" stroke-width="0.4"/>` +
+          `<line x1="${x}" y1="${y + ph / 2}" x2="${x + pw}" y2="${y + ph / 2}" stroke="var(--ink-3)" stroke-width="0.4"/>`;
+      }
+      const win = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="var(--accent-soft)" stroke="var(--ink-2)" stroke-width="1.2"/><line x1="${x + w / 2}" y1="${y}" x2="${x + w / 2}" y2="${y + h}" stroke="var(--ink-2)" stroke-width="1"/>`;
+      return `<svg viewBox="0 0 520 330" role="img" aria-label="Illustration of the house from the front, with 16 solar panels on the south-facing roof">
+        <circle cx="462" cy="46" r="20" fill="var(--sun)" opacity=".9"/>
+        <g stroke="var(--sun)" stroke-width="2" stroke-linecap="round" opacity=".7">
+          <line x1="462" y1="12" x2="462" y2="4"/><line x1="496" y1="46" x2="504" y2="46"/><line x1="486" y1="22" x2="492" y2="16"/><line x1="486" y1="70" x2="492" y2="76"/><line x1="432" y1="70" x2="426" y2="76"/>
+        </g>
+        <line x1="10" y1="300" x2="510" y2="300" stroke="var(--line)" stroke-width="2"/>
+        <rect x="400" y="200" width="100" height="100" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <polygon points="394,204 450,168 506,204" fill="var(--ink-4)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <rect x="414" y="226" width="72" height="74" fill="var(--paper-2)" stroke="var(--ink-2)" stroke-width="1.2"/>
+        <g stroke="var(--ink-4)" stroke-width="1">${[238, 250, 262, 274, 286].map((y) => `<line x1="414" x2="486" y1="${y}" y2="${y}"/>`).join('')}</g>
+        <rect x="88" y="160" width="320" height="140" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <polygon points="76,166 136,62 360,62 420,166" fill="var(--ink-4)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <rect x="372" y="36" width="20" height="58" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <rect x="368" y="30" width="28" height="8" fill="var(--ink-3)"/>
+        ${panels}
+        ${win(110, 184, 54, 40)}${win(196, 184, 54, 40)}${win(330, 184, 54, 40)}
+        ${win(110, 244, 54, 40)}${win(330, 244, 54, 40)}
+        <rect x="236" y="236" width="38" height="64" rx="2" fill="var(--ink-2)"/>
+        <circle cx="266" cy="270" r="2" fill="var(--paper)"/>
+        <rect x="230" y="228" width="50" height="6" fill="var(--ink-3)"/>
+        <rect x="292" y="262" width="26" height="22" rx="3" fill="var(--paper)" stroke="var(--ink-2)" stroke-width="1.2"/>
+        <g stroke="var(--ink-3)" stroke-width="1">${[267, 271, 275, 279].map((y) => `<line x1="296" x2="314" y1="${y}" y2="${y}"/>`).join('')}</g>
+        <text x="305" y="320" text-anchor="middle" class="axis" style="font-family:var(--font-mono);font-size:10px;fill:var(--ink-3)">HEAT PUMP</text>
+        <text x="248" y="52" text-anchor="middle" style="font-family:var(--font-mono);font-size:10px;fill:var(--ink-3);letter-spacing:.08em">16 PANELS · SOUTH-FACING</text>
+      </svg>`;
+    }
+
+    /* ---------------- Deck ---------------- */
+    function startDeck(html) {
+      const stage = document.getElementById('stage');
+      stage.innerHTML = html;
+      const D = JSON.parse(stage.querySelector('#deck-data').textContent);
+      const slides = [...stage.querySelectorAll('.slide')];
+      const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+      const C = () => ({ accent: css('--accent'), ink4: css('--ink-4'), ink2: css('--ink-2'), sun: css('--sun'), pos: css('--positive'), line: css('--paper-3') });
+
+      stage.querySelectorAll('[data-house-svg]').forEach((h) => { h.innerHTML = houseSvg(); });
+
+      const base = runModel(D, {});
+      let unit = 'gbp';
+
+      function drawUsage() {
+        const host = stage.querySelector('[data-chart="usage"]'), c = C();
+        if (unit === 'gbp') {
+          const sc = D.days.map((d) => d * D.rates.standingPerDay);
+          barChart(host, { labels: D.months, mode: 'stack', series: [
+            { name: 'Day rate', color: c.accent, values: D.dayKwh.map((k) => k * D.rates.day) },
+            { name: 'Night rate', color: c.ink4, values: D.nightKwh.map((k) => k * D.rates.night) },
+            { name: 'Standing charge', color: c.line, values: sc } ] });
+        } else {
+          barChart(host, { labels: D.months, mode: 'stack', fmt: kwh, series: [
+            { name: 'Day', color: c.accent, values: D.dayKwh }, { name: 'Night', color: c.ink4, values: D.nightKwh } ] });
+        }
+      }
+      function drawSplit() {
+        const c = C(), s = D.spec;
+        const baseV = D.days.map((d, i) => Math.min(s.baselinePerDay * d, D.dayKwh[i] + D.nightKwh[i]));
+        const heat = D.days.map((d, i) => D.dayKwh[i] + D.nightKwh[i] - baseV[i]);
+        barChart(stage.querySelector('[data-chart="split"]'), { labels: D.months, mode: 'stack', fmt: kwh, series: [
+          { name: 'Everyday use and hot water', color: c.ink4, values: baseV }, { name: 'Heating', color: c.accent, values: heat } ] });
+      }
+      function drawSolar() {
+        const c = C();
+        barChart(stage.querySelector('[data-chart="solar"]'), { labels: D.months, mode: 'group', fmt: kwh, series: [
+          { name: 'Use today', color: c.ink4, values: D.dayKwh.map((d, i) => d + D.nightKwh[i]) },
+          { name: 'Solar generation', color: c.sun, values: D.solarPerKwp.map((k) => k * D.spec.solarKwp) } ] });
+      }
+
+      // Calculator
+      const calc = stage.querySelector('[data-calc]');
+      const toggles = calc.querySelector('[data-calc-toggles]');
+      const defaults = { insulation: true, solar: true, heatPump: true, hotWater: false };
+      toggles.innerHTML = Object.entries(D.measures).map(([k, m]) => `
+        <label class="toggle"><input type="checkbox" data-measure="${k}" ${defaults[k] ? 'checked' : ''}/>
+          <span class="toggle__ui" aria-hidden="true"></span>
+          <span class="toggle__text"><strong>${m.label}</strong><span>${m.note} · £${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span></span></label>`).join('');
+      const out = (k) => calc.querySelector(`[data-out="${k}"]`);
+      function drawCalc() {
+        const opts = { exportRate: calc.querySelector('[data-calc-export]').checked ? 0.15 : 0.06 };
+        let lo = 0, hi = 0;
+        calc.querySelectorAll('[data-measure]').forEach((i) => { const k = i.dataset.measure; opts[k] = i.checked; if (i.checked) { lo += D.measures[k].cost[0]; hi += D.measures[k].cost[1]; } });
+        const r = runModel(D, opts), saving = base.total - r.total;
+        out('before').textContent = gbp(base.total);
+        out('after').textContent = gbp(r.total);
+        out('saving').textContent = gbp(saving);
+        out('cost').textContent = lo ? `£${(lo / 1000).toFixed(1).replace('.0', '')}k-£${(hi / 1000).toFixed(1).replace('.0', '')}k` : '£0';
+        out('payback').textContent = saving > 0 && lo ? `${Math.round(lo / saving)}-${Math.round(hi / saving)} years` : '-';
+        const c = C();
+        barChart(calc.querySelector('[data-chart="calc"]'), { labels: D.months, mode: 'group', height: 220, series: [
+          { name: 'Today', color: c.ink4, values: base.months.map((m) => m.cost) },
+          { name: 'With your plan', color: c.accent, values: r.months.map((m) => m.cost) } ] });
+      }
+      calc.addEventListener('change', drawCalc);
+
+      stage.querySelectorAll('[data-unit]').forEach((b) => b.addEventListener('click', () => {
+        unit = b.dataset.unit;
+        stage.querySelectorAll('[data-unit]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        drawUsage();
+      }));
+
+      const drawAll = () => { drawUsage(); drawSplit(); drawSolar(); drawCalc(); };
+      drawAll();
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', drawAll);
+
+      // Navigation
+      const prev = document.getElementById('prev'), next = document.getElementById('next');
+      const count = document.getElementById('count'), progress = document.getElementById('progress'), title = document.getElementById('deck-title');
+      let cur = 0;
+      function go(n, push = true) {
+        cur = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach((s, i) => { s.classList.toggle('is-active', i === cur); s.classList.toggle('is-before', i < cur); s.setAttribute('aria-hidden', String(i !== cur)); s.inert = i !== cur; });
+        slides[cur].scrollTop = 0;
+        prev.disabled = cur === 0; next.disabled = cur === slides.length - 1;
+        count.textContent = `${String(cur + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+        progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
+        title.textContent = slides[cur].dataset.title || '';
+        document.title = `${slides[cur].dataset.title} · Home energy plan`;
+        if (push) history.replaceState(null, '', `#${cur + 1}`);
+        tip.style.opacity = 0;
+      }
+      prev.addEventListener('click', () => go(cur - 1));
+      next.addEventListener('click', () => go(cur + 1));
+      document.addEventListener('keydown', (e) => {
+        if (e.target.closest('input, button, label') && (e.key === ' ' || e.key === 'Enter')) return;
+        if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+        else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+        else if (e.key === 'Home') go(0); else if (e.key === 'End') go(slides.length - 1);
+      });
+      let sx = null, sy = null;
+      stage.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      stage.addEventListener('touchend', (e) => {
+        if (sx === null) return;
+        const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && !e.target.closest('.calc__controls')) go(cur + (dx < 0 ? 1 : -1));
+        sx = null;
+      });
+      const fromHash = parseInt(location.hash.slice(1), 10);
+      go(Number.isFinite(fromHash) ? fromHash - 1 : 0, false);
+    }
+  })();
+  </script>
+</body>
+</html>
