@@ -29,37 +29,32 @@
       --paper: #fafaf7; --paper-2: #f4f3ee; --paper-3: #eceae2;
       --ink: #0a0a0b; --ink-2: #2a2a2c; --ink-3: #5a5a5e; --ink-4: #8a8a8e;
       --line: #e0ded7; --accent: #2547f5; --accent-soft: #dfe5fe;
-      --positive: #1e7a4c; --warning: #b26b12;
+      --positive: #1e7a4c; --warning: #b26b12; --negative: #b53d2e;
+      --sun: #e3a514; --sun-soft: #f6e3b4; --muted-bar: #c9c7bf;
       --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
-      --r-sm: 4px; --r-md: 10px; --r-lg: 16px;
+      --r-md: 10px; --r-lg: 16px;
       --ease: cubic-bezier(0.32, 0.72, 0, 1);
-      --sun: #e3a514;
+      --pad-x: clamp(16px, 4.5vw, 64px);
     }
     @media (prefers-color-scheme: dark) {
       :root {
         --paper: #0a0a0b; --paper-2: #161618; --paper-3: #1f1f22;
         --ink: #fafaf7; --ink-2: #d6d5cf; --ink-3: #8a8a8e; --ink-4: #5a5a5e;
         --line: #2a2a2c; --accent: #4d6bff; --accent-soft: #1c2450;
-        --positive: #3fb47a; --warning: #e0a04a;
+        --positive: #3fb47a; --warning: #e0a04a; --negative: #e0705f;
+        --sun: #f0b429; --sun-soft: #3a2e10; --muted-bar: #3a3a3e;
       }
     }
 
     *, *::before, *::after { box-sizing: border-box; }
     [hidden] { display: none !important; }
     html, body { margin: 0; height: 100%; }
-    body {
-      font-family: var(--font-sans); font-size: 18px; line-height: 1.55; color: var(--ink); background: var(--paper);
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    }
+    body { font-family: var(--font-sans); font-size: 17px; line-height: 1.5; color: var(--ink); background: var(--paper); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
     button { font: inherit; color: inherit; }
     .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-
-    .mono-label {
-      display: block; margin: 0; font-family: var(--font-mono); font-size: 12px; font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3);
-    }
+    .mono-label { display: block; margin: 0; font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
     .wordmark { display: inline-flex; align-items: baseline; gap: 2px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
     .wordmark .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
 
@@ -67,208 +62,230 @@
     .gate { display: grid; place-items: center; min-height: 100vh; min-height: 100dvh; padding: 16px; transition: opacity .35s ease; }
     .gate.leaving { opacity: 0; }
     .gate__inner { width: min(100%, 360px); display: flex; flex-direction: column; gap: 20px; }
-    .gate__inner .wordmark { font-size: 18px; }
     .gate h1 { margin: 0; font-size: clamp(2.2rem, 8vw, 3.25rem); line-height: 1.04; letter-spacing: -0.035em; font-weight: 600; }
     .gate h1 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
     .unlock { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
-    .unlock input {
-      height: 48px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper-2);
-      color: var(--ink); font: inherit; font-size: 16px; outline: none; transition: border-color .15s ease;
-    }
+    .unlock input { height: 48px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper-2); color: var(--ink); font: inherit; font-size: 16px; outline: none; transition: border-color .15s ease; }
     .unlock input:focus-visible { border-color: var(--accent); }
-    .unlock input[aria-invalid="true"] { border-color: #b53d2e; }
-    .unlock button {
-      height: 48px; border: 0; border-radius: var(--r-md); background: var(--ink); color: var(--paper);
-      font-weight: 600; cursor: pointer; transition: opacity .15s ease, transform .1s ease;
-    }
+    .unlock input[aria-invalid="true"] { border-color: var(--negative); }
+    .unlock button { height: 48px; border: 0; border-radius: var(--r-md); background: var(--ink); color: var(--paper); font-weight: 600; cursor: pointer; transition: opacity .15s ease, transform .1s ease; }
     .unlock button:hover { opacity: .88; }
     .unlock button:active { transform: scale(.98); }
     .unlock button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
     .unlock button:disabled { opacity: .6; cursor: progress; }
-    .feedback { margin: 0; min-height: 1.5em; font-size: 15px; color: #b53d2e; }
+    .feedback { margin: 0; min-height: 1.5em; font-size: 15px; color: var(--negative); }
     .shake { animation: shake .4s ease; }
     @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
 
     /* ---------- Deck shell ---------- */
     .deck { position: fixed; inset: 0; display: flex; flex-direction: column; }
-    .deck__top {
-      flex: none; height: 56px; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 clamp(16px, 4vw, 40px); border-bottom: 1px solid var(--line);
-    }
-    .deck__title { color: var(--ink-3); }
-    .deck__stage { position: relative; flex: 1; overflow: hidden; }
-    .slide {
-      position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
-      padding: clamp(24px, 5vh, 56px) clamp(16px, 5vw, 72px) 40px;
-      display: flex; flex-direction: column; justify-content: center; gap: 20px;
-      opacity: 0; visibility: hidden; transform: translateX(24px);
-      transition: opacity .45s var(--ease), transform .45s var(--ease), visibility 0s linear .45s;
-    }
-    .slide.is-before { transform: translateX(-24px); }
-    .slide.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity .45s var(--ease), transform .45s var(--ease); }
-    .slide > * { width: 100%; max-width: 1160px; margin-inline: auto; }
-    .deck__bar {
-      flex: none; display: flex; align-items: center; gap: 16px; height: 64px;
-      padding: 0 clamp(16px, 4vw, 40px); border-top: 1px solid var(--line);
-    }
+    .deck__top { flex: none; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--pad-x); border-bottom: 1px solid var(--line); }
+    .deck__stage { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+    .deck__bar { flex: none; display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 var(--pad-x); border-top: 1px solid var(--line); }
     .progress { flex: 1; height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
     .progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .45s var(--ease); }
     .count { font-family: var(--font-mono); font-size: 13px; color: var(--ink-3); min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
-    .navbtn {
-      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper);
-      display: grid; place-items: center; cursor: pointer; transition: background .15s ease, border-color .15s ease;
-    }
+    .navbtn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); display: grid; place-items: center; cursor: pointer; transition: background .15s ease, border-color .15s ease; }
     .navbtn:hover { background: var(--paper-2); border-color: var(--ink-4); }
     .navbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     .navbtn:disabled { opacity: .35; cursor: default; }
     .navbtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ---------- Slide content ---------- */
-    .slide h1, .slide h2 { margin: 0; font-weight: 600; letter-spacing: -0.035em; line-height: 1.06; }
-    .slide h1 { font-size: clamp(2.5rem, 6.5vw, 5.25rem); }
-    .slide h2 { font-size: clamp(1.8rem, 4.2vw, 3.25rem); max-width: 22ch; margin-inline: 0; }
-    .slide h3 { margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em; }
+    .slide {
+      position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+      padding: clamp(20px, 4vh, 44px) var(--pad-x) clamp(16px, 3vh, 32px);
+      display: flex; flex-direction: column; gap: clamp(14px, 2.4vh, 24px);
+      opacity: 0; visibility: hidden; transform: translateX(24px);
+      transition: opacity .45s var(--ease), transform .45s var(--ease), visibility 0s linear .45s;
+    }
+    .slide.is-before { transform: translateX(-24px); }
+    .slide.is-active { opacity: 1; visibility: visible; transform: none; transition: opacity .45s var(--ease), transform .45s var(--ease); }
+
+    /* ---------- Type ---------- */
+    .slide h1, .slide h2 { margin: 0; font-weight: 600; letter-spacing: -0.035em; line-height: 1.04; }
+    .slide h1 { font-size: clamp(2.6rem, 6.2vw, 5.5rem); }
+    .slide h2 { font-size: clamp(1.75rem, 3.6vw, 3.1rem); }
     .slide p { margin: 0; }
     .serif { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
     .hl { color: var(--accent); }
-    .lede { font-size: clamp(1.1rem, 1.8vw, 1.375rem); color: var(--ink-2); max-width: 36ch; }
-    .byline { color: var(--ink-3); font-size: 15px; }
-    .prose { display: flex; flex-direction: column; gap: 14px; color: var(--ink-2); max-width: 46ch; }
-    .prose strong, .checks strong { color: var(--ink); font-weight: 600; }
-    .foot { color: var(--ink-3); font-size: 15px; max-width: 80ch; }
+    strong { font-weight: 600; color: var(--ink); }
+    .lede { font-size: clamp(1.1rem, 1.7vw, 1.4rem); color: var(--ink-2); max-width: 34ch; }
+    .byline { color: var(--ink-3); font-size: 14px; }
 
-    .cover { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 4vw, 64px); align-items: center; }
-    .cover__text { display: flex; flex-direction: column; gap: 22px; }
-    .cover__art { margin: 0; }
-    .cover__art--photo { display: flex; flex-direction: column; gap: 10px; }
-    .cover__art--photo img { width: 100%; height: auto; display: block; border-radius: var(--r-lg); border: 1px solid var(--line); }
+    .s-head { flex: none; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+    .s-head > div:first-child { display: flex; flex-direction: column; gap: 10px; }
+    .s-chart__plot { flex: 1 1 auto; min-height: 260px; position: relative; }
+    .s-foot { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .s-foot__note { flex: none; color: var(--ink-3); font-size: 14px; max-width: 70ch; }
 
-    .split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
-    .split--wide-left { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; }
-    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 56px); }
-
-    .stats { display: flex; flex-direction: column; gap: 22px; }
-    .stat { display: flex; flex-direction: column; gap: 4px; padding-top: 14px; border-top: 1px solid var(--line); }
-    .stat__n { font-size: clamp(1.6rem, 3vw, 2.25rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
-    .stat__l { color: var(--ink-3); font-size: 15px; }
-
-    .quickwin { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid var(--positive); border-radius: var(--r-md); background: var(--paper-2); }
-    .quickwin .mono-label { color: var(--positive); }
-    .quickwin p { font-size: 15px; color: var(--ink-2); line-height: 1.45; }
-    .quickwin strong, .owners strong { color: var(--ink); font-weight: 600; }
-    .chart-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 10px; }
-    .chart-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .chart-note { font-size: 13px; color: var(--ink-3); }
-    .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
-    .chart .axis { font-family: var(--font-mono); font-size: 11px; fill: var(--ink-3); }
-    .chart .grid { stroke: var(--line); stroke-width: 1; }
-    .chart .bar { transition: height .5s var(--ease), y .5s var(--ease); }
-    .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-3); }
+    /* ---------- Charts ---------- */
+    .chart-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .chart-svg text { font-family: var(--font-mono); font-size: 12px; fill: var(--ink-3); font-variant-numeric: tabular-nums; }
+    .chart-svg .v { font-family: var(--font-sans); font-size: 14px; font-weight: 600; fill: var(--ink); }
+    .chart-svg .v--big { font-size: 22px; letter-spacing: -0.02em; }
+    .chart-svg .ann { font-family: var(--font-sans); font-size: 14px; fill: var(--ink-2); }
+    .chart-svg .ann-b { font-family: var(--font-sans); font-size: 14px; font-weight: 600; fill: var(--ink); }
+    .chart-svg .lab { font-family: var(--font-sans); font-size: 14px; font-weight: 600; }
+    .chart-svg .base { stroke: var(--ink-2); stroke-width: 1; }
+    .chart-svg .gl { stroke: var(--line); stroke-width: 1; }
+    .chart-svg rect.bar, .chart-svg path.area { transition: opacity .2s ease; }
+    .legend { position: absolute; top: 0; right: 0; display: flex; gap: 16px; font-size: 13px; color: var(--ink-3); }
     .legend span { display: inline-flex; align-items: center; gap: 6px; }
     .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
-    .chart-tip {
-      position: fixed; pointer-events: none; z-index: 50; background: var(--ink); color: var(--paper);
-      font-size: 13px; padding: 6px 10px; border-radius: 6px; opacity: 0; transition: opacity .12s ease; white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
+    .chart-tip { position: fixed; pointer-events: none; z-index: 50; background: var(--ink); color: var(--paper); font-size: 13px; padding: 6px 10px; border-radius: 6px; opacity: 0; transition: opacity .12s ease; white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--paper); }
-    .seg button { border: 0; background: none; padding: 4px 14px; border-radius: 999px; font-family: var(--font-mono); font-size: 12px; cursor: pointer; color: var(--ink-3); }
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; background: var(--paper); flex: none; }
+    .seg button { border: 0; background: none; padding: 5px 16px; border-radius: 999px; font-family: var(--font-mono); font-size: 13px; cursor: pointer; color: var(--ink-3); }
     .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
     .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-    .checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; color: var(--ink-2); }
-    .checks li { position: relative; padding-left: 28px; }
-    .checks li::before {
-      content: ''; position: absolute; left: 0; top: 7px; width: 14px; height: 14px; border-radius: 50%;
-      background: var(--positive) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2l2 2 4-4.4' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;
-    }
-    .checks li.warn::before { background: var(--warning) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 3.6v4.2M7 10.2v.1' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E") center/14px no-repeat; }
-    .slide[data-title="Assumptions"] .checks li::before { background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M5.2 5.4a1.9 1.9 0 113 1.5c-.7.4-1.2.8-1.2 1.6M7 10.3v.1' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center/14px no-repeat; }
+    .quickwin { flex: 0 1 520px; display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border: 1px solid var(--positive); border-radius: var(--r-md); background: var(--paper-2); }
+    .quickwin .mono-label { color: var(--positive); }
+    .quickwin p { font-size: 15px; color: var(--ink-2); line-height: 1.4; }
 
-    .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-    .card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper-2); }
-    .card p { color: var(--ink-2); font-size: 16px; }
-    .card__n { font-family: var(--font-mono); font-size: 13px; color: var(--ink-3); }
-    .card--accent { border-color: var(--accent); }
-    .card--accent .card__n { color: var(--accent); }
-    .card--muted { background: transparent; border-style: dashed; }
-    .card__cost { margin-top: auto !important; padding-top: 12px; border-top: 1px solid var(--line); font-weight: 600; color: var(--ink) !important; font-variant-numeric: tabular-nums; }
+    /* ---------- Cover ---------- */
+    .s-cover { flex-direction: row; align-items: stretch; gap: clamp(24px, 4vw, 64px); padding-right: 0; padding-bottom: 0; padding-top: 0; }
+    .s-cover__text { flex: 1 1 46%; display: flex; flex-direction: column; justify-content: center; gap: 24px; padding-block: 32px; }
+    .s-cover__img { flex: 1 1 54%; margin: 0; position: relative; min-height: 280px; }
+    .s-cover__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 45% 40%; display: block; }
+    .s-cover__img figcaption { position: absolute; left: 16px; bottom: 14px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
 
-    .spec { margin: 0; display: flex; flex-direction: column; }
-    .spec div { display: grid; grid-template-columns: 9.5em 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
-    .spec dt { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding-top: 4px; }
-    .spec dd { margin: 0; color: var(--ink); }
+    /* ---------- Heating split bar ---------- */
+    .splitbar { flex: none; display: flex; width: 100%; height: 64px; border-radius: var(--r-md); overflow: hidden; }
+    .splitbar > div { display: flex; flex-direction: column; justify-content: center; padding: 0 16px; min-width: 0; white-space: nowrap; overflow: hidden; }
+    .splitbar strong { font-size: 20px; letter-spacing: -0.02em; color: inherit; }
+    .splitbar span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
+    .splitbar .sb-heat { background: var(--accent); color: #fff; }
+    .splitbar .sb-other { background: var(--muted-bar); color: var(--ink); }
+    .splitbar .sb-stand { background: var(--paper-3); color: var(--ink-3); min-width: 120px; }
 
-    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .compare__col { padding: 24px; border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; gap: 10px; }
+    /* ---------- House ---------- */
+    .s-house { flex-direction: row; align-items: center; gap: clamp(24px, 4vw, 64px); }
+    .s-house__text { flex: 1 1 38%; display: flex; flex-direction: column; gap: 22px; }
+    .s-house__art { flex: 1 1 62%; align-self: stretch; position: relative; min-height: 300px; }
+    .s-house__art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .callouts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+    .callouts li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; color: var(--ink-2); }
+    .callouts b { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+
+    /* ---------- Plan ---------- */
+    .plan { flex: 1 1 auto; max-height: 440px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 0.8fr); gap: 16px; min-height: 0; }
+    .pcard { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 2.4vw, 28px); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper-2); }
+    .pcard--opt { background: transparent; border-style: dashed; }
+    .pcard__n { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+    .pcard--opt .pcard__n { color: var(--ink-3); }
+    .pcard h3 { margin: 0; font-size: clamp(1.15rem, 1.6vw, 1.45rem); letter-spacing: -0.02em; }
+    .pcard__save { margin-top: auto; display: flex; flex-direction: column; gap: 2px; }
+    .pcard__save b { font-size: clamp(2.2rem, 4vw, 3.6rem); font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: var(--positive); font-variant-numeric: tabular-nums; }
+    .pcard--opt .pcard__save b { color: var(--ink-3); font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
+    .pcard__desc { color: var(--ink-2); font-size: 15px; }
+    .pcard__meta { display: flex; justify-content: space-between; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+    .pcard__meta span:last-child { color: var(--ink-3); }
+
+    /* ---------- Solar spec row ---------- */
+    .specrow { flex: none; margin: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+    .specrow div { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+    .specrow dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+    .specrow dd { margin: 0; font-size: 15px; color: var(--ink); }
+
+    /* ---------- Heat pump units ---------- */
+    .units { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: clamp(16px, 3vh, 32px); min-height: 0; }
+    .urow { display: grid; grid-template-columns: minmax(150px, 0.9fr) auto 2.6fr minmax(160px, 1fr); gap: clamp(12px, 2vw, 28px); align-items: center; }
+    .urow__name { display: flex; flex-direction: column; gap: 4px; }
+    .urow__name strong { font-size: clamp(1.1rem, 1.6vw, 1.4rem); letter-spacing: -0.02em; }
+    .urow__in, .urow__out { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .unit { width: clamp(44px, 6vw, 84px); aspect-ratio: 1; border-radius: 12px; display: grid; place-items: center; }
+    .unit svg { width: 55%; height: 55%; }
+    .unit--in { background: var(--paper-3); color: var(--ink-2); }
+    .unit--out { background: var(--warning); color: #fff; }
+    .unit--half { width: calc(clamp(44px, 6vw, 84px) / 2); aspect-ratio: auto; height: clamp(44px, 6vw, 84px); }
+    .urow__arrow { color: var(--ink-3); font-family: var(--font-mono); font-size: 14px; padding: 0 6px; }
+    .urow__total { display: flex; flex-direction: column; gap: 2px; text-align: right; }
+    .urow__total b { font-size: clamp(1.6rem, 3vw, 2.6rem); letter-spacing: -0.04em; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+    .urow--hp .urow__total b { color: var(--positive); }
+    .urow__total span { font-size: 13px; color: var(--ink-3); }
+    .compare { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .compare__col { padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); font-size: 15px; }
     .compare__col--pick { border-color: var(--accent); background: var(--paper-2); }
     .compare__col--pick .mono-label { color: var(--accent); }
-    .compare ul { margin: 6px 0 0; padding-left: 1.1em; color: var(--ink-2); display: flex; flex-direction: column; gap: 6px; }
+    .compare__cost { font-weight: 600; color: var(--ink); font-size: 17px; }
+    .compare__cost span { font-weight: 400; color: var(--ink-3); font-size: 14px; }
 
-    .table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-    .table th { text-align: left; font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding: 0 0 10px; border-bottom: 1px solid var(--ink); }
-    .table td { padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
-    .table .num { text-align: right; white-space: nowrap; padding-left: 16px; }
-    .table tr.muted td { color: var(--ink-3); font-style: italic; }
-    .table tfoot td { font-weight: 600; color: var(--ink); border-bottom: 0; }
+    /* ---------- Calculator ---------- */
+    .chips { flex: none; display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; background: var(--paper); font-size: 15px; transition: border-color .15s ease, background .15s ease; }
+    .chip input { position: absolute; opacity: 0; pointer-events: none; }
+    .chip i { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--ink-4); display: grid; place-items: center; transition: background .15s ease, border-color .15s ease; }
+    .chip i::after { content: ''; width: 8px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); opacity: 0; }
+    .chip:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+    .chip input:checked + i { background: var(--accent); border-color: var(--accent); }
+    .chip input:checked + i::after { opacity: 1; }
+    .chip input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .chip span { color: var(--ink-3); font-size: 13px; font-variant-numeric: tabular-nums; }
+    .chip--alt { border-style: dashed; }
+    .figs { flex: none; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+    .figs > div { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--line); }
+    .figs b { font-size: clamp(1.5rem, 2.8vw, 2.5rem); font-weight: 600; letter-spacing: -0.035em; line-height: 1.05; font-variant-numeric: tabular-nums; }
+    .figs .f-after b { color: var(--accent); }
+    .figs .f-save b { color: var(--positive); }
+    .figs .f-sm b { font-size: clamp(1.15rem, 1.9vw, 1.6rem); }
 
-    .timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; counter-reset: t; }
-    .timeline li { position: relative; padding-top: 22px; display: flex; flex-direction: column; gap: 6px; }
-    .timeline li::before { content: ''; position: absolute; top: 0; left: 0; right: -14px; height: 2px; background: var(--line); }
-    .timeline li::after { content: ''; position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
-    .timeline li:last-child::before { right: 0; }
-    .timeline li:last-child::after { background: var(--positive); }
-    .timeline p { font-size: 15px; color: var(--ink-3); }
+    /* ---------- Payback cost row ---------- */
+    .costrow { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .costrow div { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+    .costrow strong { font-size: 17px; font-variant-numeric: tabular-nums; }
+    .costrow div:last-child strong { color: var(--positive); }
 
-    .owners { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
-    .owners li { display: grid; grid-template-columns: 8.5em 1fr; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); color: var(--ink-2); }
-    .owner { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); padding-top: 4px; }
+    /* ---------- Lists ---------- */
+    .s-list, .s-plan { justify-content: center; }
+    .grid8 { flex: 0 1 auto; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 16px; counter-reset: a; }
+    .grid8 li { counter-increment: a; padding: 24px; min-height: 180px; border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--paper-2); color: var(--ink-2); display: flex; flex-direction: column; gap: 10px; font-size: 17px; }
+    .grid8 li::before { content: counter(a, decimal-leading-zero); font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+    .grid8 strong { display: block; font-size: 20px; letter-spacing: -0.02em; margin-bottom: 2px; }
 
-    /* Calculator */
-    .calc { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
-    .calc__controls { display: flex; flex-direction: column; gap: 10px; }
-    .calc__controls > div { display: flex; flex-direction: column; gap: 10px; }
-    .toggle { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-md); cursor: pointer; background: var(--paper); transition: border-color .15s ease, background .15s ease; }
-    .toggle:has(input:checked) { border-color: var(--accent); background: var(--paper-2); }
-    .toggle--small { border-style: dashed; }
-    .toggle input { position: absolute; opacity: 0; pointer-events: none; }
-    .toggle__ui { width: 38px; height: 22px; border-radius: 999px; background: var(--paper-3); position: relative; transition: background .2s ease; border: 1px solid var(--line); }
-    .toggle__ui::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--paper); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .2s var(--ease); }
-    .toggle input:checked + .toggle__ui { background: var(--accent); border-color: var(--accent); }
-    .toggle input:checked + .toggle__ui::after { transform: translateX(16px); }
-    .toggle input:focus-visible + .toggle__ui { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .toggle__text { display: flex; flex-direction: column; gap: 2px; font-size: 15px; line-height: 1.35; }
-    .toggle__text span { color: var(--ink-3); font-size: 13px; }
-    .calc__out { display: flex; flex-direction: column; gap: 16px; }
-    .calc__figs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
-    .calc__figs > div { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
-    .calc__n { font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
-    .calc__n--accent { color: var(--accent); }
-    .calc__n--pos { color: var(--positive); }
-    .calc__n--sm { font-size: clamp(1.05rem, 1.6vw, 1.3rem); }
+    .owners { flex: 0 1 auto; display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 16px; align-items: stretch; }
+    .owners__col { padding: 26px; min-height: 260px; border: 1px solid var(--line); border-radius: var(--r-lg); display: flex; flex-direction: column; gap: 14px; }
+    .owners__col:first-child { border-color: var(--positive); background: var(--paper-2); }
+    .owner { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+    .owners__col:first-child .owner { color: var(--positive); }
+    .owners ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 16px; color: var(--ink-2); font-size: 18px; line-height: 1.45; }
+    .owners li { padding-left: 18px; position: relative; }
+    .owners li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 2px; background: var(--ink-4); }
 
-    .house-large svg, .cover__art svg { width: 100%; height: auto; display: block; }
+    /* ---------- Gantt ---------- */
+    .gantt { flex: 1 1 auto; position: relative; min-height: 320px; }
 
+    /* ---------- Responsive ---------- */
     @media (max-width: 900px) {
-      .cover, .split, .split--wide-left, .cols, .compare, .calc { grid-template-columns: 1fr; }
-      .cards { grid-template-columns: 1fr 1fr; }
-      .timeline { grid-template-columns: 1fr 1fr; row-gap: 24px; }
-      .timeline li::before { right: 0; }
-      .calc__figs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .slide { justify-content: flex-start; }
-      .cover__art { order: -1; max-width: 520px; }
+      .s-cover, .s-house { flex-direction: column; padding: 20px var(--pad-x) 24px; }
+      .s-cover__img { order: -1; flex: none; height: 38vh; margin: -20px calc(var(--pad-x) * -1) 0; }
+      .s-cover__text { padding-block: 0; }
+      .s-house__art { flex: none; height: 42vh; width: 100%; }
+      .plan { grid-template-columns: 1fr 1fr; }
+      .specrow, .costrow { grid-template-columns: 1fr 1fr; }
+      .figs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid8 { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
+      .owners { grid-template-columns: 1fr; }
+      .urow { grid-template-columns: 1fr auto; }
+      .urow__in, .urow__arrow, .urow__out { grid-column: 1 / -1; }
+      .urow__name { grid-row: 1; } .urow__total { grid-row: 1; grid-column: 2; }
+      .compare { grid-template-columns: 1fr; }
+      .s-foot { flex-direction: column; align-items: stretch; }
+      .quickwin { flex: none; }
+      .s-chart__plot { min-height: 300px; }
+      .splitbar strong { font-size: 16px; }
     }
     @media (max-width: 520px) {
       body { font-size: 16px; }
-      .cards { grid-template-columns: 1fr; }
-      .timeline { grid-template-columns: 1fr; }
-      .calc__figs { grid-template-columns: 1fr 1fr; }
-      .spec div, .owners li { grid-template-columns: 1fr; gap: 2px; }
-      .deck__title { display: none; }
+      .plan, .grid8 { grid-template-columns: 1fr; }
+      .figs { grid-template-columns: 1fr 1fr; }
+      .splitbar { height: 56px; }
+      .splitbar > div { padding: 0 10px; }
+      .splitbar span { display: none; }
+      .s-head { flex-direction: column; align-items: flex-start; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .slide, .slide.is-active, .gate, .progress span, .chart .bar { transition: none !important; }
+      .slide, .slide.is-active, .gate, .progress span { transition: none !important; }
       .shake { animation: none; }
     }
   </style>
@@ -292,7 +309,7 @@
   <div class="deck" id="deck" hidden>
     <header class="deck__top">
       <a class="wordmark" href="/" aria-label="Ed Stapleton, home"><span>Ed Stapleton</span><span class="dot" aria-hidden="true"></span></a>
-      <span class="mono-label deck__title" id="deck-title"></span>
+      <span class="mono-label" id="deck-title"></span>
     </header>
     <div class="deck__stage" id="stage" aria-live="polite"></div>
     <nav class="deck__bar" aria-label="Slides">
@@ -306,6 +323,7 @@
 
   <script>
   (function () {
+    /* ================= Unlock ================= */
     const form = document.getElementById('unlock');
     const input = document.getElementById('password');
     const button = form.querySelector('button');
@@ -324,26 +342,21 @@
       }
       return bundle;
     }
-
     async function decrypt(password) {
       const b = await loadBundle();
       const baseKey = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
-      const key = await crypto.subtle.deriveKey(
-        { name: 'PBKDF2', hash: 'SHA-256', salt: fromB64(b.salt), iterations: b.iterations },
-        baseKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: fromB64(b.salt), iterations: b.iterations }, baseKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
       try {
         const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(b.iv) }, key, fromB64(b.data));
         return new TextDecoder().decode(plain);
       } catch { throw new Error('password'); }
     }
-
     function fail(message) {
       feedback.textContent = message;
       input.setAttribute('aria-invalid', 'true');
       form.classList.remove('shake'); void form.offsetWidth; form.classList.add('shake');
       input.focus(); input.select();
     }
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const password = input.value;
@@ -353,23 +366,21 @@
       try {
         const html = await decrypt(password);
         try { sessionStorage.setItem(SESSION_KEY, password); } catch {}
-        open(html, true);
+        reveal(html, true);
       } catch (err) {
         fail(err.message === 'password' ? 'That password isn’t right. Please try again.' : 'Couldn’t load the page. Check your connection and try again.');
       } finally { button.disabled = false; button.textContent = 'Open'; }
     });
     input.addEventListener('input', () => { if (input.hasAttribute('aria-invalid')) { input.removeAttribute('aria-invalid'); feedback.textContent = ''; } });
-
     let saved = null;
     try { saved = sessionStorage.getItem(SESSION_KEY); } catch {}
-    if (saved) decrypt(saved).then((html) => open(html, false)).catch(() => { try { sessionStorage.removeItem(SESSION_KEY); } catch {} });
-
-    function open(html, animate) {
-      const reveal = () => { gate.remove(); deckEl.hidden = false; startDeck(html); };
-      if (animate) { gate.classList.add('leaving'); setTimeout(reveal, 350); } else reveal();
+    if (saved) decrypt(saved).then((html) => reveal(html, false)).catch(() => { try { sessionStorage.removeItem(SESSION_KEY); } catch {} });
+    function reveal(html, animate) {
+      const go = () => { gate.remove(); deckEl.hidden = false; startDeck(html); };
+      if (animate) { gate.classList.add('leaving'); setTimeout(go, 350); } else go();
     }
 
-    /* ---------------- Model ---------------- */
+    /* ================= Model ================= */
     function runModel(D, opts) {
       const s = D.spec, R = D.rates, exportRate = opts.exportRate || 0.06;
       const months = [];
@@ -402,179 +413,357 @@
       return { months, total: months.reduce((a, m) => a + m.cost, 0) };
     }
 
-    /* ---------------- Charts ---------------- */
+    /* ================= Chart helpers ================= */
     const NS = 'http://www.w3.org/2000/svg';
     const tip = document.getElementById('tip');
     const gbp = (n) => (n < 0 ? '-£' : '£') + Math.round(Math.abs(n)).toLocaleString('en-GB');
-    const kwh = (n) => Math.round(n).toLocaleString('en-GB') + ' kWh';
-    function el(name, attrs, parent) { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
-    function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
+    const gbpK = (n) => (n < 0 ? '-£' : '£') + (Math.abs(n) >= 1000 ? (Math.abs(n) / 1000).toFixed(Math.abs(n) % 1000 ? 1 : 0).replace('.0', '') + 'k' : Math.round(Math.abs(n)));
+    const kwhF = (n) => Math.round(n).toLocaleString('en-GB');
+    const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+    function el(name, attrs, parent, text) { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+    function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; return (m <= 1 ? 1 : m <= 1.5 ? 1.5 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10) * p; }
+    function frame(host) {
+      host.querySelector('.chart-svg')?.remove();
+      host.querySelector('.legend')?.remove();
+      const r = host.getBoundingClientRect();
+      const W = Math.max(Math.round(r.width), 280), H = Math.max(Math.round(r.height), 220);
+      const svg = el('svg', { class: 'chart-svg', viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img' }, host);
+      return { svg, W, H };
+    }
+    function legend(host, items) {
+      const lg = document.createElement('div'); lg.className = 'legend';
+      lg.innerHTML = items.map(([n, c]) => `<span><i style="background:${c}"></i>${n}</span>`).join('');
+      host.appendChild(lg);
+    }
+    function hover(node, text) {
+      node.addEventListener('pointerenter', (e) => { if (!e.clientX && !e.clientY) return; tip.textContent = text; tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 34 + 'px'; tip.style.opacity = 1; });
+      node.addEventListener('pointermove', (e) => { tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 34 + 'px'; });
+      node.addEventListener('pointerleave', () => { tip.style.opacity = 0; });
+    }
+    const compact = () => window.innerWidth < 620;
 
-    // series: [{name, color, values}], mode: 'stack' | 'group'
-    function barChart(host, { labels, series, mode = 'stack', fmt = gbp, height = 260 }) {
-      host.innerHTML = '';
-      const W = 640, H = height, L = 44, B = 24, T = 8, Rp = 4;
-      const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img' }, host);
+    // Stacked or grouped bars with values printed on the bars. No y-axis: the numbers are the axis.
+    function bars(host, { labels, series, mode = 'stack', fmt = gbp, total = true, highlight = [], refLine = null, legendItems }) {
+      const { svg, W, H } = frame(host);
+      const top = legendItems ? 40 : 28, bottom = 26, L = 0, R = 0;
       const totals = labels.map((_, i) => mode === 'stack' ? series.reduce((a, s) => a + Math.max(s.values[i], 0), 0) : Math.max(...series.map((s) => s.values[i])));
-      const max = niceMax(Math.max(...totals) * 1.05 || 1);
-      const y = (v) => T + (H - T - B) * (1 - v / max);
-      for (let k = 0; k <= 4; k++) {
-        const v = (max / 4) * k, yy = y(v);
-        el('line', { x1: L, x2: W - Rp, y1: yy, y2: yy, class: 'grid' }, svg);
-        const t = el('text', { x: L - 8, y: yy + 4, 'text-anchor': 'end', class: 'axis' }, svg);
-        t.textContent = fmt === gbp ? '£' + Math.round(v).toLocaleString('en-GB') : Math.round(v).toLocaleString('en-GB');
-      }
-      const step = (W - L - Rp) / labels.length, bw = step * 0.62;
+      const max = Math.max(...totals) * 1.04 || 1;
+      const y = (v) => top + (H - top - bottom) * (1 - v / max);
+      const step = (W - L - R) / labels.length, bw = Math.min(step * (mode === 'group' ? 0.78 : 0.66), 120);
       labels.forEach((lab, i) => {
         const x0 = L + step * i + (step - bw) / 2;
         let acc = 0;
         series.forEach((s, j) => {
           const v = Math.max(s.values[i], 0);
-          let x = x0, w = bw, top, h;
-          if (mode === 'stack') { top = y(acc + v); h = y(acc) - y(acc + v); acc += v; }
-          else { w = bw / series.length; x = x0 + w * j; top = y(v); h = y(0) - y(v); }
-          const r = el('rect', { x, y: top, width: Math.max(w - (mode === 'group' ? 2 : 0), 1), height: Math.max(h, 0), fill: s.color, rx: 2, class: 'bar' }, svg);
-          r.addEventListener('pointerenter', (e) => {
-            if (e.pointerType === 'mouse' && !e.clientX && !e.clientY) return;
-            tip.textContent = `${lab} · ${s.name}: ${fmt(s.values[i])}`;
-            tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 34 + 'px'; tip.style.opacity = 1;
-          });
-          r.addEventListener('pointermove', (e) => { tip.style.left = e.clientX + 12 + 'px'; tip.style.top = e.clientY - 34 + 'px'; });
-          r.addEventListener('pointerleave', () => { tip.style.opacity = 0; });
+          let x = x0, w = bw, y1, h;
+          if (mode === 'stack') { y1 = y(acc + v); h = y(acc) - y1; acc += v; }
+          else { w = bw / series.length - 2; x = x0 + (bw / series.length) * j; y1 = y(v); h = y(0) - y1; }
+          const fill = highlight.length && !highlight.includes(i) && s.dimmable !== false ? s.color : s.color;
+          const r = el('rect', { class: 'bar', x, y: y1, width: Math.max(w, 1), height: Math.max(h, 0), fill, rx: mode === 'group' ? 3 : 0 }, svg);
+          hover(r, `${lab} · ${s.name}: ${fmt(s.values[i])}`);
+          if (mode === 'group' && !compact()) {
+            const t = el('text', { x: x + w / 2, y: y1 - 6, 'text-anchor': 'middle', class: 'v' }, svg, fmt === gbp ? gbpK(s.values[i]) : kwhF(s.values[i]));
+            t.setAttribute('style', `fill:${s.textColor || 'var(--ink-2)'};font-size:12px`);
+          }
         });
-        const t = el('text', { x: L + step * i + step / 2, y: H - 6, 'text-anchor': 'middle', class: 'axis' }, svg);
-        t.textContent = lab;
+        if (mode === 'stack' && total && !(compact() && highlight.length && !highlight.includes(i))) {
+          const big = highlight.includes(i);
+          el('text', { x: x0 + bw / 2, y: y(totals[i]) - 8, 'text-anchor': 'middle', class: 'v' + (big ? ' v--big' : '') }, svg, compact() ? gbpK(totals[i]).replace('£', fmt === gbp ? '£' : '') : (fmt === gbp ? gbp(totals[i]) : kwhF(totals[i])));
+        }
+        el('text', { x: L + step * i + step / 2, y: H - 6, 'text-anchor': 'middle' }, svg, compact() ? lab[0] : lab);
       });
-      if (series.length > 1) {
-        const lg = document.createElement('div'); lg.className = 'legend';
-        lg.innerHTML = series.map((s) => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('');
-        host.appendChild(lg);
+      el('line', { x1: 0, x2: W, y1: y(0), y2: y(0), class: 'base' }, svg);
+      if (refLine) {
+        const yy = y(refLine.value);
+        el('line', { x1: 0, x2: W, y1: yy, y2: yy, stroke: 'var(--ink)', 'stroke-width': 1.5, 'stroke-dasharray': '5 5' }, svg);
+        const t = el('text', { x: W - 4, y: yy - 8, 'text-anchor': 'end', class: 'ann-b' }, svg, refLine.label);
+        t.setAttribute('style', 'paint-order:stroke;stroke:var(--paper);stroke-width:4px');
       }
+      if (legendItems) legend(host, legendItems);
+      return { y, step };
     }
 
-    /* ---------------- House illustration ---------------- */
+    function smoothPath(pts) {
+      let d = `M${pts[0][0]},${pts[0][1]}`;
+      for (let i = 1; i < pts.length; i++) {
+        const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], mx = (x0 + x1) / 2;
+        d += ` C${mx},${y0} ${mx},${y1} ${x1},${y1}`;
+      }
+      return d;
+    }
+
+    /* ================= House ================= */
     function houseSvg() {
-      // Front (south) elevation: two storeys, pitched roof with 16 panels, gable chimney, garage.
       let panels = '';
-      const px0 = 118, py0 = 92, pw = 33, ph = 25, gap = 3;
+      const px0 = 120, py0 = 92, pw = 33, ph = 25, gap = 3;
       for (let r = 0; r < 2; r++) for (let c = 0; c < 8; c++) {
-        const x = px0 + c * (pw + gap) + r * 0, y = py0 + r * (ph + gap);
-        panels += `<rect x="${x}" y="${y}" width="${pw}" height="${ph}" rx="1.5" fill="var(--ink)" stroke="var(--ink-3)" stroke-width="0.6"/>` +
-          `<line x1="${x + pw / 2}" y1="${y}" x2="${x + pw / 2}" y2="${y + ph}" stroke="var(--ink-3)" stroke-width="0.4"/>` +
-          `<line x1="${x}" y1="${y + ph / 2}" x2="${x + pw}" y2="${y + ph / 2}" stroke="var(--ink-3)" stroke-width="0.4"/>`;
+        const x = px0 + c * (pw + gap), y = py0 + r * (ph + gap);
+        panels += `<rect x="${x}" y="${y}" width="${pw}" height="${ph}" rx="1.5" fill="#0d1530" stroke="#3a4a7a" stroke-width="0.8"/><line x1="${x + pw / 2}" y1="${y}" x2="${x + pw / 2}" y2="${y + ph}" stroke="#3a4a7a" stroke-width="0.5"/><line x1="${x}" y1="${y + ph / 2}" x2="${x + pw}" y2="${y + ph / 2}" stroke="#3a4a7a" stroke-width="0.5"/>`;
       }
       const win = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="var(--accent-soft)" stroke="var(--ink-2)" stroke-width="1.2"/><line x1="${x + w / 2}" y1="${y}" x2="${x + w / 2}" y2="${y + h}" stroke="var(--ink-2)" stroke-width="1"/>`;
-      return `<svg viewBox="0 0 520 330" role="img" aria-label="Illustration of the house from the front, with 16 solar panels on the south-facing roof">
-        <circle cx="462" cy="46" r="20" fill="var(--sun)" opacity=".9"/>
-        <g stroke="var(--sun)" stroke-width="2" stroke-linecap="round" opacity=".7">
-          <line x1="462" y1="12" x2="462" y2="4"/><line x1="496" y1="46" x2="504" y2="46"/><line x1="486" y1="22" x2="492" y2="16"/><line x1="486" y1="70" x2="492" y2="76"/><line x1="432" y1="70" x2="426" y2="76"/>
-        </g>
-        <line x1="10" y1="300" x2="510" y2="300" stroke="var(--line)" stroke-width="2"/>
-        <rect x="400" y="200" width="100" height="100" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
-        <polygon points="394,204 450,168 506,204" fill="var(--ink-4)" stroke="var(--ink-2)" stroke-width="1.5"/>
-        <rect x="414" y="226" width="72" height="74" fill="var(--paper-2)" stroke="var(--ink-2)" stroke-width="1.2"/>
-        <g stroke="var(--ink-4)" stroke-width="1">${[238, 250, 262, 274, 286].map((y) => `<line x1="414" x2="486" y1="${y}" y2="${y}"/>`).join('')}</g>
-        <rect x="88" y="160" width="320" height="140" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
-        <polygon points="76,166 136,62 360,62 420,166" fill="var(--ink-4)" stroke="var(--ink-2)" stroke-width="1.5"/>
-        <rect x="372" y="36" width="20" height="58" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
-        <rect x="368" y="30" width="28" height="8" fill="var(--ink-3)"/>
+      const pin = (n, x, y, lx, ly) => `<line x1="${x}" y1="${y}" x2="${lx}" y2="${ly}" stroke="var(--accent)" stroke-width="1.2"/><circle cx="${lx}" cy="${ly}" r="11" fill="var(--accent)"/><text x="${lx}" y="${ly + 4}" text-anchor="middle" style="font-family:var(--font-mono);font-size:12px;fill:#fff">${n}</text>`;
+      return `<svg viewBox="0 0 560 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustration of the house from the front, with 16 solar panels on the south-facing roof, a battery in the garage and a heat pump unit outside">
+        <circle cx="500" cy="48" r="22" fill="var(--sun)"/>
+        <g stroke="var(--sun)" stroke-width="2.4" stroke-linecap="round"><line x1="500" y1="12" x2="500" y2="4"/><line x1="536" y1="48" x2="546" y2="48"/><line x1="526" y1="22" x2="533" y2="15"/><line x1="526" y1="74" x2="533" y2="81"/><line x1="474" y1="22" x2="467" y2="15"/></g>
+        <path d="M486 70 L420 112" stroke="var(--sun)" stroke-width="1.2" stroke-dasharray="3 4"/>
+        <line x1="10" y1="312" x2="550" y2="312" stroke="var(--line)" stroke-width="2"/>
+        <rect x="402" y="208" width="104" height="104" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <polygon points="396,212 454,174 512,212" fill="var(--ink-4)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <rect x="416" y="234" width="76" height="78" fill="var(--paper-2)" stroke="var(--ink-2)" stroke-width="1.2"/>
+        <g stroke="var(--ink-4)" stroke-width="1">${[246, 258, 270, 282, 294].map((y) => `<line x1="416" x2="492" y1="${y}" y2="${y}"/>`).join('')}</g>
+        <rect x="474" y="276" width="14" height="26" rx="2" fill="var(--positive)" opacity=".85"/>
+        <rect x="88" y="166" width="322" height="146" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <polygon points="76,172 136,64 362,64 422,172" fill="var(--ink-4)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <rect x="374" y="38" width="20" height="58" fill="var(--paper-3)" stroke="var(--ink-2)" stroke-width="1.5"/>
+        <rect x="370" y="32" width="28" height="8" fill="var(--ink-3)"/>
         ${panels}
-        ${win(110, 184, 54, 40)}${win(196, 184, 54, 40)}${win(330, 184, 54, 40)}
-        ${win(110, 244, 54, 40)}${win(330, 244, 54, 40)}
-        <rect x="236" y="236" width="38" height="64" rx="2" fill="var(--ink-2)"/>
-        <circle cx="266" cy="270" r="2" fill="var(--paper)"/>
-        <rect x="230" y="228" width="50" height="6" fill="var(--ink-3)"/>
-        <rect x="292" y="262" width="26" height="22" rx="3" fill="var(--paper)" stroke="var(--ink-2)" stroke-width="1.2"/>
-        <g stroke="var(--ink-3)" stroke-width="1">${[267, 271, 275, 279].map((y) => `<line x1="296" x2="314" y1="${y}" y2="${y}"/>`).join('')}</g>
-        <text x="305" y="320" text-anchor="middle" class="axis" style="font-family:var(--font-mono);font-size:10px;fill:var(--ink-3)">HEAT PUMP</text>
-        <text x="248" y="52" text-anchor="middle" style="font-family:var(--font-mono);font-size:10px;fill:var(--ink-3);letter-spacing:.08em">16 PANELS · SOUTH-FACING</text>
+        ${win(110, 190, 54, 40)}${win(196, 190, 54, 40)}${win(332, 190, 54, 40)}
+        ${win(110, 252, 54, 40)}${win(332, 252, 54, 40)}
+        <rect x="238" y="246" width="38" height="66" rx="2" fill="var(--ink-2)"/>
+        <rect x="232" y="238" width="50" height="6" fill="var(--ink-3)"/>
+        <rect x="292" y="272" width="30" height="26" rx="3" fill="var(--paper)" stroke="var(--ink-2)" stroke-width="1.3"/>
+        <circle cx="307" cy="285" r="8" fill="none" stroke="var(--ink-3)" stroke-width="1.3"/>
+        ${pin(1, 210, 100, 196, 22)}${pin(2, 104, 150, 40, 120)}${pin(3, 481, 290, 538, 250)}${pin(4, 307, 298, 340, 345)}
       </svg>`;
     }
 
-    /* ---------------- Deck ---------------- */
+    /* ================= Deck ================= */
     function startDeck(html) {
       const stage = document.getElementById('stage');
       stage.innerHTML = html;
       const D = JSON.parse(stage.querySelector('#deck-data').textContent);
       const slides = [...stage.querySelectorAll('.slide')];
-      const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-      const C = () => ({ accent: css('--accent'), ink4: css('--ink-4'), ink2: css('--ink-2'), sun: css('--sun'), pos: css('--positive'), line: css('--paper-3') });
-
+      const C = () => ({ accent: css('--accent'), soft: css('--accent-soft'), ink: css('--ink'), ink2: css('--ink-2'), ink3: css('--ink-3'), ink4: css('--ink-4'), sun: css('--sun'), sunSoft: css('--sun-soft'), pos: css('--positive'), muted: css('--muted-bar'), p3: css('--paper-3'), paper: css('--paper') });
       stage.querySelectorAll('[data-house-svg]').forEach((h) => { h.innerHTML = houseSvg(); });
 
       const base = runModel(D, {});
-      let unit = 'gbp';
+      const s = D.spec, R = D.rates, M = D.months;
+      const baseKwh = D.days.map((d, i) => Math.min(s.baselinePerDay * d, D.dayKwh[i] + D.nightKwh[i]));
+      const heatKwh = D.days.map((d, i) => D.dayKwh[i] + D.nightKwh[i] - baseKwh[i]);
 
-      function drawUsage() {
-        const host = stage.querySelector('[data-chart="usage"]'), c = C();
+      // ---- Heating split bar (£ a year)
+      let heatGbp = 0, otherGbp = 0;
+      D.days.forEach((d, i) => {
+        const b = s.baselinePerDay * d, bn = b * s.baselineNightShare, bd = b - bn;
+        const hd = Math.max(D.dayKwh[i] - bd, 0), hn = Math.max(D.nightKwh[i] - bn, 0);
+        heatGbp += hd * R.day + hn * R.night;
+        otherGbp += (D.dayKwh[i] - hd) * R.day + (D.nightKwh[i] - hn) * R.night;
+      });
+      const standGbp = D.days.reduce((a, d) => a + d * R.standingPerDay, 0), allGbp = heatGbp + otherGbp + standGbp;
+      const sb = stage.querySelector('[data-splitbar]');
+      if (sb) sb.innerHTML = [
+        ['sb-heat', heatGbp, 'Heating'], ['sb-other', otherGbp, 'Everything else'], ['sb-stand', standGbp, 'Standing']
+      ].map(([c, v, n]) => `<div class="${c}" style="flex:${v}"><strong>${gbp(v)}</strong><span>${n} · ${Math.round((v / allGbp) * 100)}%</span></div>`).join('');
+
+      // ---- Plan cards with standalone savings
+      const plan = stage.querySelector('[data-plan]');
+      if (plan) plan.innerHTML = Object.entries(D.measures).map(([k, m], i) => {
+        const save = base.total - runModel(D, { [k]: true }).total;
+        const pb = `${Math.round(m.cost[0] / save)}-${Math.round(m.cost[1] / save)} yrs`;
+        return `<article class="pcard${m.on ? '' : ' pcard--opt'}">
+          <span class="pcard__n">${m.on ? String(i + 1).padStart(2, '0') : 'Optional'}</span>
+          <h3>${m.label}</h3>
+          <p class="pcard__desc">${m.desc}</p>
+          <div class="pcard__save"><span class="mono-label">Saves a year</span><b>${gbp(save)}</b></div>
+          <div class="pcard__meta"><span>£${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span><span>${pb}</span></div>
+        </article>`;
+      }).join('');
+
+      // ---- Heat pump units graphic
+      const bolt = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>';
+      const flame = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 4 6 6 6 12a6 6 0 01-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-3-1-6 1-9z"/></svg>';
+      const units = stage.querySelector('[data-units]');
+      const heatTotal = heatKwh.reduce((a, b) => a + b, 0);
+      const hpElec = heatTotal * (1 - s.heatPumpCoverage) + (heatTotal * s.heatPumpCoverage) / s.heatPumpScop;
+      if (units) units.innerHTML = `
+        <div class="urow">
+          <div class="urow__name"><span class="mono-label">Today</span><strong>Storage and panel heaters</strong></div>
+          <div class="urow__in"><span class="unit unit--in">${bolt}</span></div>
+          <div class="urow__out"><span class="urow__arrow">1 unit in →</span><span class="unit unit--out">${flame}</span><span class="urow__arrow">1 unit of heat</span></div>
+          <div class="urow__total"><b>${kwhF(heatTotal)}</b><span>kWh a year to heat the house</span></div>
+        </div>
+        <div class="urow urow--hp">
+          <div class="urow__name"><span class="mono-label">Plan</span><strong>Air-to-air heat pumps</strong></div>
+          <div class="urow__in"><span class="unit unit--in">${bolt}</span></div>
+          <div class="urow__out"><span class="urow__arrow">1 unit in →</span><span class="unit unit--out">${flame}</span><span class="unit unit--out">${flame}</span><span class="unit unit--out">${flame}</span><span class="unit unit--out unit--half">${''}</span><span class="urow__arrow">3.5 units of heat</span></div>
+          <div class="urow__total"><b>${kwhF(hpElec)}</b><span>kWh a year (heaters stay in the hall and bathrooms)</span></div>
+        </div>`;
+
+      // ---- Gantt
+      function drawGantt() {
+        const host = stage.querySelector('[data-gantt]'); if (!host) return;
+        const { svg, W, H } = frame(host), c = C(), G = D.gantt;
+        const t = (d) => new Date(d + 'T00:00:00Z').getTime();
+        const t0 = t(G.start), t1 = t(G.end);
+        const labW = compact() ? 0 : Math.min(300, W * 0.3), ownW = compact() ? 0 : 110;
+        const x = (d) => labW + ((t(d) - t0) / (t1 - t0)) * (W - labW - ownW);
+        const head = 34, rowH = Math.min((H - head - 30) / G.rows.length, 64);
+        const mnames = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+        ['2026-11-01', '2026-12-01', '2027-01-01', '2027-02-01', '2027-03-01'].forEach((d, i) => {
+          el('line', { x1: x(d), x2: x(d), y1: head - 8, y2: head + rowH * G.rows.length, class: 'gl' }, svg);
+          el('text', { x: x(d) + 8, y: 18 }, svg, mnames[i] + (i === 0 ? ' 2026' : i === 2 ? ' 2027' : ''));
+        });
+        G.rows.forEach(([name, a, b, owner], i) => {
+          const yy = head + rowH * i, bh = Math.max(rowH * 0.56, 18);
+          const install = /^Fit/.test(name);
+          const r = el('rect', { x: x(a), y: yy + (rowH - bh) / 2, width: Math.max(x(b) - x(a), 6), height: bh, rx: 6, fill: install ? c.accent : c.soft, stroke: c.accent, 'stroke-width': install ? 0 : 1 }, svg);
+          hover(r, `${name}: ${new Date(t(a)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })} - ${new Date(t(b)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })}`);
+          if (!compact()) {
+            el('text', { x: 0, y: yy + rowH / 2 + 5, class: 'ann' }, svg, name);
+            el('text', { x: W, y: yy + rowH / 2 + 5, 'text-anchor': 'end' }, svg, owner.toUpperCase());
+          } else {
+            const tx = el('text', { x: x(a) < W / 2 ? x(a) : x(b), y: yy + (rowH - bh) / 2 - 3, 'text-anchor': x(a) < W / 2 ? 'start' : 'end', class: 'ann' }, svg, name);
+            tx.setAttribute('style', 'font-size:12px');
+          }
+        });
+        const bottomY = head + rowH * G.rows.length;
+        const tx = x(G.today);
+        el('line', { x1: tx, x2: tx, y1: head - 8, y2: bottomY + 4, stroke: c.ink, 'stroke-width': 1.5 }, svg);
+        el('text', { x: tx, y: bottomY + 20, 'text-anchor': 'middle', class: 'ann-b' }, svg, 'Today');
+        const dx = x(G.deadline);
+        el('line', { x1: dx, x2: dx, y1: head - 8, y2: bottomY + 4, stroke: c.pos, 'stroke-width': 2, 'stroke-dasharray': '6 4' }, svg);
+        const dl = el('text', { x: dx, y: bottomY + 20, 'text-anchor': 'end', class: 'ann-b' }, svg, '0% VAT ends 31 March');
+        dl.setAttribute('style', `fill:${c.pos}`);
+      }
+
+      // ---- Charts
+      let unit = 'gbp';
+      const jan = 3, aug = 10;
+      function drawBill() {
+        const host = stage.querySelector('[data-chart="bill"]'), c = C();
         if (unit === 'gbp') {
-          const sc = D.days.map((d) => d * D.rates.standingPerDay);
-          barChart(host, { labels: D.months, mode: 'stack', series: [
-            { name: 'Day rate', color: c.accent, values: D.dayKwh.map((k) => k * D.rates.day) },
-            { name: 'Night rate', color: c.ink4, values: D.nightKwh.map((k) => k * D.rates.night) },
-            { name: 'Standing charge', color: c.line, values: sc } ] });
+          bars(host, { labels: M, highlight: [jan, aug], series: [
+            { name: 'Standing charge', color: c.p3, values: D.days.map((d) => d * R.standingPerDay) },
+            { name: 'Night rate', color: c.ink4, values: D.nightKwh.map((k) => k * R.night) },
+            { name: 'Day rate', color: c.accent, values: D.dayKwh.map((k) => k * R.day) } ],
+            legendItems: [['Day rate', c.accent], ['Night rate', c.ink4], ['Standing charge', c.p3]] });
         } else {
-          barChart(host, { labels: D.months, mode: 'stack', fmt: kwh, series: [
-            { name: 'Day', color: c.accent, values: D.dayKwh }, { name: 'Night', color: c.ink4, values: D.nightKwh } ] });
+          bars(host, { labels: M, highlight: [jan, aug], fmt: kwhF, series: [
+            { name: 'Night', color: c.ink4, values: D.nightKwh }, { name: 'Day', color: c.accent, values: D.dayKwh } ],
+            legendItems: [['Day kWh', c.accent], ['Night kWh', c.ink4]] });
         }
       }
-      function drawSplit() {
-        const c = C(), s = D.spec;
-        const baseV = D.days.map((d, i) => Math.min(s.baselinePerDay * d, D.dayKwh[i] + D.nightKwh[i]));
-        const heat = D.days.map((d, i) => D.dayKwh[i] + D.nightKwh[i] - baseV[i]);
-        barChart(stage.querySelector('[data-chart="split"]'), { labels: D.months, mode: 'stack', fmt: kwh, series: [
-          { name: 'Everyday use and hot water', color: c.ink4, values: baseV }, { name: 'Heating', color: c.accent, values: heat } ] });
+      function drawHeating() {
+        const host = stage.querySelector('[data-chart="heating"]'), c = C();
+        bars(host, { labels: M, fmt: kwhF, total: false, series: [
+          { name: 'Everyday use and hot water', color: c.muted, values: baseKwh },
+          { name: 'Heating', color: c.accent, values: heatKwh } ],
+          refLine: { value: s.baselinePerDay * 31, label: 'Everyday use, ~16kWh a day' },
+          legendItems: [['Heating', c.accent], ['Everyday use and hot water', c.muted]] });
       }
       function drawSolar() {
-        const c = C();
-        barChart(stage.querySelector('[data-chart="solar"]'), { labels: D.months, mode: 'group', fmt: kwh, series: [
-          { name: 'Use today', color: c.ink4, values: D.dayKwh.map((d, i) => d + D.nightKwh[i]) },
-          { name: 'Solar generation', color: c.sun, values: D.solarPerKwp.map((k) => k * D.spec.solarKwp) } ] });
+        const host = stage.querySelector('[data-chart="solar"]'), c = C();
+        const { svg, W, H } = frame(host);
+        const use = D.dayKwh.map((d, i) => d + D.nightKwh[i]);
+        const gen = D.solarPerKwp.map((k) => k * s.solarKwp);
+        const top = 40, bottom = 26, max = niceMax(Math.max(...use) * 1.05);
+        const step = W / 12, x = (i) => step * i + step / 2, y = (v) => top + (H - top - bottom) * (1 - v / max);
+        const area = (vals, fill, stroke) => {
+          const pts = vals.map((v, i) => [x(i), y(v)]);
+          const line = smoothPath(pts);
+          el('path', { d: `${line} L${x(11)},${y(0)} L${x(0)},${y(0)} Z`, fill, class: 'area' }, svg);
+          el('path', { d: line, fill: 'none', stroke, 'stroke-width': 2.5 }, svg);
+        };
+        area(use, c.p3, c.ink3);
+        area(gen, c.sunSoft, c.sun);
+        // Gap and surplus shading labels
+        M.forEach((m, i) => {
+          el('text', { x: x(i), y: H - 6, 'text-anchor': 'middle' }, svg, compact() ? m[0] : m);
+          const hit = el('rect', { x: step * i, y: top, width: step, height: H - top - bottom, fill: 'transparent' }, svg);
+          hover(hit, `${m}: use ${kwhF(use[i])} kWh · solar ${kwhF(gen[i])} kWh`);
+        });
+        el('line', { x1: 0, x2: W, y1: y(0), y2: y(0), class: 'base' }, svg);
+        const lbl = (tx, ty, a, b, anchor = 'middle', color) => {
+          const t1 = el('text', { x: tx, y: ty, 'text-anchor': anchor, class: 'ann-b' }, svg, a); if (color) t1.setAttribute('style', `fill:${color}`);
+          el('text', { x: tx, y: ty + 18, 'text-anchor': anchor, class: 'ann' }, svg, b);
+        };
+        if (!compact()) {
+          lbl(x(3), y(use[3]) - 34, `Jan: ${kwhF(use[3])} kWh used`, `solar makes ${kwhF(gen[3])}`, 'middle');
+          lbl(x(8), y(gen[8]) - 34, `Jun: solar ${kwhF(gen[8])} kWh`, `more than the ${kwhF(use[8])} used`, 'middle', c.warning || c.sun);
+        }
+        legend(host, [['Used today', c.ink3], ['Solar generation', c.sun]]);
+      }
+      function drawPayback() {
+        const host = stage.querySelector('[data-chart="payback"]'), c = C();
+        const { svg, W, H } = frame(host);
+        const saving = base.total - runModel(D, { insulation: true, solar: true, heatPump: true }).total;
+        const cost = [19000, 28000], years = 25, batteryYear = 13, batteryCost = 4000;
+        const series = cost.map((c0) => { let v = -c0; const pts = [v]; for (let yr = 1; yr <= years; yr++) { v += saving; if (yr === batteryYear) v -= batteryCost; pts.push(v); } return pts; });
+        const minV = -30000, maxV = niceMax(Math.max(...series[0]) * 1.05);
+        const L = compact() ? 40 : 56, top = 36, bottom = 26;
+        const x = (yr) => L + (W - L - 8) * (yr / years), y = (v) => top + (H - top - bottom) * (1 - (v - minV) / (maxV - minV));
+        for (let v = -30000; v <= maxV; v += 10000) {
+          el('line', { x1: L, x2: W, y1: y(v), y2: y(v), class: v === 0 ? 'base' : 'gl' }, svg);
+          el('text', { x: L - 8, y: y(v) + 4, 'text-anchor': 'end' }, svg, gbpK(v));
+        }
+        [0, 5, 10, 15, 20, 25].forEach((yr) => el('text', { x: x(yr), y: H - 6, 'text-anchor': 'middle' }, svg, yr === 0 ? 'Now' : `${yr} yrs`));
+        // Band between the cheap and expensive cases
+        const up = series[0].map((v, i) => `${x(i)},${y(v)}`), dn = series[1].map((v, i) => `${x(i)},${y(v)}`).reverse();
+        el('polygon', { points: [...up, ...dn].join(' '), fill: c.soft, opacity: .9 }, svg);
+        series.forEach((pts, k) => el('polyline', { points: pts.map((v, i) => `${x(i)},${y(v)}`).join(' '), fill: 'none', stroke: c.accent, 'stroke-width': k ? 1.5 : 2.5, 'stroke-dasharray': k ? '5 4' : 'none' }, svg));
+        // Break-even markers
+        series.forEach((pts, k) => {
+          const i = pts.findIndex((v) => v >= 0); if (i < 1) return;
+          const f = (0 - pts[i - 1]) / (pts[i] - pts[i - 1]), bx = x(i - 1 + f);
+          el('circle', { cx: bx, cy: y(0), r: 6, fill: c.pos, stroke: c.paper, 'stroke-width': 2 }, svg);
+          if (!compact() || k === 0) {
+            const t = el('text', { x: bx, y: y(0) + (k ? 24 : -14), 'text-anchor': 'middle', class: 'ann-b' }, svg, `Paid back in ${(i - 1 + f).toFixed(0)} yrs`);
+            t.setAttribute('style', `fill:${c.pos};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
+          }
+        });
+        el('text', { x: x(batteryYear), y: y(series[0][batteryYear]) - 14, 'text-anchor': 'middle', class: 'ann' }, svg, compact() ? '' : 'New battery, ~£4k');
+        const end = series[0][years], end2 = series[1][years];
+        const e1 = el('text', { x: L + 12, y: top + 18, class: 'v v--big' }, svg, `+${gbpK(end2)} to +${gbpK(end)}`);
+        e1.setAttribute('style', `fill:${c.pos}`);
+        el('text', { x: L + 12, y: top + 40, class: 'ann' }, svg, `ahead after 25 years, saving ${gbp(saving)} a year`);
+        if (!compact()) {
+          el('text', { x: W - 8, y: y(end) - 10, 'text-anchor': 'end', class: 'ann-b' }, svg, 'Lower quotes');
+          el('text', { x: W - 8, y: y(end2) + 20, 'text-anchor': 'end', class: 'ann' }, svg, 'Higher quotes');
+        }
       }
 
-      // Calculator
-      const calc = stage.querySelector('[data-calc]');
-      const toggles = calc.querySelector('[data-calc-toggles]');
-      const defaults = { insulation: true, solar: true, heatPump: true, hotWater: false };
-      toggles.innerHTML = Object.entries(D.measures).map(([k, m]) => `
-        <label class="toggle"><input type="checkbox" data-measure="${k}" ${defaults[k] ? 'checked' : ''}/>
-          <span class="toggle__ui" aria-hidden="true"></span>
-          <span class="toggle__text"><strong>${m.label}</strong><span>${m.note} · £${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span></span></label>`).join('');
-      const out = (k) => calc.querySelector(`[data-out="${k}"]`);
+      // ---- Calculator
+      const chips = stage.querySelector('[data-chips]'), figs = stage.querySelector('[data-figs]');
+      chips.innerHTML = Object.entries(D.measures).map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>£${(m.cost[0] / 1000).toFixed(1).replace('.0', '')}k-£${(m.cost[1] / 1000).toFixed(1).replace('.0', '')}k</span></label>`).join('') +
+        `<label class="chip chip--alt"><input type="checkbox" data-export/><i></i>Better export tariff <span>15p not 6p</span></label>`;
+      figs.innerHTML = [['f-before', 'Bill today'], ['f-after', 'Bill after'], ['f-save', 'Saving a year'], ['f-sm f-cost', 'Cost to fit'], ['f-sm f-pb', 'Pays back in']].map(([c, l]) => `<div class="${c}"><span class="mono-label">${l}</span><b></b></div>`).join('');
       function drawCalc() {
-        const opts = { exportRate: calc.querySelector('[data-calc-export]').checked ? 0.15 : 0.06 };
+        const opts = { exportRate: chips.querySelector('[data-export]').checked ? 0.15 : 0.06 };
         let lo = 0, hi = 0;
-        calc.querySelectorAll('[data-measure]').forEach((i) => { const k = i.dataset.measure; opts[k] = i.checked; if (i.checked) { lo += D.measures[k].cost[0]; hi += D.measures[k].cost[1]; } });
+        chips.querySelectorAll('[data-measure]').forEach((i) => { const k = i.dataset.measure; opts[k] = i.checked; if (i.checked) { lo += D.measures[k].cost[0]; hi += D.measures[k].cost[1]; } });
         const r = runModel(D, opts), saving = base.total - r.total;
-        out('before').textContent = gbp(base.total);
-        out('after').textContent = gbp(r.total);
-        out('saving').textContent = gbp(saving);
-        out('cost').textContent = lo ? `£${(lo / 1000).toFixed(1).replace('.0', '')}k-£${(hi / 1000).toFixed(1).replace('.0', '')}k` : '£0';
-        out('payback').textContent = saving > 0 && lo ? `${Math.round(lo / saving)}-${Math.round(hi / saving)} years` : '-';
+        const f = (sel, v) => { figs.querySelector(sel + ' b').textContent = v; };
+        f('.f-before', gbp(base.total)); f('.f-after', gbp(r.total)); f('.f-save', gbp(saving));
+        f('.f-cost', lo ? `£${(lo / 1000).toFixed(1).replace('.0', '')}k-£${(hi / 1000).toFixed(1).replace('.0', '')}k` : '£0');
+        f('.f-pb', saving > 0 && lo ? `${Math.round(lo / saving)}-${Math.round(hi / saving)} years` : '-');
         const c = C();
-        barChart(calc.querySelector('[data-chart="calc"]'), { labels: D.months, mode: 'group', height: 220, series: [
-          { name: 'Today', color: c.ink4, values: base.months.map((m) => m.cost) },
-          { name: 'With your plan', color: c.accent, values: r.months.map((m) => m.cost) } ] });
+        bars(stage.querySelector('[data-chart="calc"]'), { labels: M, mode: 'group', series: [
+          { name: 'Today', color: c.muted, textColor: c.ink3, values: base.months.map((m) => m.cost) },
+          { name: 'With your plan', color: c.accent, textColor: c.accent, values: r.months.map((m) => Math.max(m.cost, 0)) } ],
+          legendItems: [['Today', c.muted], ['With your plan', c.accent]] });
       }
-      calc.addEventListener('change', drawCalc);
+      chips.addEventListener('change', drawCalc);
 
       stage.querySelectorAll('[data-unit]').forEach((b) => b.addEventListener('click', () => {
         unit = b.dataset.unit;
         stage.querySelectorAll('[data-unit]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-        drawUsage();
+        drawBill();
       }));
 
-      const drawAll = () => { drawUsage(); drawSplit(); drawSolar(); drawCalc(); };
-      drawAll();
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', drawAll);
+      const drawAll = () => { drawBill(); drawHeating(); drawSolar(); drawCalc(); drawPayback(); drawGantt(); };
+      let raf = 0;
+      const redraw = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(drawAll); };
+      new ResizeObserver(redraw).observe(stage);
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', redraw);
+      document.fonts?.ready.then(redraw);
 
-      // Navigation
+      // ---- Navigation
       const prev = document.getElementById('prev'), next = document.getElementById('next');
       const count = document.getElementById('count'), progress = document.getElementById('progress'), title = document.getElementById('deck-title');
       let cur = 0;
       function go(n, push = true) {
         cur = Math.max(0, Math.min(slides.length - 1, n));
-        slides.forEach((s, i) => { s.classList.toggle('is-active', i === cur); s.classList.toggle('is-before', i < cur); s.setAttribute('aria-hidden', String(i !== cur)); s.inert = i !== cur; });
+        slides.forEach((sl, i) => { sl.classList.toggle('is-active', i === cur); sl.classList.toggle('is-before', i < cur); sl.setAttribute('aria-hidden', String(i !== cur)); sl.inert = i !== cur; });
         slides[cur].scrollTop = 0;
         prev.disabled = cur === 0; next.disabled = cur === slides.length - 1;
         count.textContent = `${String(cur + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
@@ -597,11 +786,12 @@
       stage.addEventListener('touchend', (e) => {
         if (sx === null) return;
         const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && !e.target.closest('.calc__controls')) go(cur + (dx < 0 ? 1 : -1));
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5 && !e.target.closest('.chips')) go(cur + (dx < 0 ? 1 : -1));
         sx = null;
       });
       const fromHash = parseInt(location.hash.slice(1), 10);
       go(Number.isFinite(fromHash) ? fromHash - 1 : 0, false);
+      drawAll();
     }
   })();
   </script>
