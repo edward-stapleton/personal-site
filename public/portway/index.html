@@ -140,6 +140,8 @@
     .cover { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(24px, 4vw, 64px); align-items: center; }
     .cover__text { display: flex; flex-direction: column; gap: 22px; }
     .cover__art { margin: 0; }
+    .cover__art--photo { display: flex; flex-direction: column; gap: 10px; }
+    .cover__art--photo img { width: 100%; height: auto; display: block; border-radius: var(--r-lg); border: 1px solid var(--line); }
 
     .split { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
     .split--wide-left { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; }
@@ -150,6 +152,10 @@
     .stat__n { font-size: clamp(1.6rem, 3vw, 2.25rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
     .stat__l { color: var(--ink-3); font-size: 15px; }
 
+    .quickwin { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid var(--positive); border-radius: var(--r-md); background: var(--paper-2); }
+    .quickwin .mono-label { color: var(--positive); }
+    .quickwin p { font-size: 15px; color: var(--ink-2); line-height: 1.45; }
+    .quickwin strong, .owners strong { color: var(--ink); font-weight: 600; }
     .chart-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 10px; }
     .chart-card__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .chart-note { font-size: 13px; color: var(--ink-3); }
