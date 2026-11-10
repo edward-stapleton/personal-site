@@ -791,7 +791,7 @@
           const i = pts.findIndex((v) => v >= 0); if (i < 1) return;
           const f = (0 - pts[i - 1]) / (pts[i] - pts[i - 1]), bx = x(i - 1 + f);
           el('circle', { cx: bx, cy: y(0), r: 6, fill: c.pos, stroke: c.paper, 'stroke-width': 2 }, svg);
-          const t = el('text', { x: bx, y: y(0) + (k ? 24 : -14), 'text-anchor': 'middle', class: 'ann-b' }, svg, `Paid back in ${(i - 1 + f).toFixed(0)} yrs`);
+          const t = el('text', { x: bx > W * 0.8 ? bx + 6 : bx, y: y(0) + (k ? 24 : -14), 'text-anchor': bx > W * 0.8 ? 'end' : 'middle', class: 'ann-b' }, svg, `Paid back in ${(i - 1 + f).toFixed(0)} yrs`);
           t.setAttribute('style', `fill:${c.pos};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
         });
         const endLo = series[0][years], endHi = series[1][years];
