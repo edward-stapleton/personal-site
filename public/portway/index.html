@@ -828,8 +828,8 @@
       tariffEl.className = 'tariff';
       tariffEl.innerHTML = `<span class="mono-label">Tariff</span>
         <div class="seg seg--lg" role="group" aria-label="Tariff">
-          <button type="button" data-tariff="now" aria-pressed="false">${RNOW.name || 'Today'} <small>${(RNOW.day * 100).toFixed(1)}p / ${(RNOW.night * 100).toFixed(1)}p</small></button>
-          <button type="button" data-tariff="snug" aria-pressed="true">${D.rates.name || 'New'} <small>${(D.rates.day * 100).toFixed(0)}p / ${(D.rates.night * 100).toFixed(2)}p</small></button>
+          <button type="button" data-tariff="now" aria-pressed="false">${RNOW.name || 'Today'} <small>${+(RNOW.day * 100).toFixed(1)}p / ${+(RNOW.night * 100).toFixed(1)}p</small></button>
+          <button type="button" data-tariff="snug" aria-pressed="true">${D.rates.name || 'New'} <small>${+(D.rates.day * 100).toFixed(2)}p / ${+(D.rates.night * 100).toFixed(2)}p</small></button>
         </div>`;
       chips.before(tariffEl);
       let tariff = 'snug';
