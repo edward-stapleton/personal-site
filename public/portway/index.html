@@ -307,9 +307,18 @@
       .grid8 { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
       .owners { grid-template-columns: 1fr; }
       .rooms-wrap { grid-template-columns: 1fr; }
+      .plan { max-height: none; flex: none; }
+      .units { flex: none; justify-content: flex-start; }
+      .rooms-wrap { flex: none; }
+      .rooms { align-content: flex-start; }
+      .s-chart__plot { flex: none; height: 320px; }
+      .tariff { align-items: flex-start; flex-direction: column; gap: 8px; width: 100%; }
+      .seg--lg { width: 100%; }
+      .seg--lg button { flex: 1; padding: 8px 10px; font-size: 14px; }
+      .seg--lg button small { display: block; margin-left: 0; }
       .rooms { min-height: 0; }
       .room { min-height: 84px; }
-      .urow { grid-template-columns: 1fr auto; }
+      .urow { grid-template-columns: 1fr 1fr; }
       .urow__in, .urow__arrow, .urow__out { grid-column: 1 / -1; }
       .urow__name { grid-row: 1; } .urow__total { grid-row: 1; grid-column: 2; }
       .compare { grid-template-columns: 1fr; }
@@ -794,7 +803,7 @@
         }
         const e1 = el('text', { x: L + 12, y: top + 18, class: 'v v--big' }, svg, `${gbp(saving)} a year saved`);
         e1.setAttribute('style', `fill:${c.pos}`);
-        el('text', { x: L + 12, y: top + 40, class: 'ann' }, svg, `Plan costs ${gbpK(lo)}-${gbpK(hi)}. Position after ${years} years shown on the right.`);
+        el('text', { x: L + 12, y: top + 40, class: 'ann' }, svg, compact() ? `Plan costs ${gbpK(lo)}-${gbpK(hi)}` : `Plan costs ${gbpK(lo)}-${gbpK(hi)}. Position after ${years} years shown on the right.`);
         // Price ceilings
         const ce = stage.querySelector('[data-ceilings]');
         if (ce) {
