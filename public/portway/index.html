@@ -286,6 +286,30 @@
     .owners li { padding-left: 18px; position: relative; }
     .owners li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 2px; background: var(--ink-4); }
 
+    /* ---------- Batteries ---------- */
+    .batts { flex: none; display: flex; flex-direction: column; gap: 0; }
+    .batt, .batts__scale { display: grid; grid-template-columns: minmax(220px, 34%) 1fr; gap: 20px; align-items: center; }
+    .batts__scale { position: relative; height: 18px; display: block; margin-left: calc(max(220px, 34%) + 20px); margin-right: 90px; }
+    .batts__scale span { position: absolute; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); transform: translateX(-50%); }
+    .batts__scale span:first-child { display: none; }
+    .batts__scale span:nth-child(2) { left: 0; transform: none; }
+    .batts__scale span.lim { color: var(--ink); font-weight: 500; }
+    .batt { padding: 7px 0; border-top: 1px solid var(--line); }
+    .batt__name { display: flex; flex-direction: column; gap: 2px; }
+    .batt__name strong { font-size: 16px; letter-spacing: -0.01em; }
+    .batt__name span { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+    .batt__name em { font-style: normal; font-size: 12px; color: var(--ink-3); }
+    .batt__track { position: relative; height: 26px; margin-right: 90px; }
+    .batt__track b { position: absolute; top: 5px; height: 16px; border-radius: 4px; background: var(--muted-bar); }
+    .batt__track span { position: absolute; top: 2px; margin-left: 6px; padding: 0 4px; background: var(--paper); z-index: 1; font-weight: 600; font-size: 15px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .batt__lim { position: absolute; top: -6px; bottom: -6px; width: 0; border-left: 2px dashed var(--ink); }
+    .batt--pick { background: var(--paper-2); border-radius: var(--r-md); border-top-color: transparent; padding: 7px 12px; margin: 0 -12px; }
+    .batt--pick .batt__track b { background: var(--positive); }
+    .batt--pick .batt__track span { color: var(--positive); background: var(--paper-2); }
+    .batt--pick .batt__name strong::after { content: 'Recommended'; margin-left: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--positive); vertical-align: 2px; }
+    .batt-notes { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .batt-notes p { font-size: 13px; color: var(--ink-2); padding-top: 10px; border-top: 1px solid var(--line); }
+
     /* ---------- Rooms ---------- */
     .rooms-wrap { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 300px); gap: clamp(16px, 3vw, 40px); }
     .rooms { display: flex; flex-wrap: wrap; align-content: stretch; gap: 6px; min-height: 340px; }
@@ -316,6 +340,11 @@
       .grid8 { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
       .owners { grid-template-columns: 1fr; }
       .rooms-wrap { grid-template-columns: 1fr; }
+      .batt { grid-template-columns: 1fr; gap: 6px; }
+      .batts__scale { display: none; }
+      .batt__track { margin-right: 80px; }
+      .batt-notes { grid-template-columns: 1fr; }
+      .batts { flex: none; }
       .plan { max-height: none; flex: none; }
       .units { flex: none; justify-content: flex-start; }
       .rooms-wrap { flex: none; }
@@ -473,23 +502,20 @@
         }
         if (opts.hotWater) hw /= s.hotWaterCop;
         let day = otherDay + heatDay, night = otherNight + heatNight + hw, exported = 0, gen = 0;
-        if (opts.solarOnly && !opts.solar) {
-          // Panels without a battery: only what's used as it's made counts, the rest is exported.
+        // Panels: what's used as it's made counts in full, the rest is exported.
+        if (opts.solarOnly || opts.solar) {
           gen = D.solarPerKwp[i] * s.solarKwp;
-          const used = Math.min(gen * (s.selfUseNoBattery || 0.35), day);
-          day -= used; exported = gen - used;
+          const direct = Math.min(gen * (s.selfUseNoBattery || 0.35), day);
+          day -= direct; exported = gen - direct;
         }
-        if (opts.solar) {
-          gen = D.solarPerKwp[i] * s.solarKwp;
-          const toDay = Math.min(gen * s.batteryEfficiency, day); day -= toDay;
-          let surplus = gen - toDay / s.batteryEfficiency;
-          const toNight = Math.min(surplus * s.batteryEfficiency, night * 0.5); night -= toNight;
-          surplus -= toNight / s.batteryEfficiency; exported = Math.max(surplus, 0);
-          if (day > 0) { const shift = Math.min(day, s.batteryKwh * 0.9 * days); day -= shift; night += shift / s.batteryEfficiency; }
-        }
-        if (opts.batteryOnly && !opts.solar && !opts.solarOnly) {
-          // Battery without panels: charge in the cheap hours, run the house in the day.
-          const shift = Math.min(day, s.batteryKwh * 0.9 * days); day -= shift; night += shift / s.batteryEfficiency;
+        // Battery: one cycle a day. It stores spare solar first, then tops up in the cheap hours.
+        const kwh = opts.solar || opts.batteryOnly ? (opts.batteryKwh || s.batteryKwh) : 0;
+        if (kwh) {
+          const eff = s.batteryEfficiency;
+          let stored = 0;
+          if (gen) { stored = Math.min(exported, kwh * days, day / eff); day -= stored * eff; exported -= stored; }
+          const shift = Math.min(day, Math.max(kwh * 0.9 * days - stored * eff, 0));
+          day -= shift; night += shift / eff;
         }
         const cost = day * R.day + night * R.night + days * R.standingPerDay - exported * exportRate;
         months.push({ day, night, kwh: day + night, gen, exported, cost });
@@ -503,6 +529,8 @@
     const gbp = (n) => (n < 0 ? '-£' : '£') + Math.round(Math.abs(n)).toLocaleString('en-GB');
     const gbpK = (n) => (n < 0 ? '-£' : '£') + (Math.abs(n) >= 1000 ? (Math.abs(n) / 1000).toFixed(Math.abs(n) % 1000 ? 1 : 0).replace('.0', '') + 'k' : Math.round(Math.abs(n)));
     const kwhF = (n) => Math.round(n).toLocaleString('en-GB');
+    const gbpRange = (a, b) => a === b ? gbp(a) : `${gbp(a)}-${gbp(b)}`;
+    const yrsRange = (a, b) => { const x = a < 10 ? a.toFixed(1).replace('.0', '') : Math.round(a), y = b < 10 ? b.toFixed(1).replace('.0', '') : Math.round(b); return x === y ? `${x} yrs` : `${x}-${y} yrs`; };
     const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
     function el(name, attrs, parent, text) { const e = document.createElementNS(NS, name); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
     function niceMax(v) { const p = Math.pow(10, Math.floor(Math.log10(v))); const m = v / p; return (m <= 1 ? 1 : m <= 1.5 ? 1.5 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10) * p; }
@@ -651,8 +679,8 @@
         else if (m.cost[0] > ceil) { verdict = ['out', 'Ruled out']; cls = ' pcard--opt'; }
         else if (m.cost[1] > ceil) verdict = ['maybe', `Only if under £${(Math.floor(ceil / 100) * 100).toLocaleString('en-GB')}`];
         else verdict = ['in', 'Recommended'];
-        const pb = m.kind === 'tariff' ? 'Free' : `${Math.round(m.cost[0] / save)}-${Math.round(m.cost[1] / save)} yrs`;
-        const cost = m.kind === 'tariff' ? 'No cost' : `£${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}`;
+        const pb = m.kind === 'tariff' ? 'Free' : yrsRange(m.cost[0] / save, m.cost[1] / save);
+        const cost = m.kind === 'tariff' ? 'No cost' : gbpRange(m.cost[0], m.cost[1]);
         return `<article class="pcard${cls}">
           <span class="pcard__n">${String.fromCharCode(65 + i)}</span>
           <span class="verdict verdict--${verdict[0]}">${verdict[1]}</span>
@@ -682,6 +710,22 @@
           <div class="urow__out"><span class="urow__arrow">1 unit in →</span><span class="unit unit--out">${flame}</span><span class="unit unit--out">${flame}</span><span class="unit unit--out">${flame}</span><span class="unit unit--out unit--half">${''}</span><span class="urow__arrow">3.5 units of heat</span></div>
           <div class="urow__total"><b>${kwhF(hpElec)}</b><span>kWh a year (the playroom and small rooms keep their heaters)</span></div>
         </div>`;
+
+      // ---- Battery comparison: payback against the 10-year limit
+      const battsEl = stage.querySelector('[data-batts]');
+      if (battsEl && D.batteries) {
+        const maxYrs = 12;
+        battsEl.innerHTML = `<div class="batts__scale"><span></span><span>0</span><span style="left:${(5 / maxYrs) * 100}%">5 yrs</span><span class="lim" style="left:${(HZ / maxYrs) * 100}%">${HZ}-year limit</span></div>` +
+          D.batteries.map(([name, kwh, lo, hi, note, pick]) => {
+            const save = base.total - runModel(D, { batteryOnly: true, batteryKwh: kwh }).total;
+            const a = lo / save, b = hi / save;
+            const L = (Math.min(a, maxYrs) / maxYrs) * 100, Wd = Math.max(((Math.min(b, maxYrs) - Math.min(a, maxYrs)) / maxYrs) * 100, 1.2);
+            return `<div class="batt${pick ? ' batt--pick' : ''}">
+              <div class="batt__name"><strong>${name}</strong><span>${kwh}kWh · ${gbpRange(lo, hi)} · saves ${gbp(save)} a year</span><em>${note}</em></div>
+              <div class="batt__track"><i class="batt__lim" style="left:${(HZ / maxYrs) * 100}%"></i><b style="left:0;width:${L + Wd}%"></b><span style="left:${L + Wd}%">${yrsRange(a, b)}</span></div>
+            </div>`;
+          }).join('');
+      }
 
       // ---- Rooms to scale
       const roomsEl = stage.querySelector('[data-rooms]');
@@ -798,7 +842,7 @@
         const host = stage.querySelector('[data-chart="payback"]'), c = C();
         const { svg, W, H } = frame(host);
         const years = HZ + 2;
-        const opts = [['solarOnly', c.pos, 2.5], ['solar', c.accent, 2.5], ['batteryOnly', c.sun, 2], ['heatPump', c.ink3, 1.8]];
+        const opts = [['batteryOnly', c.pos, 2.5], ['solar', c.accent, 2.5], ['solarOnly', c.sun, 2], ['heatPump', c.ink3, 1.8]];
         const lines = opts.map(([k, col, w]) => {
           const m = D.measures[k], sv = optionSaving(k), mid = (m.cost[0] + m.cost[1]) / 2;
           return { k, col, w, m, sv, mid, pts: Array.from({ length: years + 1 }, (_, yr) => -mid + sv * yr) };
@@ -814,7 +858,7 @@
         // 10-year limit
         const hx = x(HZ);
         el('rect', { x: hx, y: top, width: W - hx, height: H - top - bottom, fill: c.p3, opacity: .6 }, svg);
-        const hl = el('text', { x: hx + 8, y: top + 16, class: 'ann-b' }, svg, `${HZ}-year limit`);
+        const hl = el('text', { x: hx + 8, y: H - bottom - 10, class: 'ann-b' }, svg, `${HZ}-year limit`);
         lines.forEach((ln) => {
           el('polyline', { points: ln.pts.map((v, i) => `${x(i)},${y(Math.max(v, minV))}`).join(' '), fill: 'none', stroke: ln.col, 'stroke-width': ln.w }, svg);
           const i = ln.pts.findIndex((v) => v >= 0);
@@ -838,13 +882,14 @@
         if (ce) ce.innerHTML = Object.entries(D.measures).filter(([, m]) => m.kind !== 'tariff').map(([k, m]) => {
           const ceil = Math.floor((optionSaving(k) * HZ) / 100) * 100;
           const state = m.cost[0] > ceil ? 'ceil-out' : m.cost[1] > ceil ? 'ceil-maybe' : 'ceil-in';
-          return `<div class="${state}"><span class="mono-label">${m.short}: ceiling</span><strong>£${ceil.toLocaleString('en-GB')}</strong><span class="sub">Estimate £${m.cost[0].toLocaleString('en-GB')}-£${m.cost[1].toLocaleString('en-GB')}</span></div>`;
+          return `<div class="${state}"><span class="mono-label">${m.short}: ceiling</span><strong>£${ceil.toLocaleString('en-GB')}</strong><span class="sub">Estimate ${gbpRange(m.cost[0], m.cost[1])}</span></div>`;
         }).join('');
       }
 
       // ---- Calculator
       const chips = stage.querySelector('[data-chips]'), figs = stage.querySelector('[data-figs]');
-      const kk = (m) => `£${(m.cost[0] / 1000).toFixed(1).replace('.0', '')}k-£${(m.cost[1] / 1000).toFixed(1).replace('.0', '')}k`;
+      const k1 = (v) => `£${(v / 1000).toFixed(1).replace('.0', '')}k`;
+      const kk = (m) => m.cost[0] === m.cost[1] ? k1(m.cost[0]) : `${k1(m.cost[0])}-${k1(m.cost[1])}`;
       const solarOpts = Object.entries(D.measures).filter(([, m]) => m.group === 'solar');
       chips.innerHTML = `<span class="chips__label mono-label">Solar and battery</span>` +
         `<label class="chip"><input type="radio" name="solar" value="" ${solarOpts.some(([, m]) => m.on) ? '' : 'checked'}/><i></i>None</label>` +
