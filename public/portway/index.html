@@ -85,6 +85,12 @@
     .pdfbtn:hover { background: var(--paper-2); border-color: var(--ink-4); }
     .pdfbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     .pdfbtn:disabled { opacity: .6; cursor: progress; }
+    .s-head__tools { display: flex; align-items: center; gap: 10px; flex: none; }
+    .dlbtn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px 0 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-family: var(--font-mono); font-size: 13px; color: var(--ink-2); cursor: pointer; }
+    .dlbtn:hover { background: var(--paper-2); border-color: var(--ink-4); }
+    .dlbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .dlbtn:disabled { opacity: .6; cursor: progress; }
+    .dlbtn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .pdfbtn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     /* Used only to render the PDF: every slide laid out as its own 16:9 page */
     body.print-mode { height: auto; }
@@ -94,7 +100,7 @@
     .print-mode .slide { position: relative; inset: auto; width: 1600px; height: 900px; opacity: 1; visibility: visible; transform: none; transition: none; overflow: hidden; break-after: page; }
     .print-mode .slide::after { content: 'Ed Stapleton · Home energy plan · November 2026'; position: absolute; left: var(--pad-x); bottom: 14px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-4); }
     .print-mode .slide:last-child { break-after: auto; }
-    .print-mode .seg { display: none; }
+    .print-mode .seg, .print-mode .dlbtn { display: none; }
     .print-mode .s-cover::after { color: #fff; left: auto; right: 16px; }
     .deck__stage { position: relative; flex: 1; min-height: 0; overflow: hidden; }
     .deck__bar { flex: none; display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 var(--pad-x); border-top: 1px solid var(--line); }
@@ -967,6 +973,25 @@
           label.textContent = 'Try again';
         } finally { pdfBtn.disabled = false; }
       });
+      // ---- Data downloads (encrypted copies, unlocked with the same password)
+      const MIME = { xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
+      stage.querySelectorAll('[data-download]').forEach((btn) => btn.addEventListener('click', async () => {
+        const type = btn.dataset.download, label = btn.querySelector('span'), was = label.textContent;
+        btn.disabled = true; label.textContent = 'Preparing…';
+        try {
+          const res = await fetch(`deck.${type}.enc.json`, { cache: 'no-cache' });
+          if (!res.ok) throw new Error('load');
+          const bytes = await decryptBytes(currentPassword, await res.json());
+          const url = URL.createObjectURL(new Blob([bytes], { type: MIME[type] || 'application/octet-stream' }));
+          const a = document.createElement('a');
+          a.href = url; a.download = btn.dataset.filename || `download.${type}`;
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
+          label.textContent = was;
+        } catch { label.textContent = 'Try again'; }
+        finally { btn.disabled = false; }
+      }));
+
       window.__portwayPrintMode = () => {
         document.body.classList.add('print-mode');
         slides.forEach((sl) => { sl.inert = false; sl.removeAttribute('aria-hidden'); });
