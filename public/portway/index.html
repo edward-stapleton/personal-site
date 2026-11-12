@@ -292,6 +292,28 @@
     .owners li { padding-left: 18px; position: relative; }
     .owners li::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 2px; background: var(--ink-4); }
 
+    /* ---------- Tariffs ---------- */
+    .tariffs { flex: none; width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    .tariffs th { text-align: left; font-family: var(--font-mono); font-size: 11px; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); padding: 0 12px 10px; }
+    .tariffs td { padding: 14px 12px; border-top: 1px solid var(--line); font-size: 16px; color: var(--ink-2); vertical-align: top; }
+    .tariffs td:first-child strong { display: block; color: var(--ink); font-size: 18px; letter-spacing: -0.01em; }
+    .tariffs td:first-child span { font-size: 13px; color: var(--ink-3); }
+    .tariffs td.num { text-align: right; font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .tariffs th.num { text-align: right; }
+    .tariffs tr.pick td { background: var(--paper-2); }
+    .tariffs tr.pick td:first-child strong::after { content: 'Recommended'; margin-left: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--positive); vertical-align: 2px; }
+    .tariffs tr.pick td.num { color: var(--positive); }
+    .tariff-out { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+    .tariff-out p { margin: 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--r-md); font-size: 14px; color: var(--ink-2); line-height: 1.4; }
+    .tariff-out strong { color: var(--ink); }
+    @media (max-width: 900px) {
+      .tariffs .hide-m { display: none; }
+      .tariffs td { padding: 10px 6px; font-size: 14px; }
+      .tariffs td:first-child strong { font-size: 15px; }
+      .tariffs tr.pick td:first-child strong::after { display: block; margin: 2px 0 0; }
+      .tariff-out { grid-template-columns: 1fr; }
+    }
+
     /* ---------- Batteries ---------- */
     .batts { flex: none; display: flex; flex-direction: column; gap: 0; }
     .batt, .batts__scale { display: grid; grid-template-columns: minmax(220px, 34%) 1fr; gap: 20px; align-items: center; }
@@ -676,15 +698,16 @@
       // ---- Plan cards: each option on its own, judged against the payback horizon
       const RNOW = D.ratesNow || D.rates, today = runModel(D, { rates: RNOW });
       const HZ = s.horizonYears || 10;
-      const optionSaving = (k) => D.measures[k].kind === 'tariff' ? today.total - base.total : base.total - runModel(D, { [k]: true }).total;
+      const optionSaving = (k) => { const m = D.measures[k]; if (m.kind === 'tariff') return today.total - base.total; if (m.base) return runModel(D, { [m.base]: true }).total - runModel(D, { [m.run]: true }).total; return base.total - runModel(D, { [k]: true }).total; };
       const plan = stage.querySelector('[data-plan]');
-      if (plan) plan.innerHTML = Object.entries(D.measures).map(([k, m], i) => {
+      if (plan) plan.innerHTML = Object.entries(D.measures).filter(([, m]) => !m.hidePlan).map(([k, m], i) => {
         const save = optionSaving(k), ceil = save * HZ;
         let verdict, cls = '';
         if (m.kind === 'tariff') { verdict = ['in', 'Do this now']; cls = ' pcard--tariff'; }
         else if (m.cost[0] > ceil) { verdict = ['out', 'Ruled out']; cls = ' pcard--opt'; }
         else if (m.cost[1] > ceil) verdict = ['maybe', `Only if under £${(Math.floor(ceil / 100) * 100).toLocaleString('en-GB')}`];
-        else verdict = ['in', 'Recommended'];
+        else verdict = m.stage === 'alt' ? ['maybe', 'Alternative to B'] : ['in', m.stage === 'next' ? 'Do this next' : 'Recommended'];
+        if (m.stage === 'next') cls = ' pcard--tariff';
         const pb = m.kind === 'tariff' ? 'Free' : yrsRange(m.cost[0] / save, m.cost[1] / save);
         const cost = m.kind === 'tariff' ? 'No cost' : gbpRange(m.cost[0], m.cost[1]);
         return `<article class="pcard${cls}">
@@ -848,7 +871,7 @@
         const host = stage.querySelector('[data-chart="payback"]'), c = C();
         const { svg, W, H } = frame(host);
         const years = HZ + 2;
-        const opts = [['batteryOnly', c.pos, 2.5], ['solar', c.accent, 2.5], ['solarOnly', c.sun, 2], ['heatPump', c.ink3, 1.8]];
+        const opts = [['batteryOnly', c.pos, 2.5], ['solarAdd', c.accent, 2.5], ['solarOnly', c.sun, 2], ['heatPump', c.ink3, 1.8]];
         const lines = opts.map(([k, col, w]) => {
           const m = D.measures[k], sv = optionSaving(k), mid = (m.cost[0] + m.cost[1]) / 2;
           return { k, col, w, m, sv, mid, pts: Array.from({ length: years + 1 }, (_, yr) => -mid + sv * yr) };
@@ -876,16 +899,16 @@
         if (!compact()) {
           // End labels, nudged apart so they never overlap
           const labs = lines.map((ln) => ({ ln, yy: y(ln.pts[years]) - 8 })).sort((p, q) => p.yy - q.yy);
-          for (let i = 1; i < labs.length; i++) if (labs[i].yy - labs[i - 1].yy < 18) labs[i].yy = labs[i - 1].yy + 18;
+          for (let i = 1; i < labs.length; i++) if (labs[i].yy - labs[i - 1].yy < 24) labs[i].yy = labs[i - 1].yy + 24;
           labs.forEach(({ ln, yy }) => {
             const t = el('text', { x: W - 8, y: yy, 'text-anchor': 'end', class: 'ann-b' }, svg, `${ln.m.short}: ${(ln.mid / ln.sv).toFixed(1)} yrs`);
-            t.setAttribute('style', `fill:${ln.col};paint-order:stroke;stroke:var(--paper);stroke-width:4px`);
+            t.setAttribute('style', `fill:${ln.col};paint-order:stroke;stroke:var(--paper);stroke-width:9px;stroke-linejoin:round`);
           });
         }
         if (compact()) legend(host, lines.map((ln) => [`${ln.m.short} ${(ln.mid / ln.sv).toFixed(0)} yrs`, ln.col]));
         // Price ceilings
         const ce = stage.querySelector('[data-ceilings]');
-        if (ce) ce.innerHTML = Object.entries(D.measures).filter(([, m]) => m.kind !== 'tariff').map(([k, m]) => {
+        if (ce) ce.innerHTML = Object.entries(D.measures).filter(([, m]) => m.kind !== 'tariff' && !m.hidePlan).map(([k, m]) => {
           const ceil = Math.floor((optionSaving(k) * HZ) / 100) * 100;
           const state = m.cost[0] > ceil ? 'ceil-out' : m.cost[1] > ceil ? 'ceil-maybe' : 'ceil-in';
           return `<div class="${state}"><span class="mono-label">${m.short}: ceiling</span><strong>£${ceil.toLocaleString('en-GB')}</strong><span class="sub">Estimate ${gbpRange(m.cost[0], m.cost[1])}</span></div>`;
@@ -901,7 +924,7 @@
         `<label class="chip"><input type="radio" name="solar" value="" ${solarOpts.some(([, m]) => m.on) ? '' : 'checked'}/><i></i>None</label>` +
         solarOpts.map(([k, m]) => `<label class="chip"><input type="radio" name="solar" value="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>${kk(m)}</span></label>`).join('') +
         `<span class="chips__label mono-label">Heating</span>` +
-        Object.entries(D.measures).filter(([, m]) => !m.group && m.kind !== 'tariff').map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>${kk(m)}</span></label>`).join('');
+        Object.entries(D.measures).filter(([, m]) => !m.group && m.kind !== 'tariff' && !m.planOnly).map(([k, m]) => `<label class="chip"><input type="checkbox" data-measure="${k}" ${m.on ? 'checked' : ''}/><i></i>${m.short} <span>${kk(m)}</span></label>`).join('');
       figs.innerHTML = [['f-before', 'Bill today, E.ON'], ['f-after', 'Bill after'], ['f-save', 'Saving a year'], ['f-sm f-cost', 'Cost to fit'], ['f-sm f-pb', 'Kit pays back in']].map(([c, l]) => `<div class="${c}"><span class="mono-label">${l}</span><b></b></div>`).join('');
       // Tariff switch: today's E.ON tariff vs Octopus Snug
       const tariffEl = document.createElement('div');
